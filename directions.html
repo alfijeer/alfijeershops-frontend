@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Directions — ALFIJEER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<meta name="theme-color" content="#001233"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --gold: #FFBE1A;
+    --gold-light: #FFCF4D;
+    --navy-deep: #001233;
+    --navy-mid: #001E4D;
+    --on-navy: #FFFFFF;
+    --on-navy-dim: rgba(255,255,255,0.72);
+    --white: #14203A;
+    --white-dim: #5C6B85;
+  }
+  html, body { height: 100%; }
+  body { font-family: 'Nunito', sans-serif; overflow: hidden; background: #e8eef2; }
+
+  #map { position: absolute; inset: 0; z-index: 0; }
+
+  /* ── TOP INSTRUCTION BANNER ── */
+  .dir-banner {
+    position: absolute; top: 16px; left: 16px; right: 16px; z-index: 10;
+    background: var(--navy-deep); color: var(--on-navy);
+    border-radius: 14px; padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+  .dir-banner .dir-turn-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .dir-banner .dir-turn-text { font-size: 0.85rem; line-height: 1.4; }
+  .dir-banner .dir-turn-text b { display: block; font-size: 1rem; }
+  .dir-back {
+    position: absolute; top: 90px; left: 16px; z-index: 10;
+    width: 40px; height: 40px; border-radius: 50%; background: #fff;
+    border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 1.1rem; cursor: pointer;
+  }
+
+  /* ── MODE TOGGLE ── */
+  .dir-modes {
+    position: absolute; top: 16px; z-index: 10;
+    display: flex; gap: 8px;
+  }
+
+  /* ── BOTTOM SUMMARY ── */
+  .dir-bottom {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: #fff; border-radius: 20px 20px 0 0;
+    padding: 16px 18px 20px;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.15);
+  }
+  .dir-dest {
+    font-family: 'Cinzel', serif; font-weight: 700; font-size: 1rem;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .dir-dest-addr { font-size: 0.78rem; color: var(--white-dim); margin-bottom: 14px; }
+  .dir-toggle-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .dir-toggle {
+    flex: 1; text-align: center; padding: 10px 6px; border-radius: 10px;
+    border: 1px solid #e2e2e2; background: #fafafa; cursor: pointer;
+    font-size: 0.78rem; font-weight: 700; color: var(--white-dim);
+  }
+  .dir-toggle.active { border-color: var(--gold); background: rgba(255,190,26,0.12); color: #C99000; }
+  .dir-toggle .dir-toggle-time { display: block; font-size: 0.95rem; margin-top: 2px; color: var(--white); }
+  .dir-open-app {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    background: var(--gold); color: var(--navy-deep); font-weight: 800;
+    font-size: 0.9rem; padding: 13px; border-radius: 10px;
+  }
+  .dir-open-app:active { transform: scale(0.98); }
+  .dir-status {
+    text-align: center; font-size: 0.8rem; color: var(--white-dim); padding: 10px;
+  }
+
+  .gm-key-warning {
+    position: absolute; inset: 0; z-index: 20; background: var(--navy-deep); color: var(--on-navy);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 30px; font-size: 0.9rem; line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <div class="dir-banner" id="dir-banner" style="display:none;">
+    <span class="dir-turn-icon">🧭</span>
+    <div class="dir-turn-text">
+      <b id="dir-turn-headline">Calculating route…</b>
+      <span id="dir-turn-sub">Getting your location</span>
+    </div>
+  </div>
+  <button class="dir-back" onclick="history.back()" aria-label="Back">←</button>
+
+  <div class="dir-bottom">
+    <div class="dir-dest" id="dir-dest-name">Shop</div>
+    <div class="dir-dest-addr" id="dir-dest-addr">—</div>
+    <div class="dir-toggle-row">
+      <div class="dir-toggle active" id="toggle-walking" onclick="setMode('WALKING')">
+        🚶 Walking <span class="dir-toggle-time" id="time-walking">—</span>
+      </div>
+      <div class="dir-toggle" id="toggle-driving" onclick="setMode('DRIVING')">
+        🚗 Driving <span class="dir-toggle-time" id="time-driving">—</span>
+      </div>
+    </div>
+    <a class="dir-open-app" id="dir-open-app" href="#" target="_blank" rel="noopener noreferrer">Open in Google Maps app</a>
+    <div class="dir-status" id="dir-status"></div>
+  </div>
+
+  <script src="./google-maps-config.js"></script>
+  <script>
+    const _params = new URLSearchParams(window.location.search);
+    const destLat = parseFloat(_params.get('lat'));
+    const destLng = parseFloat(_params.get('lng'));
+    const destName = _params.get('name') || 'Shop';
+
+    document.getElementById('dir-dest-name').textContent = destName;
+
+    let map, directionsService, directionsRenderer, userPos = null;
+    let currentMode = 'WALKING';
+    const etaCache = {};
+
+    function setStatus(msg) { document.getElementById('dir-status').textContent = msg; }
+
+    function initMap() {
+      if (!window.GOOGLE_MAPS_API_KEY || window.GOOGLE_MAPS_API_KEY.indexOf('PASTE_') === 0) {
+        document.body.insertAdjacentHTML('beforeend',
+          `<div class="gm-key-warning">🔑 Add your Google Maps API key in <b>&nbsp;google-maps-config.js&nbsp;</b> to enable live directions. Meanwhile you can still tap "Open in Google Maps app" below.</div>`);
+      }
+      if (isNaN(destLat) || isNaN(destLng)) {
+        setStatus('This shop has not set a map location yet.');
+        return;
+      }
+
+      // Fallback deep link always works, even before we have the user's location
+      document.getElementById('dir-open-app').href =
+        'https://www.google.com/maps/dir/?api=1&destination=' + destLat + ',' + destLng;
+
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: destLat, lng: destLng },
+        zoom: 14,
+        disableDefaultUI: true,
+        zoomControl: true,
+      });
+      new google.maps.Marker({
+        position: { lat: destLat, lng: destLng },
+        map, title: destName,
+      });
+
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({
+        map, suppressMarkers: true,
+        polylineOptions: { strokeColor: '#FFBE1A', strokeWeight: 6 },
+      });
+
+      setStatus('Finding your location…');
+      if (!navigator.geolocation) {
+        setStatus('Turn on location to see a live route. You can still get directions in the Google Maps app.');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          document.getElementById('dir-banner').style.display = 'flex';
+          calcRoute('WALKING');
+          calcRoute('DRIVING');
+          document.getElementById('dir-open-app').href =
+            'https://www.google.com/maps/dir/?api=1&origin=' + userPos.lat + ',' + userPos.lng +
+            '&destination=' + destLat + ',' + destLng;
+          setStatus('');
+        },
+        () => { setStatus('Location access was denied — showing the shop location only. Use "Open in Google Maps app" for turn-by-turn directions.'); },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    }
+
+    function calcRoute(mode) {
+      directionsService.route({
+        origin: userPos,
+        destination: { lat: destLat, lng: destLng },
+        travelMode: google.maps.TravelMode[mode],
+      }, (result, status) => {
+        if (status !== 'OK') {
+          document.getElementById('time-' + mode.toLowerCase()).textContent = 'N/A';
+          return;
+        }
+        const leg = result.routes[0].legs[0];
+        etaCache[mode] = { duration: leg.duration.text, distance: leg.distance.text, result };
+        document.getElementById('time-' + mode.toLowerCase()).textContent = leg.duration.text;
+        if (mode === currentMode) renderRoute(mode);
+      });
+    }
+
+    function renderRoute(mode) {
+      const data = etaCache[mode];
+      if (!data) return;
+      directionsRenderer.setDirections(data.result);
+      const step = data.result.routes[0].legs[0].steps[0];
+      document.getElementById('dir-turn-headline').textContent = data.duration + ' · ' + data.distance;
+      document.getElementById('dir-turn-sub').innerHTML = step ? step.instructions.replace(/<[^>]+>/g, '') : 'Follow the highlighted route';
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('toggle-walking').classList.toggle('active', mode === 'WALKING');
+      document.getElementById('toggle-driving').classList.toggle('active', mode === 'DRIVING');
+      if (etaCache[mode]) renderRoute(mode);
+    }
+  </script>
+  <script>
+    (function loadGMaps() {
+      const s = document.createElement('script');
+      const key = window.GOOGLE_MAPS_API_KEY || '';
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + key + '&callback=initMap&loading=async';
+      s.async = true;
+      s.onerror = () => setStatus('Could not load Google Maps. Check the API key in google-maps-config.js.');
+      document.head.appendChild(s);
+    })();
+  </script>
+</body>
+</html>

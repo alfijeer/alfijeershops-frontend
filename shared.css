@@ -1,0 +1,150 @@
+/* ══════════════════════════════════════════════════════════
+   AREWA SQUARE — SHARED STYLES
+   Drop this into any NEW page with:
+     <link rel="stylesheet" href="./shared.css"/>
+
+   This mirrors the exact tokens already used inline across
+   index.html, buyer-dashboard.html, seller-dashboard.html,
+   shop-detail.html, and the admin pages — so a new page built
+   on top of this file matches the rest of the app automatically.
+
+   Note: existing pages keep their own inline <style> blocks and
+   don't need to change — this file is for pages you build next.
+   ══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Legacy alias names kept for consistency with older pages —
+     both point at the same navy/gold palette. */
+  --green-deep:  #FFFFFF;
+  --green-mid:   #F3F9F5;
+  --green-light: #E3F2E8;
+  --emerald:     #FFBE1A;
+  --emerald-dim: #C99000;
+
+  --gold:        #FFBE1A;
+  --gold-light:  #FFCF4D;
+  --gold-dim:    #C99000;
+
+  --white:       #14203A; /* primary text color, despite the name */
+  --white-dim:   #5C6B85; /* secondary/muted text */
+
+  --dark:        #001233;
+  --navy-deep:   #001233;
+  --navy-mid:    #001E4D;
+  --navy-light:  #0A294D;
+  --on-navy:     #FFFFFF;
+  --on-navy-dim: rgba(255,255,255,0.72);
+
+  --card-bg:     #FFFFFF;
+  --border:      rgba(201,144,0,0.2);
+  --bg:          #FFFFFF;
+  --bg2:         #F3F9F5;
+
+  --sidebar-w:   240px;
+
+  --success: #16803C;
+  --success-bg: rgba(74,222,128,0.14);
+  --danger: #C0392B;
+  --danger-bg: rgba(231,76,60,0.12);
+  --warning: #C9750A;
+  --warning-bg: rgba(243,156,18,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: var(--white);
+}
+
+a { color: inherit; }
+
+/* Subtle brand watermark background, used behind full-page layouts */
+.brand-watermark {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(201,144,0,0.02) 50px, rgba(201,144,0,0.02) 51px),
+    repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(201,144,0,0.02) 50px, rgba(201,144,0,0.02) 51px);
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 10px; font-weight: 800; font-size: 0.85rem;
+  font-family: 'Nunito', sans-serif; border: none; cursor: pointer; text-decoration: none;
+  transition: transform .15s ease, opacity .15s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--gold); color: var(--navy-deep); }
+.btn-primary:hover { background: var(--gold-light); }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--white); }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold-dim); }
+.btn-whatsapp { background: #25D366; color: #fff; }
+.btn-danger { background: #e74c3c; color: #fff; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Badges / status pills ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px;
+  border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-danger  { background: var(--danger-bg);  color: var(--danger); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+.badge-neutral { background: rgba(92,107,133,0.14); color: var(--white-dim); }
+
+/* ── Cards ── */
+.card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px;
+}
+
+/* ── Forms ── */
+input, textarea, select {
+  font-family: 'Nunito', sans-serif; font-size: 0.88rem;
+  padding: 11px 14px; border-radius: 9px; border: 1px solid var(--border);
+  background: #fff; color: var(--white); width: 100%;
+}
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--gold); }
+label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--white-dim); margin-bottom: 6px; }
+
+/* ── Toast (matches the JS-driven toast in api.js) ── */
+.as-toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  background: #fff; border: 1px solid var(--navy-deep);
+  color: var(--white); padding: 14px 20px; border-radius: 8px;
+  font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 4px 24px rgba(16,40,28,0.14); max-width: 340px;
+}
+
+/* ── Scrollbar (desktop) ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(201,144,0,0.3); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,144,0,0.5); }
+
+/* ── Utility ── */
+.text-dim { color: var(--white-dim); }
+.text-gold { color: var(--gold-dim); }
+.text-center { text-align: center; }
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.hidden { display: none !important; }
+
+@media (max-width: 640px) {
+  .as-toast { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+}

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop — ALFIJEER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#001233"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --gold: #FFBE1A;
+    --gold-light: #FFCF4D;
+    --gold-dim: #C99000;
+    --navy-deep: #001233;
+    --navy-mid: #001E4D;
+    --navy-light: #0A294D;
+    --on-navy: #FFFFFF;
+    --on-navy-dim: rgba(255,255,255,0.72);
+    --white: #14203A;
+    --white-dim: #5C6B85;
+    --border: rgba(201,144,0,0.2);
+    --bg: #F3F9F5;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── HEADER ── */
+  .sd-header {
+    background: var(--navy-deep);
+    color: var(--on-navy);
+    padding: 16px 20px 22px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .sd-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .sd-back {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: none; color: var(--on-navy);
+    font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+  }
+  .sd-back:hover { background: rgba(255,255,255,0.16); }
+  .sd-brand { display: flex; align-items: center; gap: 8px; }
+  .sd-brand img { height: 28px; width: 28px; border-radius: 28px; object-fit: contain; }
+  .sd-brand span { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 1.5px; color: var(--gold); }
+  .sd-share {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: none;
+    color: var(--on-navy); font-size: 1rem; cursor: pointer;
+  }
+  .sd-share:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── SHOP CARD (sits on the navy header, like the mockup) ── */
+  .sd-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,190,26,0.18);
+    border-radius: 16px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .sd-photo {
+    position: relative;
+    height: 190px;
+    background: var(--navy-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+    overflow: hidden;
+  }
+  .sd-photo img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  }
+  .sd-photo .sd-num {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--gold); color: var(--navy-deep);
+    font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.65rem;
+    padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px;
+  }
+  .sd-body { padding: 16px 18px 18px; }
+  .sd-verified {
+    display: inline-flex; align-items: center; gap: 5px;
+    color: #4ADE80; font-size: 0.72rem; font-weight: 700; margin-bottom: 6px;
+  }
+  .sd-name {
+    font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 700;
+    color: var(--on-navy); margin-bottom: 8px; line-height: 1.25;
+  }
+  .sd-meta-row {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    font-size: 0.75rem; color: var(--on-navy-dim); margin-bottom: 14px;
+  }
+  .sd-tag {
+    background: rgba(255,190,26,0.1); border: 1px solid rgba(255,190,26,0.25);
+    color: var(--gold-light); padding: 3px 10px; border-radius: 20px; font-weight: 700;
+  }
+  .sd-rating-note {
+    font-size: 0.72rem; color: var(--on-navy-dim); font-style: italic;
+  }
+
+  .sd-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+  .sd-actions a {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.82rem;
+    text-decoration: none; border: none; cursor: pointer; transition: transform .15s ease;
+  }
+  .sd-actions a:active { transform: scale(0.97); }
+  .btn-call { background: rgba(255,255,255,0.08); color: var(--on-navy); border: 1px solid rgba(255,255,255,0.15) !important; }
+  .btn-whatsapp { background: #25D366; color: #fff; }
+
+  .sd-address-row {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 0.8rem; color: var(--on-navy-dim); margin: 14px 0;
+  }
+  .btn-directions {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    background: var(--gold); color: var(--navy-deep);
+    font-weight: 800; font-size: 0.88rem; padding: 13px; border-radius: 10px;
+  }
+  .btn-directions:active { transform: scale(0.98); }
+
+  /* ── PRODUCTS ── */
+  .sd-section { padding: 22px 20px 0; }
+  .sd-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .sd-section-head h3 { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--white); }
+  .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 480px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+  .p-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden;
+  }
+  .p-thumb {
+    height: 90px; background: var(--bg); display: flex; align-items: center;
+    justify-content: center; font-size: 1.8rem; overflow: hidden;
+  }
+  .p-thumb-count {
+    position: absolute; bottom: 4px; right: 4px;
+    background: rgba(0,0,0,0.65); color: #fff; font-size: 0.6rem; font-weight: 700;
+    padding: 2px 6px; border-radius: 10px;
+  }
+  .gallery-overlay {
+    display: none; position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .gallery-overlay.open { display: flex; }
+  .gallery-close {
+    position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,0.12);
+    border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%;
+    font-size: 1.2rem; cursor: pointer; z-index: 2;
+  }
+  .gallery-stage {
+    position: relative; width: 100%; max-width: 520px; overflow: hidden;
+    display: flex; align-items: center; touch-action: pan-y;
+  }
+  .gallery-track { display: flex; width: 100%; will-change: transform; }
+  .gallery-slide {
+    flex: 0 0 100%; width: 100%; display: flex; align-items: center; justify-content: center;
+    padding: 0 12px; box-sizing: border-box;
+  }
+  .gallery-slide img { max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain; pointer-events: none; }
+  .gallery-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+    background: rgba(255,255,255,0.12); border: none; color: #fff;
+    width: 42px; height: 42px; border-radius: 50%; font-size: 1.3rem; cursor: pointer;
+  }
+  #gallery-prev { left: 4px; }
+  #gallery-next { right: 4px; }
+  .gallery-arrow:disabled { opacity: 0.25; cursor: default; }
+  @media (max-width: 768px) {
+    .gallery-arrow { display: none; }
+  }
+  .gallery-counter { color: rgba(255,255,255,0.75); font-size: 0.82rem; margin-top: 16px; font-weight: 600; }
+  .gallery-dots { display: flex; gap: 6px; margin-top: 10px; }
+  .gallery-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; }
+  .gallery-dots span.active { background: var(--gold); width: 18px; border-radius: 4px; transition: width 0.2s ease; }
+  .p-info { padding: 10px 10px 12px; }
+  .p-info .p-name { font-size: 0.78rem; font-weight: 700; color: var(--white); margin-bottom: 4px; line-height: 1.3; }
+  .p-info .p-price { font-size: 0.82rem; font-weight: 800; color: var(--gold-dim); }
+  .sd-empty, .sd-loading { grid-column: 1/-1; text-align: center; color: var(--white-dim); padding: 30px 10px; font-size: 0.82rem; }
+
+  /* ── TOAST ── */
+  .sd-toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--navy-deep); color: var(--on-navy); padding: 12px 20px; border-radius: 10px;
+    font-size: 0.82rem; font-weight: 600; opacity: 0; pointer-events: none;
+    transition: all 0.3s ease; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    max-width: 90%; text-align: center;
+  }
+  .sd-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (min-width: 640px) {
+    .sd-header, .sd-section { padding-left: calc(50% - 300px); padding-right: calc(50% - 300px); }
+    .sd-card { margin-left: calc(50% - 300px); margin-right: calc(50% - 300px); }
+  }
+</style>
+</head>
+<body>
+
+  <header class="sd-header">
+    <div class="sd-header-row">
+      <a href="buyer-dashboard.html" class="sd-back" aria-label="Back">←</a>
+      <div class="sd-brand">
+        <img src="./Alfijeer1.png" alt="" onerror="this.style.display='none'"/>
+        <span>ALFIJEER</span>
+      </div>
+      <button class="sd-share" onclick="shareShop()" aria-label="Share this shop">⤴</button>
+    </div>
+
+    <div class="sd-card" id="sd-card">
+      <div class="sd-photo" id="sd-photo">🏪<span class="sd-num" id="sd-num">Shop —</span></div>
+      <div class="sd-body">
+        <div class="sd-verified" id="sd-verified" style="display:none;">✅ Verified Shop</div>
+        <h1 class="sd-name" id="sd-name">Loading…</h1>
+        <div class="sd-meta-row">
+          <span class="sd-tag" id="sd-cat">—</span>
+          <span class="sd-rating-note" id="sd-rating-note">Reviews coming soon</span>
+        </div>
+
+        <div class="sd-actions">
+          <a class="btn-call" id="sd-call" href="#" onclick="return false;">📞 Call</a>
+          <a class="btn-whatsapp" id="sd-whatsapp" href="#" target="_blank" rel="noopener noreferrer" onclick="return false;">💬 WhatsApp</a>
+        </div>
+
+        <div class="sd-address-row">
+          <span>📍</span>
+          <span id="sd-address">—</span>
+        </div>
+
+        <a class="btn-directions" id="sd-directions" href="#" onclick="return false;">🧭 Get Directions</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="sd-section">
+    <div class="sd-section-head"><h3>Products in this Shop</h3></div>
+    <div class="product-grid" id="sd-products">
+      <p class="sd-loading">Loading products…</p>
+    </div>
+  </section>
+
+  <div class="sd-toast" id="sd-toast"></div>
+
+  <script>
+    const _API = 'https://arewa-square-backend-production.up.railway.app/api';
+    const _params = new URLSearchParams(window.location.search);
+    const _shopId = _params.get('id');
+
+    function showToast(msg) {
+      const t = document.getElementById('sd-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    function _catIcon(cat) {
+      const icons = {
+        'Fashion, Clothing & Shoes':'👕','Electronics & Appliances':'📺',
+        'Phones & Accessories':'📱','Home & Furniture':'🛋️',
+        'Food & Groceries':'🛒','Computers & Technology':'💻',
+        'Agriculture & Livestock':'🌾','Health & Beauty':'💊',
+        'Education & Training':'📚','Services':'🔧','Other':'📦',
+      };
+      return icons[cat] || '🏪';
+    }
+    function _formatShopNum(num) {
+      if (!num) return 'Shop —';
+      const s = String(num).replace(/[^0-9]/g, '');
+      return s ? 'Shop ' + s.padStart(3, '0') : 'Shop —';
+    }
+
+    let _shop = null;
+
+    async function loadShop() {
+      if (!_shopId) {
+        document.getElementById('sd-name').textContent = 'Shop not found';
+        return;
+      }
+      try {
+        const res = await fetch(_API + '/sellers?limit=200');
+        const data = await res.json();
+        const list = data.sellers || data || [];
+        const s = list.find(x => x._id === _shopId);
+        if (!s) {
+          document.getElementById('sd-name').textContent = 'Shop not found';
+          return;
+        }
+        _shop = s;
+        renderShop(s);
+        loadProducts(s._id);
+      } catch (e) {
+        document.getElementById('sd-name').textContent = 'Unable to load shop';
+        showToast('Check your connection and try again.');
+      }
+    }
+
+    function renderShop(s) {
+      document.title = (s.businessName || 'Shop') + ' — ALFIJEER';
+      document.getElementById('sd-name').textContent = s.businessName || 'Unnamed Shop';
+      document.getElementById('sd-cat').textContent = s.category || 'Other';
+      document.getElementById('sd-num').textContent = _formatShopNum(s.shopNumber);
+      document.getElementById('sd-address').textContent = s.address || [s.city, s.state].filter(Boolean).join(', ') || 'Address not provided';
+      document.getElementById('sd-verified').style.display = 'inline-flex';
+
+      const photoEl = document.getElementById('sd-photo');
+      if (s.shopPhotoUrl) {
+        photoEl.textContent = '';
+        const img = document.createElement('img');
+        img.src = s.shopPhotoUrl;
+        img.alt = s.businessName || 'Shop photo';
+        img.onerror = () => { img.remove(); photoEl.textContent = _catIcon(s.category); };
+        photoEl.appendChild(img);
+        const numBadge = document.createElement('span');
+        numBadge.className = 'sd-num';
+        numBadge.textContent = _formatShopNum(s.shopNumber);
+        photoEl.appendChild(numBadge);
+      } else {
+        photoEl.textContent = _catIcon(s.category);
+      }
+
+      // Real average rating only if the backend actually provides one —
+      // no placeholder numbers are shown when it doesn't.
+      if (s.rating && s.reviewCount) {
+        document.getElementById('sd-rating-note').textContent = `⭐ ${s.rating.toFixed(1)} (${s.reviewCount} reviews)`;
+      }
+
+      const phone = s.phone || s.whatsappNumber || '';
+      const wa = s.whatsappNumber || s.phone || '';
+      const callBtn = document.getElementById('sd-call');
+      const waBtn = document.getElementById('sd-whatsapp');
+      if (phone) { callBtn.href = 'tel:' + phone; callBtn.onclick = null; }
+      else { callBtn.onclick = () => { showToast('This shop has not added a phone number yet.'); return false; }; }
+      if (wa) { waBtn.href = 'https://wa.me/' + wa.replace(/[^0-9]/g,''); waBtn.onclick = null; }
+      else { waBtn.onclick = () => { showToast('This shop has not added a WhatsApp number yet.'); return false; }; }
+
+      const dirBtn = document.getElementById('sd-directions');
+      if (s.latitude && s.longitude) {
+        const url = `directions.html?lat=${s.latitude}&lng=${s.longitude}&name=${encodeURIComponent(s.businessName || 'Shop')}&id=${s._id}`;
+        dirBtn.href = url;
+        dirBtn.onclick = null;
+      } else {
+        dirBtn.onclick = () => { showToast("This shop hasn't set a map location yet."); return false; };
+      }
+    }
+
+    let _sdProducts = [];
+
+    async function loadProducts(sellerId) {
+      const grid = document.getElementById('sd-products');
+      try {
+        const res = await fetch(_API + '/products?sellerId=' + sellerId);
+        const data = await res.json();
+        const products = data.products || data || [];
+        _sdProducts = products;
+        if (!products.length) {
+          grid.innerHTML = '<p class="sd-empty">This shop hasn\'t listed any products yet.</p>';
+          return;
+        }
+        grid.innerHTML = products.map((p, idx) => {
+          const hasImages = p.images && p.images.length > 0;
+          const hasMultiple = hasImages && p.images.length > 1;
+          return `
+          <div class="p-card">
+            <div class="p-thumb" ${hasImages ? `onclick="openProductGallery(${idx})" style="cursor:pointer;position:relative;"` : ''}>${hasImages ? `<img src="${p.images[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.parentNode.textContent='${_catIcon(p.category)}'" loading="lazy">` : _catIcon(p.category)}${hasMultiple ? `<span class="p-thumb-count">📷 ${p.images.length}</span>` : ''}</div>
+            <div class="p-info">
+              <div class="p-name">${p.name}</div>
+              <div class="p-price">₦${Number(p.price || 0).toLocaleString()}</div>
+            </div>
+          </div>
+        `;}).join('');
+      } catch (e) {
+        grid.innerHTML = '<p class="sd-empty">Unable to load products right now.</p>';
+      }
+    }
+
+    // ── PRODUCT PHOTO GALLERY — swipeable carousel ──
+    // Primary navigation is a finger swipe (live drag that follows the
+    // finger, then snaps to the nearest photo). Arrow buttons remain for
+    // desktop/mouse users but are hidden on mobile via CSS.
+    let _galleryImages = [];
+    let _galleryIndex = 0;
+    let _galleryDragging = false;
+    let _galleryStartX = 0;
+    let _galleryStartTranslate = 0;
+    let _galleryCurrentTranslate = 0;
+
+    function openProductGallery(productIdx) {
+      const product = _sdProducts[productIdx];
+      if (!product || !product.images || !product.images.length) return;
+      _galleryImages = product.images;
+      _galleryIndex = 0;
+
+      const track = document.getElementById('gallery-track');
+      track.innerHTML = _galleryImages.map((src, i) =>
+        `<div class="gallery-slide"><img src="${src}" alt="Product photo ${i + 1}"/></div>`
+      ).join('');
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0%)';
+
+      renderGalleryChrome();
+      document.getElementById('gallery-overlay').classList.add('open');
+    }
+    function closeProductGallery() {
+      document.getElementById('gallery-overlay').classList.remove('open');
+    }
+
+    function goToGallerySlide(newIndex) {
+      const clamped = Math.max(0, Math.min(_galleryImages.length - 1, newIndex));
+      _galleryIndex = clamped;
+      const track = document.getElementById('gallery-track');
+      track.style.transition = 'transform 0.3s ease';
+      track.style.transform = `translateX(-${_galleryIndex * 100}%)`;
+      renderGalleryChrome();
+    }
+    function galleryStep(dir) { goToGallerySlide(_galleryIndex + dir); }
+
+    function renderGalleryChrome() {
+      document.getElementById('gallery-counter').textContent = (_galleryIndex + 1) + ' of ' + _galleryImages.length;
+      document.getElementById('gallery-prev').disabled = _galleryIndex === 0;
+      document.getElementById('gallery-next').disabled = _galleryIndex === _galleryImages.length - 1;
+      document.getElementById('gallery-dots').innerHTML = _galleryImages.map((_, i) =>
+        `<span class="${i === _galleryIndex ? 'active' : ''}" onclick="goToGallerySlide(${i})"></span>`
+      ).join('');
+    }
+
+    function galleryTouchStart(e) {
+      _galleryDragging = true;
+      _galleryStartX = e.touches[0].clientX;
+      _galleryStartTranslate = -_galleryIndex * 100;
+      document.getElementById('gallery-track').style.transition = 'none';
+    }
+    function galleryTouchMove(e) {
+      if (!_galleryDragging) return;
+      const stageWidth = document.getElementById('gallery-stage').offsetWidth || 1;
+      const deltaX = e.touches[0].clientX - _galleryStartX;
+      const deltaPercent = (deltaX / stageWidth) * 100;
+      _galleryCurrentTranslate = _galleryStartTranslate + deltaPercent;
+      document.getElementById('gallery-track').style.transform = `translateX(${_galleryCurrentTranslate}%)`;
+      e.preventDefault();
+    }
+    function galleryTouchEnd() {
+      if (!_galleryDragging) return;
+      _galleryDragging = false;
+      const draggedPercent = _galleryCurrentTranslate - _galleryStartTranslate;
+      if (draggedPercent < -18) goToGallerySlide(_galleryIndex + 1);
+      else if (draggedPercent > 18) goToGallerySlide(_galleryIndex - 1);
+      else goToGallerySlide(_galleryIndex);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('gallery-overlay').classList.contains('open')) return;
+      if (e.key === 'Escape') closeProductGallery();
+      if (e.key === 'ArrowLeft') galleryStep(-1);
+      if (e.key === 'ArrowRight') galleryStep(1);
+    });
+
+    function shareShop() {
+      const url = window.location.href;
+      if (navigator.share) {
+        navigator.share({ title: _shop ? _shop.businessName : 'ALFIJEER', url }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(url).then(() => showToast('Link copied to clipboard!'));
+      }
+    }
+
+    loadShop();
+  </script>
+  <!-- PRODUCT PHOTO GALLERY -->
+  <div class="gallery-overlay" id="gallery-overlay" onclick="if(event.target===this) closeProductGallery()">
+    <button class="gallery-close" onclick="closeProductGallery()" aria-label="Close">✕</button>
+    <div class="gallery-stage" id="gallery-stage"
+         ontouchstart="galleryTouchStart(event)" ontouchmove="galleryTouchMove(event)" ontouchend="galleryTouchEnd()" ontouchcancel="galleryTouchEnd()">
+      <button class="gallery-arrow" id="gallery-prev" onclick="galleryStep(-1)" aria-label="Previous photo">‹</button>
+      <div class="gallery-track" id="gallery-track"></div>
+      <button class="gallery-arrow" id="gallery-next" onclick="galleryStep(1)" aria-label="Next photo">›</button>
+    </div>
+    <div class="gallery-counter" id="gallery-counter"></div>
+    <div class="gallery-dots" id="gallery-dots"></div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "name": "ALFIJEER — The Digital Market Place For Nigeria",
+  "short_name": "ALFIJEER",
+  "description": "The Digital Market Place For Nigeria. Discover verified local shops near you, with trust and transparency.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#001233",
+  "theme_color": "#001233",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["shopping", "business", "lifestyle"],
+  "icons": [
+    {
+      "src": "/Alfijeer1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Alfijeer1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Alfijeer1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Shops",
+      "short_name": "Browse",
+      "url": "/buyer-dashboard.html",
+      "icons": [{ "src": "/Alfijeer1.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Shop",
+      "short_name": "Sell",
+      "url": "/seller-dashboard.html",
+      "icons": [{ "src": "/Alfijeer1.png", "sizes": "192x192" }]
+    }
+  ]
+}

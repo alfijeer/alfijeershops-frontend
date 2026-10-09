@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ALFIJEER — Register / Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+      --green-deep:  #FFFFFF;
+      --green-mid:   #F3F9F5;
+      --green-light: #E3F2E8;
+      --gold:        #FFBE1A;
+      --gold-light:  #FFCF4D;
+      --gold-dim:    #C99000;
+      --emerald:     #FFBE1A;
+      --emerald-dim: #C99000;
+      --white:       #14203A;
+      --white-dim:   #5C6B85;
+      --dark:        #001233;
+      --bg:          #FFFFFF;
+      --bg2:         #F3F9F5;
+      --border:      rgba(201,144,0,0.2);
+      --input-bg:    #F3F9F5;
+      --input-border:rgba(201,144,0,0.25);
+      --error:       #e74c3c;
+
+      --navy-deep:   #001233;
+      --navy-mid:    #001E4D;
+      --navy-light:  #0A294D;
+      --on-navy:     #FFFFFF;
+      --on-navy-dim: rgba(255,255,255,0.72);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--green-deep);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,144,0,0.025) 40px, rgba(201,144,0,0.025) 41px),
+        repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(201,144,0,0.025) 40px, rgba(201,144,0,0.025) 41px);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ══ NAVBAR ══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: var(--navy-deep);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .nav-logo img { height: 40px; width: 40px; border-radius: 40px;
+    object-fit: contain; }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .nav-logo-text span:first-child {
+      font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 700;
+      color: var(--gold); letter-spacing: 2px;
+    }
+    .nav-logo-text span:last-child {
+      font-size: 0.6rem; color: var(--on-navy-dim);
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+
+    .nav-back {
+      display: flex; align-items: center; gap: 7px;
+      color: var(--on-navy-dim); text-decoration: none;
+      font-size: 0.83rem; font-weight: 600; transition: color 0.3s;
+    }
+    .nav-back:hover { color: var(--gold); }
+
+    /* ══ LAYOUT ══ */
+    .auth-wrapper {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 68px;
+    }
+
+    /* LEFT PANEL */
+    .auth-left {
+      position: sticky; top: 68px;
+      height: calc(100vh - 68px);
+      background: linear-gradient(160deg, var(--navy-light) 0%, var(--navy-deep) 100%);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 60px 48px; text-align: center; overflow: hidden;
+    }
+
+    .left-star {
+      position: absolute; bottom: -80px; right: -80px;
+      width: 380px; height: 380px; opacity: 0.08; pointer-events: none;
+    }
+
+    .left-glow {
+      position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(255,190,26,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .left-logo {
+      width: 100px; height: 100px; object-fit: contain;
+      margin-bottom: 28px;
+      filter: drop-shadow(0 0 24px rgba(255,190,26,0.25));
+      animation: floatLogo 4s ease-in-out infinite;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    .auth-left h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.7rem; font-weight: 700;
+      color: var(--on-navy); margin-bottom: 14px; line-height: 1.3;
+    }
+    .auth-left h2 span { color: var(--gold); }
+
+    .auth-left p {
+      color: var(--on-navy-dim); font-size: 0.9rem;
+      line-height: 1.8; max-width: 300px; margin-bottom: 36px;
+    }
+
+    .trust-pills { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 280px; }
+
+    .trust-pill {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 12px 16px; text-align: left;
+    }
+
+    .trust-pill .pill-icon { font-size: 1.2rem; min-width: 28px; text-align: center; }
+    .trust-pill .pill-text strong { display: block; font-size: 0.82rem; font-weight: 700; color: var(--gold); }
+    .trust-pill .pill-text span { font-size: 0.75rem; color: var(--on-navy-dim); }
+
+    /* RIGHT PANEL */
+    .auth-right {
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 60px 5% 60px;
+      min-height: calc(100vh - 68px);
+    }
+
+    /* ══ AUTH CARD ══ */
+    .auth-card {
+      width: 100%; max-width: 480px;
+      margin: 0 auto;
+      animation: fadeIn 0.6s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-switcher {
+      display: flex; gap: 4px;
+      background: rgba(0,18,51,0.04);
+      border: 1px solid rgba(201,144,0,0.15);
+      border-radius: 8px; padding: 4px; margin-bottom: 36px;
+    }
+
+    .page-btn {
+      flex: 1; padding: 11px;
+      background: transparent; border: none; border-radius: 5px;
+      font-family: 'Nunito', sans-serif; font-size: 0.875rem; font-weight: 700;
+      color: var(--white-dim); cursor: pointer; transition: all 0.3s; letter-spacing: 0.5px;
+    }
+    .page-btn.active { background: var(--gold); color: var(--dark); }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--white); margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 0.875rem; color: var(--white-dim);
+      margin-bottom: 32px; line-height: 1.6;
+    }
+
+    /* Type selector */
+    .type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+
+    .type-card {
+      border: 1.5px solid rgba(201,144,0,0.2);
+      border-radius: 8px; padding: 18px 14px; text-align: center;
+      cursor: pointer; transition: all 0.3s; background: var(--input-bg);
+    }
+    .type-card:hover { border-color: var(--gold-dim); background: rgba(201,144,0,0.06); }
+    .type-card.selected { border-color: var(--gold); background: rgba(201,144,0,0.1); }
+    .type-card .type-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .type-card .type-label {
+      font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600;
+      color: var(--white); display: block; margin-bottom: 4px;
+    }
+    .type-card .type-desc { font-size: 0.72rem; color: var(--white-dim); line-height: 1.5; }
+    .type-card.selected .type-label { color: var(--gold); }
+
+    /* Steps */
+    .form-step { display: none; }
+    .form-step.active { display: block; animation: fadeIn 0.4s ease both; }
+
+    .step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1.5px solid rgba(201,144,0,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; color: var(--white-dim); transition: all 0.3s;
+    }
+    .step-dot.done { background: var(--emerald-dim); border-color: var(--emerald); color: var(--white); }
+    .step-dot.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+
+    .step-line { flex: 1; height: 1px; background: rgba(201,144,0,0.2); }
+    .step-line.done { background: var(--emerald-dim); }
+
+    /* Form fields */
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      color: var(--white-dim); margin-bottom: 7px;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    label .required { color: var(--gold); margin-left: 2px; }
+
+    input[type="text"], input[type="email"], input[type="tel"],
+    input[type="password"], select, textarea {
+      width: 100%; padding: 12px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 6px; color: var(--white);
+      font-family: 'Nunito', sans-serif; font-size: 0.875rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none; appearance: none;
+    }
+    input::placeholder, textarea::placeholder { color: rgba(92,107,133,0.85); }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,144,0,0.1);
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230B6B3A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    select option { background: var(--green-deep); color: var(--white); }
+    textarea { resize: vertical; min-height: 90px; }
+
+    .input-wrapper { position: relative; }
+    .input-wrapper input { padding-right: 44px; }
+
+    .toggle-pass {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--white-dim);
+      cursor: pointer; font-size: 1rem; transition: color 0.3s;
+    }
+    .toggle-pass:hover { color: var(--gold); }
+
+    .pass-strength { margin-top: 8px; display: flex; gap: 4px; }
+    .strength-bar { flex: 1; height: 3px; background: rgba(0,18,51,0.1); border-radius: 2px; transition: background 0.3s; }
+    .strength-bar.weak   { background: var(--error); }
+    .strength-bar.fair   { background: var(--gold); }
+    .strength-bar.strong { background: var(--emerald); }
+    .strength-label { font-size: 0.7rem; color: var(--white-dim); margin-top: 4px; text-align: right; }
+
+    .file-upload {
+      border: 1.5px dashed rgba(201,144,0,0.25);
+      border-radius: 8px; padding: 24px; text-align: center;
+      cursor: pointer; transition: all 0.3s; background: var(--input-bg);
+    }
+    .file-upload:hover { border-color: var(--gold-dim); background: rgba(201,144,0,0.04); }
+    .file-upload input { display: none; }
+    .file-upload .upload-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .file-upload .upload-text { font-size: 0.82rem; color: var(--white-dim); line-height: 1.6; }
+    .file-upload .upload-text strong { color: var(--gold); }
+
+    .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px; height: 18px; min-width: 18px;
+      accent-color: var(--gold); margin-top: 2px; cursor: pointer;
+    }
+    .checkbox-group label {
+      text-transform: none; letter-spacing: 0;
+      font-size: 0.82rem; color: var(--white-dim); cursor: pointer; font-weight: 500;
+    }
+    .checkbox-group label a { color: var(--gold); text-decoration: none; }
+    .checkbox-group label a:hover { text-decoration: underline; }
+
+    .notice-box {
+      background: rgba(201,144,0,0.07);
+      border: 1px solid rgba(201,144,0,0.2);
+      border-radius: 8px; padding: 14px 16px;
+      display: flex; gap: 12px; align-items: flex-start; margin-bottom: 20px;
+    }
+    .notice-box .notice-icon { font-size: 1rem; margin-top: 1px; }
+    .notice-box p { font-size: 0.8rem; color: var(--white-dim); line-height: 1.6; }
+    .notice-box p strong { color: var(--gold); }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%; padding: 13px;
+      background: var(--gold); color: var(--dark); border: none;
+      border-radius: 6px; font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem; font-weight: 800; cursor: pointer;
+      transition: all 0.3s; letter-spacing: 0.5px; margin-bottom: 12px;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(201,144,0,0.25); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-secondary {
+      width: 100%; padding: 12px;
+      background: transparent; color: var(--white-dim);
+      border: 1px solid rgba(0,18,51,0.15);
+      border-radius: 6px; font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem; font-weight: 700; cursor: pointer;
+      transition: all 0.3s; margin-bottom: 12px;
+    }
+    .btn-secondary:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+    .btn-emerald {
+      width: 100%; padding: 13px;
+      background: var(--emerald-dim); color: var(--white);
+      border: 1px solid var(--emerald); border-radius: 6px;
+      font-family: 'Nunito', sans-serif; font-size: 0.95rem;
+      font-weight: 800; cursor: pointer; transition: all 0.3s;
+      letter-spacing: 0.5px; margin-bottom: 12px;
+    }
+    .btn-emerald:hover { background: var(--emerald); transform: translateY(-1px); }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(201,144,0,0.15); }
+    .divider span { font-size: 0.75rem; color: var(--white-dim); letter-spacing: 1px; text-transform: uppercase; }
+
+    .switch-link { text-align: center; font-size: 0.83rem; color: var(--white-dim); margin-top: 8px; }
+    .switch-link a { color: var(--gold); font-weight: 700; text-decoration: none; cursor: pointer; }
+    .switch-link a:hover { text-decoration: underline; }
+
+    .forgot-link { text-align: right; margin-top: -10px; margin-bottom: 18px; }
+    .forgot-link a { font-size: 0.78rem; color: var(--gold-dim); text-decoration: none; transition: color 0.3s; }
+    .forgot-link a:hover { color: var(--gold); }
+
+    /* Success screens */
+    .success-screen {
+      display: none; text-align: center; padding: 20px 0;
+      animation: fadeIn 0.5s ease both;
+    }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: rgba(18,128,73,0.12);
+      border: 2px solid var(--emerald); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; margin: 0 auto 24px;
+    }
+    .success-screen h3 {
+      font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 700;
+      color: var(--white); margin-bottom: 12px;
+    }
+    .success-screen p { color: var(--white-dim); font-size: 0.875rem; line-height: 1.8; max-width: 340px; margin: 0 auto 28px; }
+
+    .shop-number-preview {
+      display: inline-block;
+      background: rgba(201,144,0,0.1);
+      border: 1px solid var(--gold-dim);
+      border-radius: 8px; padding: 16px 32px;
+      font-family: 'Cinzel', serif; font-size: 1.2rem;
+      color: var(--gold); margin-bottom: 28px; letter-spacing: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .auth-wrapper { grid-template-columns: 1fr; }
+      .auth-left { display: none; }
+      .auth-right { padding: 40px 6%; }
+    }
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+      .type-selector { grid-template-columns: 1fr; }
+    }
+  </style>
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#001233"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="./Alfijeer1.png" alt="ALFIJEER" onerror="this.style.display='none'"/>
+      <div class="nav-logo-text">
+        <span>ALFIJEER</span>
+        <span>The Digital Market Place For Nigeria</span>
+      </div>
+    </a>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+  </nav>
+
+  <!-- MAIN LAYOUT -->
+  <div class="auth-wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <div class="left-glow"></div>
+      <svg class="left-star" viewBox="0 0 200 200" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 0 L112 44 L154 18 L130 58 L176 62 L144 90 L164 132 L122 118 L100 158 L78 118 L36 132 L56 90 L24 62 L70 58 L46 18 L88 44 Z"/>
+      </svg>
+      <img src="./Alfijeer1.png" class="left-logo" alt="Logo" onerror="this.style.display='none'"/>
+      <h2>Join <span>ALFIJEER</span><br/>Today</h2>
+      <p>The Digital Market Place For Nigeria. Every seller is verified. Every shop has a permanent number.</p>
+      <div class="trust-pills">
+        <div class="trust-pill">
+          <span class="pill-icon">✅</span>
+          <div class="pill-text">
+            <strong>Verified Sellers Only</strong>
+            <span>Every seller passes our manual review</span>
+          </div>
+        </div>
+        <div class="trust-pill">
+          <span class="pill-icon">🔢</span>
+          <div class="pill-text">
+            <strong>Permanent Shop Numbers</strong>
+            <span>Your Shop # belongs to you forever</span>
+          </div>
+        </div>
+        <div class="trust-pill">
+          <span class="pill-icon">📍</span>
+          <div class="pill-text">
+            <strong>Location-Based Discovery</strong>
+            <span>Buyers find you by proximity</span>
+          </div>
+        </div>
+        <div class="trust-pill">
+          <span class="pill-icon">🛡️</span>
+          <div class="pill-text">
+            <strong>Dispute Protection</strong>
+            <span>We protect both buyers and sellers</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <div class="auth-card">
+
+        <!-- Switcher -->
+        <div class="page-switcher">
+          <button class="page-btn active" onclick="showPage('register')">Register</button>
+          <button class="page-btn" onclick="showPage('login')">Login</button>
+        </div>
+
+        <!-- ══ REGISTER ══ -->
+        <div id="page-register">
+
+          <!-- STEP 0: Choose type -->
+          <div id="step-type" class="form-step active">
+            <h2 class="card-title">Create Account</h2>
+            <p class="card-subtitle">Choose how you want to use ALFIJEER.</p>
+            <div class="type-selector">
+              <div class="type-card" id="type-buyer" onclick="selectType('buyer')">
+                <span class="type-icon">🛒</span>
+                <span class="type-label">I want to Buy</span>
+                <span class="type-desc">Browse verified shops and contact sellers near you</span>
+              </div>
+              <div class="type-card" id="type-seller" onclick="selectType('seller')">
+                <span class="type-icon">🏪</span>
+                <span class="type-label">I want to Sell</span>
+                <span class="type-desc">Apply for a verified shop and reach buyers in your area</span>
+              </div>
+            </div>
+            <button class="btn-primary" id="btn-next-type" onclick="goToStep('details')" disabled>Continue →</button>
+            <p class="switch-link">Already have an account? <a onclick="showPage('login')">Login here</a></p>
+          </div>
+
+          <!-- STEP 1: Buyer Details -->
+          <div id="step-buyer-details" class="form-step">
+            <div class="step-indicator">
+              <div class="step-dot done">1</div>
+              <div class="step-line done"></div>
+              <div class="step-dot active">2</div>
+              <div class="step-line"></div>
+              <div class="step-dot">3</div>
+            </div>
+            <h2 class="card-title">Your Details</h2>
+            <p class="card-subtitle">Fill in your personal information to create your buyer account.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name <span class="required">*</span></label>
+                <input type="text" id="buyer-firstname" placeholder="Abubakar"/>
+              </div>
+              <div class="form-group">
+                <label>Last Name <span class="required">*</span></label>
+                <input type="text" id="buyer-lastname" placeholder="Musa"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Address <span class="required">*</span></label>
+              <input type="email" id="buyer-email" placeholder="abubakar@email.com"/>
+            </div>
+            <div class="form-group">
+              <label>Phone Number <span class="required">*</span></label>
+              <input type="tel" id="buyer-phone" placeholder="080XXXXXXXX"/>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>State <span class="required">*</span></label>
+                <select id="buyer-state">
+                  <option value="">Select State</option>
+                  <option>Abia</option><option>Abuja</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>LGA / Area</label>
+                <input type="text" id="buyer-city" placeholder="e.g. Nassarawa"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Password <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <input type="password" id="buyer-pass" placeholder="Create a strong password" oninput="checkStrength(this,'buyer-strength','buyer-strength-label')"/>
+                <button class="toggle-pass" onclick="togglePass('buyer-pass',this)" type="button">👁</button>
+              </div>
+              <div class="pass-strength" id="buyer-strength">
+                <div class="strength-bar"></div><div class="strength-bar"></div>
+                <div class="strength-bar"></div><div class="strength-bar"></div>
+              </div>
+              <div class="strength-label" id="buyer-strength-label"></div>
+            </div>
+            <div class="form-group">
+              <label>Confirm Password <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <input type="password" id="buyer-pass2" placeholder="Repeat your password"/>
+                <button class="toggle-pass" onclick="togglePass('buyer-pass2',this)" type="button">👁</button>
+              </div>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="buyer-terms"/>
+              <label for="buyer-terms">I agree to the <a href="terms.html" target="_blank" rel="noopener noreferrer">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> of ALFIJEER</label>
+            </div>
+            <button class="btn-primary" id="buyer-submit-btn" onclick="completeBuyerReg(this)">Create Buyer Account</button>
+            <button class="btn-secondary" onclick="goToStep('type')">← Back</button>
+          </div>
+
+          <!-- STEP 1: Seller Details -->
+          <div id="step-seller-details" class="form-step">
+            <div class="step-indicator">
+              <div class="step-dot done">1</div>
+              <div class="step-line done"></div>
+              <div class="step-dot active">2</div>
+              <div class="step-line"></div>
+              <div class="step-dot">3</div>
+            </div>
+            <h2 class="card-title">Business Details</h2>
+            <p class="card-subtitle">Tell us about yourself and your business. We review every application manually.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name <span class="required">*</span></label>
+                <input type="text" id="seller-name" placeholder="Your full name"/>
+              </div>
+              <div class="form-group">
+                <label>Business Name <span class="required">*</span></label>
+                <input type="text" id="seller-bizname" placeholder="e.g. Zainab Footwear"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Business Category <span class="required">*</span></label>
+              <select id="seller-category">
+                <option value="">Select a category</option>
+                <option value="Food, Grains &amp; Spices">🌾 Food, Grains &amp; Spices</option>
+                <option value="Beauty &amp; Personal Care">💄 Beauty &amp; Personal Care</option>
+                <option value="Household &amp; Cleaning Supplies">🧴 Household &amp; Cleaning Supplies</option>
+                <option value="Health &amp; Wellness">💊 Health &amp; Wellness</option>
+                <option value="Fashion &amp; Clothing">👕 Fashion &amp; Clothing</option>
+                <option value="Baby &amp; Kids">🧸 Baby &amp; Kids</option>
+                <option value="Phones &amp; Electronics">📱 Phones &amp; Electronics</option>
+                <option value="Farm Products">🫘 Farm Products</option>
+                <option value="Home &amp; Furniture">🛋️ Home &amp; Furniture</option>
+                <option value="Building Materials &amp; Hardware">🧱 Building Materials &amp; Hardware</option>
+                <option value="Vehicles &amp; Spare Parts">🚗 Vehicles &amp; Spare Parts</option>
+                <option value="Business &amp; Industrial Equipment">⚙️ Business &amp; Industrial Equipment</option>
+                <option value="Books, Office &amp; School Supplies">📚 Books, Office &amp; School Supplies</option>
+                <option value="Sports &amp; Outdoor">⚽ Sports &amp; Outdoor</option>
+                <option value="Other">📦 Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Phone Number <span class="required">*</span></label>
+                <input type="tel" id="seller-phone" placeholder="080XXXXXXXX"/>
+              </div>
+              <div class="form-group">
+                <label>WhatsApp Number <span class="required">*</span></label>
+                <input type="tel" id="seller-whatsapp" placeholder="080XXXXXXXX"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>State <span class="required">*</span></label>
+                <select id="seller-state">
+                  <option value="">Select State</option>
+                  <option>Abia</option><option>Abuja</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>LGA <span class="required">*</span></label>
+                <input type="text" id="seller-lga" placeholder="e.g. Kano Central"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Full Shop Address <span class="required">*</span></label>
+              <input type="text" id="seller-address" placeholder="Street, area, landmark"/>
+            </div>
+            <div class="form-group">
+              <label>Shop Location on Map <span class="required">*</span></label>
+              <button type="button" class="btn-secondary" id="seller-locate-btn" onclick="captureSellerLocation()" style="width:100%;text-align:center;">📍 Use My Current Location</button>
+              <p id="seller-location-status" style="font-size:0.78rem;color:var(--white-dim);margin-top:6px;">
+                Stand inside or right outside your shop, then tap the button above. Buyers use this to find your shop nearby and get directions — without it, your shop won't appear in distance-sorted results.
+              </p>
+            </div>
+            <div class="form-group">
+              <label>What do you sell? <span class="required">*</span></label>
+              <textarea id="seller-desc" placeholder="Briefly describe your products. e.g. We sell original Samsung and Tecno phones at the best prices in Kano."></textarea>
+            </div>
+            <button class="btn-primary" onclick="goToStep('seller-verify')">Continue → Verification</button>
+            <button class="btn-secondary" onclick="goToStep('type')">← Back</button>
+          </div>
+
+          <!-- STEP 2: Seller Verification -->
+          <div id="step-seller-verify" class="form-step">
+            <div class="step-indicator">
+              <div class="step-dot done">1</div>
+              <div class="step-line done"></div>
+              <div class="step-dot done">2</div>
+              <div class="step-line done"></div>
+              <div class="step-dot active">3</div>
+            </div>
+            <h2 class="card-title">Verification Documents</h2>
+            <p class="card-subtitle">We need these to verify you are a real business. Your information is kept private and secure.</p>
+            <div class="notice-box">
+              <span class="notice-icon">ℹ️</span>
+              <p>Upload clear photos or scans. Accepted: JPG, PNG, PDF. <strong>Application reviewed within 24–48 hours.</strong></p>
+            </div>
+            <div class="form-group">
+              <label>Government ID <span class="required">*</span></label>
+              <div class="file-upload" onclick="document.getElementById('id-upload').click()">
+                <input type="file" id="id-upload" accept="image/*,.pdf" onchange="showFileName(this,'id-name')"/>
+                <span class="upload-icon">🪪</span>
+                <p class="upload-text"><strong>Click to upload</strong> your NIN slip, voter card, or any government ID</p>
+                <p id="id-name" style="margin-top:8px;font-size:0.78rem;color:var(--gold);"></p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Shop or Business Photo <span class="required">*</span></label>
+              <div class="file-upload" onclick="document.getElementById('shop-upload').click()">
+                <input type="file" id="shop-upload" accept="image/*" onchange="showFileName(this,'shop-name')"/>
+                <span class="upload-icon">🏪</span>
+                <p class="upload-text"><strong>Click to upload</strong> a photo of your shop, stall, or business location</p>
+                <p id="shop-name" style="margin-top:8px;font-size:0.78rem;color:var(--gold);"></p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Address <span class="required">*</span></label>
+              <input type="email" id="seller-email" placeholder="Your email for application status updates"/>
+            </div>
+            <div class="form-group">
+              <label>Create Password <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <input type="password" id="seller-pass" placeholder="Create a strong password" oninput="checkStrength(this,'seller-strength','seller-strength-label')"/>
+                <button class="toggle-pass" onclick="togglePass('seller-pass',this)" type="button">👁</button>
+              </div>
+              <div class="pass-strength" id="seller-strength">
+                <div class="strength-bar"></div><div class="strength-bar"></div>
+                <div class="strength-bar"></div><div class="strength-bar"></div>
+              </div>
+              <div class="strength-label" id="seller-strength-label"></div>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="seller-terms"/>
+              <label for="seller-terms">I agree to the <a href="seller-rules.html" target="_blank" rel="noopener noreferrer">Seller Rules</a>, <a href="terms.html" target="_blank" rel="noopener noreferrer">Terms of Use</a>, and <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> of ALFIJEER</label>
+            </div>
+            <button class="btn-emerald" id="seller-submit-btn" onclick="completeSellerReg(this)">📤 Submit Application</button>
+            <button class="btn-secondary" onclick="goToStep('seller-details')">← Back</button>
+          </div>
+
+          <!-- SUCCESS: Buyer -->
+          <div id="success-buyer" class="success-screen">
+            <div class="success-icon">✅</div>
+            <h3>Account Created!</h3>
+            <p>Welcome to ALFIJEER. Your buyer account is ready. Start exploring verified shops near you.</p>
+            <button class="btn-primary" onclick="window.location.href='buyer-dashboard.html'">Go to Dashboard →</button>
+            <p class="switch-link" style="margin-top:12px;">Back to <a href="index.html">Homepage</a></p>
+          </div>
+
+          <!-- SUCCESS: Seller -->
+          <div id="success-seller" class="success-screen">
+            <div class="success-icon">📬</div>
+            <h3>Application Submitted!</h3>
+            <p>Your seller application has been received. Our team will review it within <strong style="color:var(--gold)">24–48 hours</strong>. If approved, you will receive your permanent shop number by email.</p>
+            <div class="shop-number-preview">Shop #???</div>
+            <p style="font-size:0.78rem;color:var(--white-dim);margin-bottom:24px;">Your shop number will be assigned upon approval.</p>
+            <button class="btn-primary" onclick="window.location.href='index.html'">Back to Homepage →</button>
+          </div>
+
+        </div><!-- end #page-register -->
+
+        <!-- ══ LOGIN ══ -->
+        <div id="page-login" style="display:none;">
+          <h2 class="card-title">Welcome Back</h2>
+          <p class="card-subtitle">Login to your ALFIJEER account.</p>
+          <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <input type="email" id="login-email" placeholder="your@email.com"/>
+          </div>
+          <div class="form-group">
+            <label>Password <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="password" id="login-pass" placeholder="Your password"/>
+              <button class="toggle-pass" onclick="togglePass('login-pass',this)" type="button">👁</button>
+            </div>
+          </div>
+          <div class="forgot-link">
+            <a onclick="showPage('forgot')" style="cursor:pointer;">Forgot password?</a>
+          </div>
+          <button class="btn-primary" id="login-submit-btn" onclick="handleLoginRedirect(this)">Login to Account</button>
+          <div class="divider"><span>or</span></div>
+          <div class="notice-box">
+            <span class="notice-icon">🏪</span>
+            <p>Sellers: after approval, use the email and password from your application to login to your Seller Dashboard.</p>
+          </div>
+          <p class="switch-link">Don't have an account? <a onclick="showPage('register')">Register here</a></p>
+        </div>
+
+        <!-- ══ FORGOT PASSWORD ══ -->
+        <div id="page-forgot" style="display:none;">
+          <h2 class="card-title">Reset Password</h2>
+          <p class="card-subtitle">Enter your email and we will send you a reset link.</p>
+          <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <input type="email" id="forgot-email" placeholder="your@email.com"/>
+          </div>
+          <button class="btn-primary" id="forgot-submit-btn" onclick="submitForgotPassword()">Send Reset Link</button>
+          <button class="btn-secondary" onclick="showPage('login')">← Back to Login</button>
+        </div>
+
+      </div><!-- end .auth-card -->
+    </div><!-- end .auth-right -->
+  </div><!-- end .auth-wrapper -->
+
+  <script>
+    let selectedType = null;
+
+    function showPage(page) {
+      document.getElementById('page-register').style.display = page === 'register' ? 'block' : 'none';
+      document.getElementById('page-login').style.display    = page === 'login'    ? 'block' : 'none';
+      document.getElementById('page-forgot').style.display   = page === 'forgot'   ? 'block' : 'none';
+      document.querySelectorAll('.page-btn').forEach((b, i) => {
+        b.classList.toggle('active', (page === 'register' && i === 0) || (page === 'login' && i === 1));
+      });
+      if (page === 'register') goToStep('type');
+    }
+
+    function selectType(type) {
+      selectedType = type;
+      document.getElementById('type-buyer').classList.toggle('selected', type === 'buyer');
+      document.getElementById('type-seller').classList.toggle('selected', type === 'seller');
+      const btn = document.getElementById('btn-next-type');
+      btn.disabled = false;
+    }
+
+    function goToStep(step) {
+      document.querySelectorAll('#page-register .form-step').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.success-screen').forEach(el => el.style.display = 'none');
+      const map = {
+        'type':           'step-type',
+        'details':        selectedType === 'buyer' ? 'step-buyer-details' : 'step-seller-details',
+        'seller-verify':  'step-seller-verify',
+        'seller-details': 'step-seller-details',
+      };
+      const el = document.getElementById(map[step]);
+      if (el) el.classList.add('active');
+    }
+
+    /* ── TOAST NOTIFICATION SYSTEM ── */
+    function showToast(message, type = 'info') {
+      const existing = document.querySelector('.as-toast');
+      if (existing) existing.remove();
+      const colors = { success: '#128049', error: '#e74c3c', info: '#001233', warning: '#f39c12' };
+      const icons  = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+      const toast = document.createElement('div');
+      toast.className = 'as-toast';
+      toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+      Object.assign(toast.style, {
+        position: 'fixed', bottom: '28px', right: '28px', zIndex: '9999',
+        background: '#FFFFFF', border: `1px solid ${colors[type]}`,
+        color: '#14203A', padding: '14px 20px', borderRadius: '8px',
+        fontFamily: 'Nunito, sans-serif', fontSize: '0.9rem', fontWeight: '600',
+        display: 'flex', alignItems: 'center', gap: '10px',
+        boxShadow: `0 4px 24px rgba(16,40,28,0.14)`,
+        animation: 'slideInToast 0.3s ease', maxWidth: '340px'
+      });
+      const style = document.createElement('style');
+      style.textContent = `@keyframes slideInToast { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`;
+      document.head.appendChild(style);
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    /* ── FORM VALIDATION HELPERS ── */
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    function validatePhone(phone) {
+      const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+      return cleaned.length >= 7 && cleaned.length <= 15;
+    }
+
+    async function completeBuyerReg(btn) {
+      const fullname = (document.getElementById('buyer-firstname')?.value.trim() || '') + ' ' + (document.getElementById('buyer-lastname')?.value.trim() || '');
+      const email    = document.getElementById('buyer-email')?.value.trim() || '';
+      const phone    = document.getElementById('buyer-phone')?.value.trim() || '';
+      const state    = document.getElementById('buyer-state')?.value.trim() || '';
+      const city     = document.getElementById('buyer-city')?.value.trim() || '';
+      const pass     = document.getElementById('buyer-pass')?.value || '';
+      const pass2    = document.getElementById('buyer-pass2')?.value || '';
+      const terms    = document.getElementById('buyer-terms')?.checked;
+
+      if (!fullname.trim() || fullname.trim() === '') { showToast('Please enter your full name', 'error'); return; }
+      if (!validateEmail(email)) { showToast('Please enter a valid email address', 'error'); return; }
+      if (!phone) { showToast('Please enter your phone number', 'error'); return; }
+      if (!state) { showToast('Please select your state', 'error'); return; }
+      if (pass.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+      if (pass !== pass2) { showToast('Passwords do not match', 'error'); return; }
+      if (!terms) { showToast('Please accept the Terms of Use to continue', 'error'); return; }
+
+      if (btn.disabled) return;
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Creating your account…';
+
+      try {
+        const res  = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName: fullname.trim(), email, phone, password: pass, state, city, role: 'buyer' })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          if (res.status === 429) {
+            showToast("You've tried a few times in a row — please wait a couple of minutes before trying again.", 'error');
+          } else {
+            showToast(data.message || 'Registration failed. Please try again.', 'error');
+          }
+          btn.disabled = false;
+          btn.textContent = originalText;
+          return;
+        }
+        localStorage.setItem('as_token', data.token);
+        localStorage.setItem('as_role',  data.role);
+        localStorage.setItem('as_user',  JSON.stringify(data.user));
+        showToast('🎉 Registration successful!', 'success');
+        setTimeout(() => {
+          document.querySelectorAll('#page-register .form-step').forEach(el => el.classList.remove('active'));
+          const s = document.getElementById('success-buyer');
+          if (s) s.style.display = 'block';
+        }, 800);
+      } catch(e) {
+        showToast('Connection error. Please check your internet and try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+
+    let _sellerLat = null, _sellerLng = null;
+    function captureSellerLocation() {
+      const btn = document.getElementById('seller-locate-btn');
+      const status = document.getElementById('seller-location-status');
+      if (!navigator.geolocation) {
+        status.textContent = "Your browser doesn't support location. You can still submit — add your location later from your seller dashboard.";
+        status.style.color = '#C0392B';
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = '📍 Getting your location…';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          _sellerLat = pos.coords.latitude;
+          _sellerLng = pos.coords.longitude;
+          btn.disabled = false;
+          btn.textContent = '✓ Location Captured — Tap to Update';
+          status.textContent = 'Got it! Buyers near ' + _sellerLat.toFixed(4) + ', ' + _sellerLng.toFixed(4) + ' will see your shop.';
+          status.style.color = '#16803C';
+        },
+        (err) => {
+          btn.disabled = false;
+          btn.textContent = '📍 Use My Current Location';
+          status.textContent = 'Could not get your location — please allow location access and try again.';
+          status.style.color = '#C0392B';
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    async function completeSellerReg(btn) {
+      const fullname    = document.getElementById('seller-name')?.value.trim()     || '';
+      const bizname     = document.getElementById('seller-bizname')?.value.trim()  || document.getElementById('seller-biz')?.value.trim() || '';
+      const category    = document.getElementById('seller-category')?.value.trim() || '';
+      const phone       = document.getElementById('seller-phone')?.value.trim()    || '';
+      const whatsapp    = document.getElementById('seller-whatsapp')?.value.trim() || phone;
+      const state       = document.getElementById('seller-state')?.value.trim()    || '';
+      const lga         = document.getElementById('seller-lga')?.value.trim()      || '';
+      const address     = document.getElementById('seller-address')?.value.trim()  || '';
+      const desc        = document.getElementById('seller-desc')?.value.trim()     || '';
+      const email       = document.getElementById('seller-email')?.value.trim()    || '';
+      const pass        = document.getElementById('seller-pass')?.value            || '';
+      const terms       = document.getElementById('seller-terms')?.checked;
+      const govId       = document.getElementById('id-upload')?.files?.[0];
+      const shopPhoto   = document.getElementById('shop-upload')?.files?.[0];
+
+      if (!fullname)             { showToast('Please enter your full name', 'error');          return; }
+      if (!bizname)              { showToast('Please enter your business name', 'error');      return; }
+      if (!phone)                { showToast('Please enter your phone number', 'error');       return; }
+      if (!state)                { showToast('Please select your state', 'error');             return; }
+      if (!validateEmail(email)) { showToast('Please enter a valid email address', 'error');   return; }
+      if (pass.length < 6)       { showToast('Password must be at least 6 characters', 'error'); return; }
+      if (!terms)                { showToast('Please accept the Seller Rules to continue', 'error'); return; }
+      if (_sellerLat === null || _sellerLng === null) { showToast('Please tap "Use My Current Location" so buyers can find your shop', 'error'); return; }
+      if (!shopPhoto && !confirm("You haven't added a shop photo — buyers will see a plain icon instead of your storefront. Submit anyway?")) {
+        return;
+      }
+
+      // Prevent double-submission — this is the actual root cause of the
+      // "network error / too many attempts" pattern: on a slow mobile
+      // connection, a big photo+ID upload can take a while, and without
+      // this guard a seller naturally taps Submit again, firing a second
+      // (and sometimes third) request that trips the rate limiter.
+      if (btn.disabled) return;
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = '📤 Submitting… this can take a moment on slower connections';
+
+      try {
+        const fd = new FormData();
+        fd.append('fullName',       fullname);
+        fd.append('businessName',   bizname);
+        fd.append('category',       category || 'Other');
+        fd.append('phone',          phone);
+        fd.append('whatsappNumber', whatsapp);
+        fd.append('state',          state);
+        fd.append('city',           lga);
+        fd.append('address',        address || 'Not specified');
+        fd.append('latitude',       _sellerLat);
+        fd.append('longitude',      _sellerLng);
+        fd.append('description',    desc);
+        fd.append('email',          email);
+        fd.append('password',       pass);
+        fd.append('role',           'seller');
+        if (govId)     fd.append('govId',     govId);
+        if (shopPhoto) fd.append('shopPhoto', shopPhoto);
+
+        const res  = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/register', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          if (res.status === 429) {
+            showToast("You've tried a few times in a row — please wait a couple of minutes before trying again.", 'error');
+          } else {
+            showToast(data.message || 'Registration failed. Please try again.', 'error');
+          }
+          btn.disabled = false;
+          btn.textContent = originalText;
+          return;
+        }
+        showToast('✅ Application submitted successfully!', 'success');
+        setTimeout(() => {
+          document.querySelectorAll('#page-register .form-step').forEach(el => el.classList.remove('active'));
+          const s = document.getElementById('success-seller');
+          if (s) s.style.display = 'block';
+        }, 800);
+      } catch(e) {
+        showToast('Connection error. Please check your internet and try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+
+    function togglePass(id, btn) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+      btn.textContent = input.type === 'password' ? '👁' : '🙈';
+    }
+
+    function checkStrength(input, barId, labelId) {
+      const val = input.value;
+      const bars = document.querySelectorAll('#' + barId + ' .strength-bar');
+      const label = document.getElementById(labelId);
+      let score = 0;
+      if (val.length >= 6)  score++;
+      if (val.length >= 10) score++;
+      if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const levels = ['', 'weak', 'fair', 'fair', 'strong'];
+      const texts  = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      bars.forEach((bar, i) => {
+        bar.className = 'strength-bar';
+        if (i < score) bar.classList.add(levels[score]);
+      });
+      label.textContent = val ? texts[score] : '';
+      label.style.color = score <= 1 ? 'var(--error)' : score <= 2 ? 'var(--gold)' : 'var(--emerald)';
+    }
+
+    function showFileName(input, targetId) {
+      const t = document.getElementById(targetId);
+      t.textContent = input.files[0] ? '✓ ' + input.files[0].name : '';
+    }
+
+    async function submitForgotPassword() {
+      const email = document.getElementById('forgot-email')?.value.trim() || '';
+      if (!validateEmail(email)) { showToast('Please enter a valid email address', 'error'); return; }
+
+      const btn = document.getElementById('forgot-submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        const res = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.message || 'Something went wrong. Please try again.', 'error');
+        } else {
+          showToast(data.message || 'If an account exists for that email, a reset link has been sent.', 'success');
+        }
+      } catch (e) {
+        showToast('Connection error. Please check your internet and try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Reset Link';
+      }
+    }
+
+    async function handleLoginRedirect(btn) {
+      const email    = document.getElementById('login-email')?.value.trim() || '';
+      const password = document.getElementById('login-pass')?.value || '';
+
+      if (!validateEmail(email)) { showToast('Please enter a valid email address', 'error'); return; }
+      if (!password)             { showToast('Please enter your password', 'error');         return; }
+
+      if (btn.disabled) return;
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Logging in…';
+
+      try {
+        const res  = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          if (res.status === 429) {
+            showToast("You've tried a few times in a row — please wait a couple of minutes before trying again.", 'error');
+          } else {
+            showToast(data.message || 'Invalid email or password. Please try again.', 'error');
+          }
+          btn.disabled = false;
+          btn.textContent = originalText;
+          return;
+        }
+        localStorage.setItem('as_token',  data.token);
+        localStorage.setItem('as_role',   data.role);
+        localStorage.setItem('as_user',   JSON.stringify(data.user));
+        if (data.seller) localStorage.setItem('as_seller', JSON.stringify(data.seller));
+
+        showToast('Welcome back! Redirecting…', 'success');
+        const redirectShop = localStorage.getItem('as_redirect_shop');
+        localStorage.removeItem('as_redirect_shop');
+        setTimeout(() => {
+          const map = { admin: 'admin.html', seller: 'seller-dashboard.html', buyer: 'buyer-dashboard.html' };
+          let dest = map[data.role] || 'buyer-dashboard.html';
+          if (data.role === 'buyer' && redirectShop) dest += '?shop=' + redirectShop;
+          window.location.href = dest;
+        }, 800);
+      } catch(e) {
+        showToast('Connection error. Please check your internet and try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+
+    showPage('register');
+  </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js').catch(function(err) {
+        console.warn('Service worker registration failed:', err);
+      });
+    });
+  }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ALFIJEER — The Digital Market Place For Nigeria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green-deep:   #FFFFFF;   /* page background stays white/light */
+      --green-mid:    #F3F9F5;
+      --green-light:  #E3F2E8;
+      --gold:         #FFBE1A;   /* primary accent - was green, now brand gold */
+      --gold-light:   #FFCF4D;
+      --gold-dim:     #C99000;
+      --emerald:      #FFBE1A;
+      --emerald-dim:  #C99000;
+      --white:        #14203A;   /* primary text - neutral dark navy-black, not green-tinted */
+      --white-dim:    #5C6B85;   /* muted text - neutral blue-gray, not green-tinted */
+      --dark:         #001233;
+
+      /* New: navy as a surface color for header / hero / footer */
+      --navy-deep:    #001233;
+      --navy-mid:     #001E4D;
+      --navy-light:   #0A294D;
+      --on-navy:      #FFFFFF;
+      --on-navy-dim:  rgba(255,255,255,0.72);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--green-deep);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── GEOMETRIC BACKGROUND PATTERN ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,144,0,0.03) 40px, rgba(201,144,0,0.03) 41px),
+        repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(201,144,0,0.03) 40px, rgba(201,144,0,0.03) 41px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ════════════════════════════════
+       NAVBAR
+    ════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      height: 72px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,144,0,0.2);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 52px;
+      width: 52px;
+      border-radius: 52px;
+      object-fit: contain;
+      box-shadow: 0 2px 8px rgba(16,40,28,0.12);
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .nav-logo-text span:first-child {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+
+    .nav-logo-text span:last-child {
+      font-size: 0.65rem;
+      color: var(--white-dim);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Footer uses the same .nav-logo-text markup but sits on navy,
+       unlike the white mobile drawer that also uses this class */
+    .footer-brand .nav-logo-text span:last-child { color: var(--on-navy-dim); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--white-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-outline {
+      padding: 8px 20px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: transparent;
+      border-radius: 4px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-outline:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    .btn-gold {
+      padding: 8px 20px;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      border-radius: 4px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      border-radius: 4px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .btn-hero-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201,144,0,0.3);
+    }
+
+    .btn-hero-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 4px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-hero-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* ════════════════════════════════
+       BANNER CAROUSEL (image-based hero)
+    ════════════════════════════════ */
+    .banner-wrap {
+      padding: 10px 5% 4px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .banner-carousel {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(16,40,28,0.1);
+      background: linear-gradient(135deg, #eef3fa 0%, #e6ecf7 60%, #f4f7fb 100%);
+      min-height: 160px;
+    }
+    /* Fallback shown when banner image fails to load */
+    .banner-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .banner-slide img::after {
+      content: '';
+      display: block;
+    }
+    .banner-fallback {
+      display: none;
+      padding: 28px 24px;
+      background: linear-gradient(135deg, #eef3fa 0%, #e6ecf7 60%, #f4f7fb 100%);
+    }
+    .banner-fallback.visible { display: block; }
+    .banner-fallback h2 { font-family:'Cinzel',serif; font-size:1.2rem; font-weight:800; color:#14203A; margin-bottom:4px; }
+    .banner-fallback h3 { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700; color:#C99000; margin-bottom:12px; }
+    .banner-fallback p  { font-size:0.8rem; color:#5C6B85; margin-bottom:14px; line-height:1.6; }
+    .banner-fallback .fb-badge { display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(201,144,0,0.3); border-radius:8px; padding:6px 12px; font-size:0.72rem; color:#14203A; margin-bottom:14px; }
+    .banner-fallback .fb-btn { display:inline-block; background:#C99000; color:#fff; font-family:'Nunito',sans-serif; font-size:0.82rem; font-weight:800; padding:10px 22px; border-radius:8px; text-decoration:none; }
+    .banner-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .banner-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      display: block;
+    }
+    .banner-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .banner-dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 0 2px;
+    }
+    .banner-dots button {
+      width: 7px; height: 7px; border-radius: 50%;
+      border: none; background: rgba(201,144,0,0.25);
+      padding: 0; cursor: pointer;
+    }
+    .banner-dots button.active { background: var(--gold); width: 18px; border-radius: 4px; }
+
+    /* ════════════════════════════════
+       TRUST BAR
+    ════════════════════════════════ */
+    .trust-bar {
+      position: relative;
+      z-index: 2;
+      background: rgba(201,144,0,0.08);
+      border-top: 1px solid rgba(201,144,0,0.2);
+      border-bottom: 1px solid rgba(201,144,0,0.2);
+      padding: 20px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--white-dim);
+    }
+
+    .trust-item .icon {
+      font-size: 1.1rem;
+    }
+
+    .trust-item strong { color: var(--gold); }
+
+    /* ════════════════════════════════
+       HOW IT WORKS
+    ════════════════════════════════ */
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 90px 5%;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .section-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .section-header p {
+      color: var(--white-dim);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .how-tabs {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 48px;
+      background: rgba(201,144,0,0.04);
+      border: 1px solid rgba(201,144,0,0.15);
+      border-radius: 6px;
+      padding: 4px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tab-btn {
+      padding: 10px 28px;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      color: var(--white-dim);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-btn.active {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: grid; }
+
+    .steps-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .step-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(201,144,0,0.18);
+      border-radius: 8px;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .step-card:hover {
+      border-color: var(--gold);
+      background: rgba(201,144,0,0.05);
+      transform: translateY(-4px);
+    }
+
+    .step-number {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green-deep);
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 12px;
+      letter-spacing: 1px;
+    }
+
+    .step-icon {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .step-card h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .step-card p {
+      font-size: 0.85rem;
+      color: var(--white-dim);
+      line-height: 1.7;
+    }
+
+    /* ════════════════════════════════
+       FEATURED SHOPS
+    ════════════════════════════════ */
+    .shops-section {
+      background: rgba(201,144,0,0.035);
+      border-top: 1px solid rgba(201,144,0,0.1);
+      border-bottom: 1px solid rgba(201,144,0,0.1);
+    }
+
+    .shops-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .shop-card {
+      background: #FFFFFF;
+      box-shadow: 0 2px 14px rgba(16,40,28,0.08);
+      border: 1px solid rgba(201,144,0,0.12);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.35s;
+      cursor: pointer;
+    }
+
+    .shop-card:hover {
+      border-color: var(--gold-dim);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(16,40,28,0.10);
+    }
+
+    .shop-img {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+    }
+
+    .shop-number-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--gold);
+      color: var(--dark);
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+    }
+
+    .verified-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(79,195,247,0.15);
+      border: 1px solid var(--emerald);
+      color: var(--emerald);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    .shop-info {
+      padding: 20px;
+    }
+
+    .shop-info h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .shop-meta {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .shop-meta span {
+      font-size: 0.78rem;
+      color: var(--white-dim);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .shop-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid rgba(201,144,0,0.06);
+    }
+
+    .shop-distance {
+      font-size: 0.78rem;
+      color: var(--emerald);
+      font-weight: 700;
+    }
+
+    .btn-view-shop {
+      padding: 7px 16px;
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      border-radius: 4px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-view-shop:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    /* ════════════════════════════════
+       CATEGORIES
+    ════════════════════════════════ */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .cat-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(201,144,0,0.14);
+      border-radius: 16px;
+      padding: 26px 16px 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 10px rgba(16,40,28,0.06);
+    }
+
+    .cat-card:hover {
+      background: #FFFFFF;
+      border-color: var(--gold);
+      box-shadow: 0 8px 20px rgba(0,18,51,0.12);
+      transform: translateY(-4px);
+    }
+
+    .cat-card .cat-icon-badge {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 1.7rem;
+      transition: transform 0.3s;
+    }
+    .cat-card:hover .cat-icon-badge { transform: scale(1.08); }
+    .cat-card .cat-icon { font-size: inherit; display: inline; margin: 0; }
+
+    .cat-card span {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.5px;
+      display: block;
+    }
+
+    .cat-card .cat-count {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--white-dim);
+      margin-top: 4px;
+      letter-spacing: 0;
+    }
+
+    .cat-card:hover span { color: #C99000; }
+    .cat-card:hover .cat-count { color: var(--white-dim); }
+
+    /* ════════════════════════════════
+       WHY ALFIJEER
+    ════════════════════════════════ */
+    .why-section {
+      background: rgba(201,144,0,0.04);
+      border-top: 1px solid rgba(201,144,0,0.1);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 28px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .why-card {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .why-icon-box {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      background: rgba(201,144,0,0.1);
+      border: 1px solid rgba(201,144,0,0.25);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .why-card h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .why-card p {
+      font-size: 0.83rem;
+      color: var(--white-dim);
+      line-height: 1.7;
+    }
+
+    /* ════════════════════════════════
+       CTA SECTION
+    ════════════════════════════════ */
+    .cta-section {
+      position: relative;
+      text-align: center;
+      padding: 100px 5%;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201,144,0,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-section p {
+      color: var(--white-dim);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto 36px;
+      line-height: 1.8;
+      position: relative;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-cta-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: var(--emerald-dim);
+      color: var(--white);
+      border: 1px solid var(--emerald);
+      border-radius: 4px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-cta-green:hover {
+      background: var(--emerald);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(79,195,247,0.25);
+    }
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    footer {
+      position: relative;
+      z-index: 2;
+      background: var(--navy-deep);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 60px 5% calc(30px + 76px);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand .nav-logo { margin-bottom: 16px; display: inline-flex; }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--on-navy-dim);
+      line-height: 1.8;
+      max-width: 260px;
+      margin-bottom: 20px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .social-link {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--on-navy-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,144,0,0.08);
+    }
+
+    .footer-col h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      color: var(--gold);
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul li a {
+      color: var(--on-navy-dim);
+      text-decoration: none;
+      font-size: 0.83rem;
+      transition: color 0.3s;
+    }
+
+    .footer-col ul li a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.78rem;
+      color: var(--on-navy-dim);
+    }
+
+    .footer-bottom span { color: var(--gold); font-weight: 700; }
+
+    /* ════════════════════════════════
+       MOBILE RESPONSIVE
+    ════════════════════════════════ */
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+      z-index: 1100;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(.4,0,.2,1);
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE NAV MENU ── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 72px; left: 0; right: 0;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,144,0,0.2);
+      z-index: 999;
+      flex-direction: column;
+      padding: 20px 5% 28px;
+      gap: 0;
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .mobile-menu.open {
+      display: flex;
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .mobile-menu a {
+      color: var(--white-dim);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(201,144,0,0.06);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .mob-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .mobile-menu .mob-buttons button {
+      flex: 1;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: 'Nunito', sans-serif;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .info-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(16,40,28,0.55);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .info-modal-overlay.open { display: flex; }
+    .info-modal-box {
+      background: #FFFFFF;
+      border: 1px solid rgba(201,144,0,0.25);
+      border-radius: 16px;
+      padding: 36px 32px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      position: relative;
+      animation: fadeUp 0.35s ease both;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+    .info-modal-box h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .info-modal-box .modal-sub {
+      font-size: 0.8rem;
+      color: var(--white-dim);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(201,144,0,0.15);
+    }
+    .info-modal-close {
+      position: absolute;
+      top: 16px; right: 18px;
+      background: none;
+      border: none;
+      color: var(--white-dim);
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .info-modal-close:hover { color: var(--gold); }
+    .verif-step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 22px;
+      align-items: flex-start;
+    }
+    .verif-step-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--dark);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .verif-step-body h4 { font-size: 0.92rem; color: var(--white); margin-bottom: 4px; font-weight: 700; }
+    .verif-step-body p  { font-size: 0.8rem; color: var(--white-dim); line-height: 1.6; }
+    .rule-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: #FFFFFF;
+      border: 1px solid rgba(201,144,0,0.18);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(16,40,28,0.05);
+    }
+    .rule-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .rule-body h4 { font-size: 0.88rem; color: var(--white); margin-bottom: 3px; font-weight: 700; }
+    .rule-body p  { font-size: 0.77rem; color: var(--white-dim); line-height: 1.6; }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-buttons { display: none; }
+      .hamburger { display: flex; }
+      .trust-bar { gap: 20px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .info-modal-box { padding: 28px 20px; }
+    }
+    @media (max-width: 480px) {
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .btn-hero-primary, .btn-hero-secondary, .btn-cta-green, .btn-gold { width: 100%; justify-content: center; max-width: 280px; }
+    }
+  
+    /* ════════════════════════════════
+       APP BAR (mobile-style top bar)
+    ════════════════════════════════ */
+    .app-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 0 5%;
+      background: var(--navy-deep);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .app-bar-left, .app-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .app-bar-left { gap: 24px; }
+    .app-bar-right { justify-content: flex-end; }
+    .app-bar-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--on-navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem; cursor: pointer; transition: all 0.25s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.16); }
+    .icon-btn { position: relative; }
+    .icon-btn .notif-dot {
+      position: absolute; top: -3px; right: -3px;
+      background: var(--gold); color: var(--navy-deep); font-size: 0.6rem; font-weight: 800;
+      min-width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 3px; box-shadow: 0 0 0 2px var(--navy-deep);
+    }
+
+    .location-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px; padding: 7px 12px;
+      font-family: 'Nunito', sans-serif; font-size: 0.78rem; font-weight: 700;
+      color: var(--on-navy); cursor: pointer; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; max-width: 180px;
+    }
+    .location-pill .loc-caret { color: var(--on-navy-dim); font-size: 0.7rem; }
+    .location-pill span#location-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+    .hamburger span { background: var(--on-navy); }
+
+    /* Desktop nav links - hidden on mobile, matches the reference design's top nav */
+    .desktop-nav-links {
+      display: none;
+      align-items: center;
+      gap: 18px;
+    }
+    .desktop-nav-links a {
+      color: var(--on-navy-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .desktop-nav-links a:hover, .desktop-nav-links a.active { color: var(--gold); }
+
+    .header-seller-btn {
+      display: none;
+      background: var(--gold);
+      color: var(--navy-deep);
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 9px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .header-seller-btn:hover { background: var(--gold-light); }
+
+    @media (min-width: 1080px) {
+      .desktop-nav-links { display: flex; }
+      .header-seller-btn { display: inline-block; }
+      .hamburger { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-logo img { height: 40px; width: 40px; }
+      .location-pill { max-width: 118px; padding: 6px 8px; font-size: 0.7rem; }
+      .location-pill span#location-label { max-width: 68px; }
+      .app-bar { padding: 0 3.5%; gap: 6px; }
+      .icon-btn { width: 34px; height: 34px; font-size: 0.95rem; }
+    }
+
+    .search-bar-wrap { margin-top: 64px; padding: 14px 5% 4px; position: relative; z-index: 5; }
+    .search-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: #FFFFFF; border: 1px solid var(--border, rgba(201,144,0,0.15));
+      border-radius: 12px; padding: 12px 16px;
+      box-shadow: 0 2px 10px rgba(16,40,28,0.06);
+      max-width: 640px; margin: 0 auto;
+    }
+    .search-bar .search-icon { font-size: 0.95rem; opacity: 0.6; }
+    .search-bar input {
+      border: none; outline: none; background: transparent; flex: 1;
+      font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: var(--white);
+    }
+    .search-bar input::placeholder { color: var(--white-dim); }
+
+    /* section heading row used for Top Categories / view-all links */
+    .section-heading-row { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto 18px; }
+    .mobile-h2 { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700; color: var(--white); }
+    .view-all-link { font-size: 0.8rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+
+    /* ════════════════════════════════
+       NAV DRAWER
+    ════════════════════════════════ */
+    .drawer-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(16,40,28,0.35);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+      display: flex;
+    }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer {
+      width: 300px; max-width: 82vw; height: 100%;
+      background: #FFFFFF;
+      box-shadow: 6px 0 30px rgba(16,40,28,0.18);
+      display: flex; flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+    .drawer-overlay.open .drawer { transform: translateX(0); }
+    .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border, rgba(201,144,0,0.12)); }
+    .drawer-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border, rgba(201,144,0,0.2)); background: none; font-size: 0.9rem; cursor: pointer; color: var(--white-dim); }
+    .drawer-section { display: flex; flex-direction: column; padding: 8px 8px; }
+    .drawer-section a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 12px; border-radius: 8px;
+      color: var(--white); text-decoration: none; font-size: 0.88rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .drawer-section a:hover { background: rgba(201,144,0,0.07); }
+    .drawer-divider { height: 1px; background: var(--border, rgba(201,144,0,0.12)); margin: 4px 20px; }
+    .drawer .mob-buttons { display: flex; gap: 10px; padding: 20px; margin-top: auto; }
+    .drawer .mob-buttons button { flex: 1; padding: 11px 0; border-radius: 6px; font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 800; cursor: pointer; }
+
+    .hamburger { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; width: 38px; height: 38px; background: none; border: none; cursor: pointer; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
+
+    /* ════════════════════════════════
+       BOTTOM NAV
+    ════════════════════════════════ */
+    .bottom-nav {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border, rgba(201,144,0,0.12));
+      box-shadow: 0 -2px 14px rgba(16,40,28,0.08);
+      display: flex; align-items: center; justify-content: space-around;
+      padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+    }
+    .bn-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      text-decoration: none; color: var(--white-dim);
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2px;
+      flex: 1; padding: 4px 0;
+    }
+    .bn-item .bn-icon { font-size: 1.15rem; }
+    .bn-item.active { color: var(--gold); }
+    .bn-item.bn-center .bn-icon {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--gold); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: -22px; box-shadow: 0 4px 14px rgba(201,144,0,0.35);
+    }
+    .bn-item.bn-center { color: var(--gold); }
+
+    @media (min-width: 769px) {
+      .bottom-nav { display: none; }
+    }
+    @media (max-width: 768px) {
+      body { padding-bottom: 76px; } /* clears the fixed bottom nav so content/footer isn't hidden underneath it */
+    }
+
+    @media (min-width: 860px) {
+      .app-bar-actions { margin-right: 4px; }
+    }
+
+    /* ════════════════════════════════
+       RECOMMENDED FOR YOU (product cards)
+    ════════════════════════════════ */
+    .recommended-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 800px) { .recommended-grid { grid-template-columns: repeat(2, 1fr); } }
+    .rec-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border, rgba(201,144,0,0.15));
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 2px 14px rgba(16,40,28,0.06);
+    }
+    .rec-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: rgba(201,144,0,0.05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem;
+      overflow: hidden;
+    }
+    .rec-thumb img { width: 100%; height: 100%; object-fit: contain; }
+    .rec-save {
+      position: absolute; top: 8px; right: 8px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; border: none; cursor: pointer;
+    }
+    .rec-info { padding: 10px 12px 14px; }
+    .rec-info .rec-name {
+      font-size: 0.82rem; font-weight: 700; color: var(--white);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;
+    }
+    .rec-info .rec-seller {
+      font-size: 0.68rem; color: var(--white-dim);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-bottom: 4px;
+    }
+    .rec-info .rec-price { font-size: 0.85rem; font-weight: 800; color: #C99000; }
+
+    /* ════════════════════════════════
+       YOUR LOCATION + NEARBY SHOPS
+    ════════════════════════════════ */
+    .location-shops-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 700px) {
+      .location-shops-row { grid-template-columns: 1fr; }
+    }
+    .your-location-card, .nearby-shops-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border, rgba(201,144,0,0.15));
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 14px rgba(16,40,28,0.06);
+    }
+    .ylc-header {
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem;
+      color: var(--white); margin-bottom: 6px;
+    }
+    .ylc-address { font-size: 0.8rem; color: var(--white); font-weight: 700; margin-bottom: 2px; }
+    .ylc-change { font-size: 0.75rem; color: var(--gold); text-decoration: underline; display: inline-block; margin-bottom: 12px; }
+    .mini-map {
+      width: 100%; height: 130px; border-radius: 10px; overflow: hidden;
+      background: rgba(201,144,0,0.05);
+      border: 1px solid rgba(201,144,0,0.1);
+    }
+    .nsc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .nsc-header h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem; color: var(--white); }
+    .nearby-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; cursor: pointer;
+      border-bottom: 1px solid rgba(201,144,0,0.08);
+    }
+    .nearby-item:last-child { border-bottom: none; }
+    .nearby-index {
+      font-size: 0.65rem; font-weight: 800; color: var(--gold);
+      border: 1px solid var(--gold); border-radius: 6px;
+      width: 26px; height: 22px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .nearby-thumb {
+      width: 46px; height: 46px; border-radius: 8px; overflow: hidden;
+      background: rgba(201,144,0,0.06); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+    }
+    .nearby-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+    .nearby-info strong { font-size: 0.78rem; color: var(--white); font-family: 'Nunito', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nearby-info span { font-size: 0.68rem; color: var(--white-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nearby-dist { font-size: 0.68rem; color: #C99000; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+
+    /* ── App-card polish: soft shadow + rounded corners for light theme ── */
+.cat-card,
+    .shop-card,
+    .step-card,
+    .why-card {
+      box-shadow: 0 2px 14px rgba(16,40,28,0.07);
+      border-radius: 12px;
+    }
+  </style>
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#001233"/>
+</head>
+<body>
+
+  <!-- ══ TOP APP BAR ══ -->
+  <header class="app-bar">
+    <div class="app-bar-left">
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="./index.html" class="nav-logo">
+        <img src="./Alfijeer1.png" alt="ALFIJEER Logo" onerror="this.style.display='none'"/>
+      </a>
+      <nav class="desktop-nav-links">
+        <a href="./index.html" class="active">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#shops">Shops</a>
+        <a href="#" onclick="openModal('howitworks-modal');return false;">How It Works</a>
+        <a href="#" onclick="openModal('about-modal');return false;">About Us</a>
+      </nav>
+    </div>
+    <div class="app-bar-right">
+      <button class="location-pill" id="location-pill" onclick="requestGPS()" aria-label="Change location">
+        <span>📍</span>
+        <span id="location-label">Set location</span>
+        <span class="loc-caret">⌄</span>
+      </button>
+      <a href="auth.html" class="header-seller-btn">Become a Seller</a>
+      <div class="app-bar-actions">
+      <button class="icon-btn" onclick="window.location.href='auth.html'" aria-label="Notifications">
+        🔔<span class="notif-dot">5</span>
+      </button>
+      <button class="icon-btn" onclick="window.location.href='auth.html'" aria-label="Account">👤</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ SEARCH BAR ══ -->
+  <div class="search-bar-wrap">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input id="home-search-input" type="text" placeholder="Search for shops, products…" oninput="filterShopsBySearch(this.value)"/>
+    </div>
+  </div>
+
+  <!-- ══ NAV DRAWER ══ -->
+  <div class="drawer-overlay" id="mobile-menu" onclick="closeMobileMenu()">
+    <nav class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div class="nav-logo-text"><span>ALFIJEER</span><span>Menu</span></div>
+        <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">✕</button>
+      </div>
+      <div class="drawer-section">
+        <a href="#" onclick="closeMobileMenu()">🏠 Home</a>
+        <a href="#shops" onclick="closeMobileMenu()">🛒 Nearby Shops</a>
+        <a href="#categories" onclick="closeMobileMenu()">🏷️ Categories</a>
+        <a href="#" onclick="goToDashboard('orders');return false;">📦 My Orders</a>
+        <a href="#" onclick="goToDashboard('account');return false;">👤 My Account</a>
+        <a href="#" onclick="goToDashboard('saved');return false;">💾 Saved Shops</a>
+        <a href="auth.html?role=seller">🏪 Sell on ALFIJEER</a>
+      </div>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section">
+        <a href="#" onclick="openModal('about-modal');closeMobileMenu();return false;">ℹ️ Our Story</a>
+        <a href="#" onclick="openModal('howitworks-modal');closeMobileMenu();return false;">📖 How It Works</a>
+        <a href="#" onclick="openModal('contact-modal');closeMobileMenu();return false;">📞 Contact Us</a>
+        <a href="#" onclick="openModal('verif-modal');closeMobileMenu();return false;">✅ Seller Verification</a>
+        <a href="#" onclick="openModal('rules-modal');closeMobileMenu();return false;">🛡️ Seller Rules</a>
+      </div>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section">
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./terms.html">Terms of Use</a>
+      </div>
+      <div class="mob-buttons">
+        <button class="btn-outline" onclick="window.location.href='auth.html'">Login</button>
+        <button class="btn-gold" onclick="window.location.href='auth.html'">Register</button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- VERIFICATION MODAL -->
+  <div class="info-modal-overlay" id="verif-modal">
+    <div class="info-modal-box">
+      <button class="info-modal-close" onclick="closeModal('verif-modal')">✕</button>
+      <h2>✦ How Verification Works</h2>
+      <p class="modal-sub">Every seller on ALFIJEER goes through a strict 5-step human verification process before they can list a single product.</p>
+      <div class="verif-step">
+        <div class="verif-step-num">01</div>
+        <div class="verif-step-body">
+          <h4>Submit Your Application</h4>
+          <p>Fill in your business name, category, location (LGA/ward), WhatsApp number, and a brief description of what you sell. This takes under 3 minutes.</p>
+        </div>
+      </div>
+      <div class="verif-step">
+        <div class="verif-step-num">02</div>
+        <div class="verif-step-body">
+          <h4>Identity Confirmation</h4>
+          <p>Our team contacts you on WhatsApp to confirm your identity. We verify your phone number is real and active, and that you are who you say you are.</p>
+        </div>
+      </div>
+      <div class="verif-step">
+        <div class="verif-step-num">03</div>
+        <div class="verif-step-body">
+          <h4>Business Check</h4>
+          <p>We confirm your business location is real — either through a photo of your shop, market stall, or operating location. Home-based sellers are accepted.</p>
+        </div>
+      </div>
+      <div class="verif-step">
+        <div class="verif-step-num">04</div>
+        <div class="verif-step-body">
+          <h4>Manual Review by ALFIJEER Team</h4>
+          <p>Our team reviews everything within 24–48 hours. We check for duplicates, fake businesses, and any red flags before approval.</p>
+        </div>
+      </div>
+      <div class="verif-step">
+        <div class="verif-step-num">05</div>
+        <div class="verif-step-body">
+          <h4>Receive Your Permanent Shop Number</h4>
+          <p>Once approved, you are assigned a unique permanent shop number (e.g. Shop 021). This number belongs to your business forever and cannot be transferred.</p>
+        </div>
+      </div>
+      <div style="background:rgba(201,144,0,0.07);border:1px solid rgba(201,144,0,0.2);border-radius:8px;padding:14px 16px;margin-top:8px;">
+        <p style="font-size:0.8rem;color:var(--white-dim);line-height:1.7;">⏱️ <strong style="color:var(--gold);">Timeline:</strong> 24–48 hours after submission. &nbsp;|&nbsp; 💰 <strong style="color:var(--gold);">Cost:</strong> Free to apply. &nbsp;|&nbsp; 📞 Questions? <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" style="color:#25D366;">WhatsApp us</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SELLER RULES MODAL -->
+  <div class="info-modal-overlay" id="rules-modal">
+    <div class="info-modal-box">
+      <button class="info-modal-close" onclick="closeModal('rules-modal')">✕</button>
+      <h2>✦ Seller Rules & Standards</h2>
+      <p class="modal-sub">To protect buyers and maintain the trust ALFIJEER is built on, all sellers must follow these rules at all times.</p>
+      <div class="rule-item">
+        <span class="rule-icon">✅</span>
+        <div class="rule-body">
+          <h4>Sell Only What You Actually Have</h4>
+          <p>Do not list products you cannot supply. Misleading buyers about product availability is grounds for immediate suspension.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">💰</span>
+        <div class="rule-body">
+          <h4>Display Honest Prices</h4>
+          <p>The price shown to a buyer must be the price they pay. No hidden charges. No price changes after a buyer contacts you.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">📞</span>
+        <div class="rule-body">
+          <h4>Respond to Buyers Promptly</h4>
+          <p>Respond to buyer messages within 24 hours. Sellers with consistently poor response rates risk losing their shop listing.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">🛡️</span>
+        <div class="rule-body">
+          <h4>No Fraud or Deception</h4>
+          <p>Any seller found collecting payment without delivering goods will be permanently removed and reported. We take fraud very seriously.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">🖼️</span>
+        <div class="rule-body">
+          <h4>Use Real Product Photos</h4>
+          <p>Only upload photos of your actual products. Using stock images or photos from other sellers is not permitted.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">🔢</span>
+        <div class="rule-body">
+          <h4>Your Shop Number is Non-Transferable</h4>
+          <p>Your shop number belongs to you and your registered business only. It cannot be sold, lent, or shared with another person or business.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">⚠️</span>
+        <div class="rule-body">
+          <h4>Consequences for Violations</h4>
+          <p>Minor violations result in a warning. Serious violations result in immediate shop suspension. Fraud results in permanent removal and blacklisting.</p>
+        </div>
+      </div>
+      <div style="background:rgba(201,144,0,0.07);border:1px solid rgba(201,144,0,0.2);border-radius:8px;padding:14px 16px;margin-top:8px;">
+        <p style="font-size:0.8rem;color:var(--white-dim);line-height:1.7;">By selling on ALFIJEER you agree to these rules. Questions? <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" style="color:#25D366;">WhatsApp our team</a></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ HERO ══ -->
+  <!-- ══ BANNER CAROUSEL ══ -->
+  <div class="banner-wrap">
+    <div class="banner-carousel">
+      <div class="banner-track" id="banner-track">
+        <a href="#shops" class="banner-slide">
+          <img src="./Alfijeer2.png"
+               alt="Start Shopping Online in your area today with Alfijeer"
+               onerror="this.style.display='none';document.getElementById('banner-fallback').classList.add('visible')"/>
+        </a>
+        <!-- Shown only when Alfijeer2.png is not yet uploaded -->
+        <div class="banner-fallback" id="banner-fallback">
+          <h2>Start Shopping Online</h2>
+          <h3>In Your Area Today With Alfijeer</h3>
+          <p>Discover trusted shops and quality products near you.</p>
+          <div class="fb-badge">👥 Free to join — <strong>Register today</strong></div><br/>
+          <a href="#shops" class="fb-btn">Shop Now →</a>
+        </div>
+      </div>
+    </div>
+    <div class="banner-dots" id="banner-dots">
+      <button class="active" aria-label="Slide 1"></button>
+    </div>
+  </div>
+
+
+  <!-- ══ HOW IT WORKS MODAL (moved from homepage into nav drawer) ══ -->
+  <div class="info-modal-overlay" id="howitworks-modal">
+    <div class="info-modal-box">
+      <button class="info-modal-close" onclick="closeModal('howitworks-modal')">✕</button>
+      <h2>✦ How It Works</h2>
+      <p class="modal-sub">Getting started on ALFIJEER is fast and easy — whether you are buying or selling.</p>
+
+      <div class="how-tabs">
+        <button class="tab-btn active" onclick="switchTab('buyers', this)">👤 For Buyers</button>
+        <button class="tab-btn" onclick="switchTab('sellers', this)">🏪 For Sellers</button>
+      </div>
+
+      <div id="tab-buyers" class="tab-content active steps-grid">
+        <div class="step-card">
+          <span class="step-number">STEP 01</span>
+          <span class="step-icon">👤</span>
+          <h3>Create Free Account</h3>
+          <p>Register as a buyer in less than 2 minutes. No payment required.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">STEP 02</span>
+          <span class="step-icon">🔍</span>
+          <h3>Search for a Product</h3>
+          <p>Type what you need. We show you verified shops near you that sell it.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">STEP 03</span>
+          <span class="step-icon">🏪</span>
+          <h3>Browse Nearby Shops</h3>
+          <p>See shops sorted by distance. Every shop is verified with a permanent number.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">STEP 04</span>
+          <span class="step-icon">📞</span>
+          <h3>Contact the Seller</h3>
+          <p>Call directly or message on WhatsApp. No middleman. No hidden process.</p>
+        </div>
+      </div>
+
+      <div id="tab-sellers" class="tab-content steps-grid">
+        <div class="step-card">
+          <span class="step-number">STEP 01</span>
+          <span class="step-icon">📝</span>
+          <h3>Apply to Join</h3>
+          <p>Submit your business details and verification documents through our form.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">STEP 02</span>
+          <span class="step-icon">✅</span>
+          <h3>Get Verified</h3>
+          <p>Our team reviews your application within 24–48 hours and confirms your identity.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">STEP 03</span>
+          <span class="step-icon">🔢</span>
+          <h3>Receive Shop Number</h3>
+          <p>You receive a permanent shop number (e.g. Shop 021) that belongs to you forever.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">STEP 04</span>
+          <span class="step-icon">📦</span>
+          <h3>Add Products & Sell</h3>
+          <p>Upload your products and start receiving contact from buyers in your area.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ OUR STORY MODAL (moved from homepage into nav drawer) ══ -->
+  <div class="info-modal-overlay" id="about-modal">
+    <div class="info-modal-box">
+      <button class="info-modal-close" onclick="closeModal('about-modal')">✕</button>
+      <h2>✦ Our Story</h2>
+      <p class="modal-sub">Alfijeer is a digital marketplace designed to help small businesses sell their products online with trust and transparency.</p>
+
+      <div style="margin-bottom:28px;">
+        <p style="font-size:0.9rem;color:var(--white-dim);line-height:1.85;margin-bottom:16px;">
+          <strong style="color:var(--white);">ALFIJEER</strong> was born from a simple truth: Nigeria has millions of hardworking, honest traders who deserve a trusted digital home. For too long, buyers couldn't find reliable sellers online, and sellers struggled to reach customers beyond their street or market row.
+        </p>
+        <p style="font-size:0.9rem;color:var(--white-dim);line-height:1.85;margin-bottom:16px;">
+          We built ALFIJEER to change that. Every seller on our platform is <strong style="color:var(--gold);">manually verified</strong> by our team — we confirm real identities, real businesses, and real locations before a shop goes live. No fake profiles. No anonymous traders. Just real people with real businesses, accountable to their community.
+        </p>
+        <p style="font-size:0.9rem;color:var(--white-dim);line-height:1.85;">
+          Our <strong style="color:var(--gold);">permanent shop number system</strong> — inspired by the fixed stall numbers found in Nigeria's great markets, from Kurmi Market in Kano to Balogun Market in Lagos to Onitsha Main Market in Anambra — gives every seller a lasting identity. Whether you sell shoes, food, phones, or services, your shop number follows your business and builds your reputation over time.
+        </p>
+      </div>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon-box">🌍</div>
+          <div>
+            <h3>Built for Nigeria</h3>
+            <p>ALFIJEER is designed for Nigerian traders — our languages, our market culture, our way of doing business. This was made for us.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">✅</div>
+          <div>
+            <h3>Every Seller is Verified</h3>
+            <p>No one joins without going through our manual verification process — creating a marketplace you can actually trust.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">🔢</div>
+          <div>
+            <h3>Permanent Shop Numbers</h3>
+            <p>Every seller gets a permanent number like Shop 007 that never changes, creating identity and long-term reputation.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">🛡️</div>
+          <div>
+            <h3>Community Protection</h3>
+            <p>Sellers who violate the trust of buyers lose their shop number permanently. We protect this community fiercely.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">📍</div>
+          <div>
+            <h3>Local & Real</h3>
+            <p>We show you verified shops closest to you first — call, WhatsApp, or visit in person. No middlemen.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">💡</div>
+          <div>
+            <h3>Proudly Powered by KAUSANITECH</h3>
+            <p>ALFIJEER is built and maintained by KAUSANITECH — serving Nigeria with pride and excellence.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTACT MODAL (moved from homepage into nav drawer) ══ -->
+  <div class="info-modal-overlay" id="contact-modal">
+    <div class="info-modal-box">
+      <button class="info-modal-close" onclick="closeModal('contact-modal')">✕</button>
+      <h2>✦ Contact Us</h2>
+      <p class="modal-sub">We are here for buyers, sellers, and anyone who wants to know more about ALFIJEER.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+        <a href="mailto:Alfijeershops@gmail.com" style="text-decoration:none;">
+          <div style="background:rgba(201,144,0,0.04);border:1px solid rgba(201,144,0,0.2);border-radius:12px;padding:24px 20px;text-align:center;">
+            <div style="font-size:1.8rem;margin-bottom:10px;">✉️</div>
+            <h4 style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--gold);margin-bottom:6px;">Email Support</h4>
+            <p style="font-size:0.76rem;color:var(--white-dim);">Alfijeershops@gmail.com</p>
+            <p style="font-size:0.68rem;color:var(--white-dim);margin-top:6px;">Response within 24 hours</p>
+          </div>
+        </a>
+        <a href="tel:+2347082783618" style="text-decoration:none;">
+          <div style="background:rgba(201,144,0,0.04);border:1px solid rgba(201,144,0,0.2);border-radius:12px;padding:24px 20px;text-align:center;">
+            <div style="font-size:1.8rem;margin-bottom:10px;">📞</div>
+            <h4 style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--gold);margin-bottom:6px;">Call Us</h4>
+            <p style="font-size:0.76rem;color:var(--white-dim);">07082783618</p>
+            <p style="font-size:0.68rem;color:var(--white-dim);margin-top:6px;">Mon – Sat, 8am – 6pm</p>
+          </div>
+        </a>
+        <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div style="background:rgba(37,211,102,0.04);border:1px solid rgba(37,211,102,0.25);border-radius:12px;padding:24px 20px;text-align:center;">
+            <div style="font-size:1.8rem;margin-bottom:10px;">💬</div>
+            <h4 style="font-family:'Cinzel',serif;font-size:0.82rem;color:#25D366;margin-bottom:6px;">WhatsApp</h4>
+            <p style="font-size:0.76rem;color:var(--white-dim);">Message ALFIJEER</p>
+            <p style="font-size:0.68rem;color:var(--white-dim);margin-top:6px;">Fastest response channel</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ TOP CATEGORIES ══ -->
+  <section class="section" id="categories" style="padding-top:20px;padding-bottom:20px;">
+    <div class="section-heading-row">
+      <h2 class="mobile-h2">Shop by Categories</h2>
+      <a href="#" onclick="filterShopsByCategory('');return false;" class="view-all-link">View All</a>
+    </div>
+    <div class="categories-grid">
+      <div class="cat-card" onclick="filterShopsByCategory('Food, Grains &amp; Spices')"><span class="cat-icon-badge" style="background:#E8F5E1;">🌾</span><span>Food, Grains &amp; Spices</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Beauty &amp; Personal Care')"><span class="cat-icon-badge" style="background:#FCE4EC;">💄</span><span>Beauty &amp; Personal Care</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Household &amp; Cleaning Supplies')"><span class="cat-icon-badge" style="background:#E0F7F5;">🧴</span><span>Household &amp; Cleaning</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Health &amp; Wellness')"><span class="cat-icon-badge" style="background:#FDEAEA;">💊</span><span>Health &amp; Wellness</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Fashion &amp; Clothing')"><span class="cat-icon-badge" style="background:#E3F0FC;">👕</span><span>Fashion &amp; Clothing</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Baby &amp; Kids')"><span class="cat-icon-badge" style="background:#FFF6DE;">🧸</span><span>Baby &amp; Kids</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Phones &amp; Electronics')"><span class="cat-icon-badge" style="background:#EFE7FB;">📱</span><span>Phones &amp; Electronics</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Farm Products')"><span class="cat-icon-badge" style="background:#F5EDE1;">🫘</span><span>Farm Products</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Home &amp; Furniture')"><span class="cat-icon-badge" style="background:#FDEEE0;">🛋️</span><span>Home &amp; Furniture</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Building Materials &amp; Hardware')"><span class="cat-icon-badge" style="background:#EEF0F2;">🧱</span><span>Building &amp; Hardware</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Vehicles &amp; Spare Parts')"><span class="cat-icon-badge" style="background:#E5EEF7;">🚗</span><span>Vehicles &amp; Spare Parts</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Business &amp; Industrial Equipment')"><span class="cat-icon-badge" style="background:#E9EBEE;">⚙️</span><span>Business &amp; Industrial</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Books, Office &amp; School Supplies')"><span class="cat-icon-badge" style="background:#EAE8FB;">📚</span><span>Books &amp; School Supplies</span><span class="cat-count">—</span></div>
+      <div class="cat-card" onclick="filterShopsByCategory('Sports &amp; Outdoor')"><span class="cat-icon-badge" style="background:#E4F7EE;">⚽</span><span>Sports &amp; Outdoor</span><span class="cat-count">—</span></div>
+    </div>
+  </section>
+
+
+  <!-- ══ NEARBY / FEATURED SHOPS ══ -->
+  <!-- ══ YOUR LOCATION + NEARBY SHOPS ══ -->
+  <section class="section" style="padding-top:4px;padding-bottom:8px;">
+    <div class="location-shops-row">
+      <div class="your-location-card">
+        <div class="ylc-header">📍 Your Location</div>
+        <div class="ylc-address" id="ylc-address">Detecting your location…</div>
+        <a href="#" class="ylc-change" onclick="requestGPS();return false;">Change Location</a>
+        <div id="mini-map" class="mini-map">
+          <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:var(--white-dim);text-align:center;padding:10px;">🗺️ Map loads once location is detected</div>
+        </div>
+      </div>
+      <div class="nearby-shops-card">
+        <div class="nsc-header">
+          <h3>📍 Nearby Shops</h3>
+          <a href="#shops" class="view-all-link">View All</a>
+        </div>
+        <div id="nearby-list">
+          <p style="font-size:0.78rem;color:var(--white-dim);padding:8px 0;">Loading nearby shops…</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ RECOMMENDED FOR YOU (real products from nearby sellers) ══ -->
+  <section class="section" id="recommended" style="padding-top:8px;padding-bottom:20px;">
+    <div class="section-heading-row">
+      <h2 class="mobile-h2">Recommended For You</h2>
+      <a href="#shops" class="view-all-link">View All</a>
+    </div>
+    <div class="recommended-grid" id="recommended-grid">
+      <p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">Loading products from nearby shops…</p>
+    </div>
+  </section>
+
+
+  <section class="section shops-section" id="shops" style="padding-top:40px;">
+    <div class="section-header">
+      <span class="section-tag">✦ Verified Sellers</span>
+      <h2>Featured Shops</h2>
+      <p>These are some of our verified sellers. Every shop is real, confirmed, and accountable.</p>
+    </div>
+
+    <div class="shops-grid" id="shops-grid">
+      <p style="text-align:center;color:var(--white-dim);padding:40px;grid-column:1/-1;">Loading verified shops…</p>
+    </div>
+  </section>
+
+
+
+  <!-- ══ TRUST BAR ══ -->
+  <div class="trust-bar">
+    <div class="trust-item"><span class="icon">✅</span> <span><strong>All Sellers</strong> Verified</span></div>
+    <div class="trust-item"><span class="icon">🔢</span> <span><strong>Permanent</strong> Shop Numbers</span></div>
+    <div class="trust-item"><span class="icon">📍</span> <span><strong>Location-Based</strong> Discovery</span></div>
+    <div class="trust-item"><span class="icon">🛡️</span> <span><strong>Dispute</strong> Protection</span></div>
+    <div class="trust-item"><span class="icon">📞</span> <span><strong>Direct</strong> WhatsApp Contact</span></div>
+  </div>
+
+
+  <section class="cta-section">
+    <h2>Start Buying & Selling<br/>in Your Area Today</h2>
+    <p>Join the marketplace built for the North. Trusted sellers. Real locations. Zero confusion.</p>
+    <div class="cta-buttons">
+      <a href="auth.html" class="btn-hero-primary">👤 Register as Buyer</a>
+      <a href="auth.html" class="btn-cta-green">🏪 Register as Seller</a>
+    </div>
+  </section>
+
+
+
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="./index.html" class="nav-logo">
+          <img src="./Alfijeer1.png" alt="ALFIJEER" height="40" onerror="this.style.display='none'"/>
+          <div class="nav-logo-text">
+            <span>ALFIJEER</span>
+            <span>The Digital Market Place For Nigeria</span>
+          </div>
+        </a>
+        <p>Alfijeer is a digital marketplace designed to help small businesses sell their products online with trust and transparency. Verified sellers, permanent shop numbers, and a community built on real trust.</p>
+        <div class="social-links">
+          <a href="https://www.facebook.com/profile.php?id=61595066786406" target="_blank" class="social-link" title="Facebook" style="color:#1877F2;border-color:rgba(24,119,242,0.3);">f</a>
+          <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&amp;utm_medium=copy_link&amp;utm_content=azdicg8" target="_blank" class="social-link" title="Instagram" style="color:#E1306C;border-color:rgba(225,48,108,0.3);">ig</a>
+          <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" class="social-link" title="WhatsApp" style="color:#25D366;border-color:rgba(37,211,102,0.3);">wa</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Marketplace</h4>
+        <ul>
+          <li><a href="./auth.html">Browse Shops</a></li>
+          <li><a href="./auth.html">All Categories</a></li>
+          <li><a href="./auth.html">Nearby Shops</a></li>
+          <li><a href="./auth.html">New Arrivals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Sellers</h4>
+        <ul>
+          <li><a href="./auth.html">Apply to Sell</a></li>
+          <li><a href="#" onclick="openModal('verif-modal');return false;">How Verification Works</a></li>
+          <li><a href="#" onclick="openModal('rules-modal');return false;">Seller Rules</a></li>
+          <li><a href="./auth.html">Seller Dashboard</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#" onclick="openModal('about-modal');return false;">About Us</a></li>
+          <li><a href="#" onclick="openModal('contact-modal');return false;">Contact</a></li>
+          <li><a href="./privacy.html">Privacy Policy</a></li>
+          <li><a href="./terms.html">Terms of Use</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Support & Contact</h4>
+        <ul>
+          <li>
+            <a href="mailto:Alfijeershops@gmail.com" style="display:flex;align-items:center;gap:8px;">
+              <span style="color:var(--gold);">✉️</span> Alfijeershops@gmail.com
+            </a>
+          </li>
+          <li>
+            <a href="tel:+2347082783618" style="display:flex;align-items:center;gap:8px;">
+              <span style="color:var(--emerald);">📞</span> 07082783618
+            </a>
+          </li>
+          <li>
+            <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#25D366;">💬</span> WhatsApp Us
+            </a>
+          </li>
+          <li style="margin-top:10px;">
+            <p style="font-size:0.7rem;color:var(--on-navy-dim);line-height:1.5;">For general assistance, orders, complaints, or seller verification — reach us on any of the channels above.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span>ALFIJEER 2026</span> — Built With Pride by <span>KAUSANITECH</span></p>
+      <div class="social-links">
+        <a href="./privacy.html" style="font-size:0.75rem;font-weight:700;color:#C99000;text-decoration:none;padding:6px 12px;border:1px solid rgba(201,144,0,0.35);border-radius:4px;">Privacy Policy</a>
+        <a href="./terms.html" style="font-size:0.75rem;font-weight:700;color:#C99000;text-decoration:none;padding:6px 12px;border:1px solid rgba(201,144,0,0.35);border-radius:4px;">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    // ── MOBILE MENU ──
+    function toggleMobileMenu() {
+      const btn  = document.getElementById('hamburger-btn');
+      const menu = document.getElementById('mobile-menu');
+      btn.classList.toggle('open');
+      menu.classList.toggle('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('hamburger-btn').classList.remove('open');
+      document.getElementById('mobile-menu').classList.remove('open');
+    }
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const btn  = document.getElementById('hamburger-btn');
+      const menu = document.getElementById('mobile-menu');
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        btn.classList.remove('open');
+        menu.classList.remove('open');
+      }
+    });
+
+    // ── INFO MODALS ──
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    // Close modal on overlay click
+    document.querySelectorAll('.info-modal-overlay').forEach(function(overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal(overlay.id);
+      });
+    });
+    // Esc key closes modals
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.info-modal-overlay.open').forEach(function(m) { closeModal(m.id); });
+        closeMobileMenu();
+      }
+    });
+
+    // ── HOW IT WORKS TABS ──
+    function switchTab(tab, el) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      if (el) el.classList.add('active');
+    }
+
+    // ── SCROLL REVEAL ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.step-card, .shop-card, .cat-card, .why-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // ── NAVBAR SCROLL SHADOW ──
+    window.addEventListener('scroll', function() {
+      const nav = document.querySelector('nav');
+      nav.style.boxShadow = window.scrollY > 10 ? '0 4px 30px rgba(16,40,28,0.14)' : 'none';
+    });
+  </script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- ══ REAL SHOPS LOADER + GPS ══ -->
+  <script>
+    const _HOME_API = 'https://arewa-square-backend-production.up.railway.app/api';
+    let _allHomeShops = [];
+    let _buyerLat = null;
+    let _buyerLng = null;
+    let _miniMap = null;
+    let _miniMarker = null;
+
+    // ── Haversine distance formula (km) ──
+    function _haversine(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function _shopIcon(cat) {
+      const icons = {
+        'Fashion, Clothing & Shoes':'👕','Phones & Accessories':'📱',
+        'Computers & Technology':'💻','Electronics & Appliances':'📺',
+        'Vehicles & Motorcycles':'🚗','Property & Real Estate':'🏘️',
+        'Agriculture & Livestock':'🌾','Food & Groceries':'🥘',
+        'Home & Furniture':'🏠','Health & Beauty':'💊',
+        'Education & Training':'📚','Services':'🔧','Other':'📦',
+      };
+      return icons[cat] || '🏪';
+    }
+
+    // ── Format shop number consistently as "Shop 001", regardless of raw backend format
+    //    (handles "#001", "001", "1", "Shop 001", null/undefined) ──
+    function _formatShopNum(num) {
+      if (num === null || num === undefined || num === '') return 'Pending';
+      let s = num.toString().trim().replace(/^(shop)?\s*#?\s*/i, '');
+      if (!s) return 'Pending';
+      return 'Shop ' + s;
+    }
+
+    function _renderHomeShops(shops) {
+      const grid = document.getElementById('shops-grid');
+      if (!grid) return;
+      // Limit to 4 shops for homepage sample
+      const sample = shops.slice(0, 4);
+      if (!sample.length) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:40px;grid-column:1/-1;">No verified shops yet — be the first to register!</p>';
+        return;
+      }
+      grid.innerHTML = sample.map(s => {
+        const distLabel = (s.distance !== null && s.distance !== undefined)
+          ? `<span class="shop-distance">📍 ${s.distance < 1 ? Math.round(s.distance * 1000) + 'm' : s.distance.toFixed(1) + 'km'} away</span>`
+          : `<span class="shop-distance">📍 ${s.city ? s.city + ', ' : ''}${s.state || ''}</span>`;
+
+        const banner = s.shopPhotoUrl
+          ? `<img src="${s.shopPhotoUrl}" alt="${s.businessName}" style="width:100%;height:100%;object-fit:contain;border-radius:8px 8px 0 0;" onerror="this.style.display='none'" loading="lazy"/>`
+          : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">${_shopIcon(s.category)}</div>`;
+
+        return `<div class="shop-card">
+          <div class="shop-img" style="height:140px;border-radius:8px 8px 0 0;overflow:hidden;background:var(--green-mid);">
+            ${banner}
+            <span class="shop-number-badge" style="position:absolute;top:10px;left:10px;">${_formatShopNum(s.shopNumber)}</span>
+            <span class="verified-badge" style="position:absolute;top:10px;right:10px;">✅ Verified</span>
+          </div>
+          <div class="shop-info" style="padding:14px;">
+            <h3 style="font-family:'Cinzel',serif;font-size:0.9rem;color:var(--white);margin-bottom:6px;">${s.businessName || ''}</h3>
+            <div class="shop-meta" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+              <span style="font-size:0.72rem;color:var(--white-dim);">${_shopIcon(s.category)} ${s.category || ''}</span>
+              ${distLabel}
+            </div>
+            <div class="shop-footer" style="display:flex;justify-content:space-between;align-items:center;">
+              <a href="#" class="btn-view-shop" onclick="goToShop('${s._id}');return false;"
+                style="padding:7px 16px;background:var(--gold);color:#FFFFFF;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;border-radius:6px;text-decoration:none;">
+                View Shop
+              </a>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Compact "Nearby Shops" list (Your Location panel) ──
+    function _renderNearbyList(shops) {
+      const list = document.getElementById('nearby-list');
+      if (!list) return;
+      const top = shops.slice(0, 3);
+      if (!top.length) {
+        list.innerHTML = '<p style="font-size:0.78rem;color:var(--white-dim);padding:8px 0;">No verified shops yet in your area.</p>';
+        return;
+      }
+      list.innerHTML = top.map((s, i) => {
+        const distLabel = (s.distance !== null && s.distance !== undefined)
+          ? (s.distance < 1 ? Math.round(s.distance * 1000) + 'm' : s.distance.toFixed(1) + 'km')
+          : (s.city || s.state || '');
+        const thumb = s.shopPhotoUrl
+          ? `<img src="${s.shopPhotoUrl}" alt="${s.businessName || ''}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy"/>`
+          : _shopIcon(s.category);
+        return `<div class="nearby-item" onclick="goToShop('${s._id}')">
+          <span class="nearby-index">${String(i + 1).padStart(2, '0')}</span>
+          <div class="nearby-thumb">${thumb}</div>
+          <div class="nearby-info">
+            <strong>${s.businessName || ''}</strong>
+            <span>${s.category || ''}</span>
+          </div>
+          <div class="nearby-dist">📍 ${distLabel}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Mini map (Leaflet + free OpenStreetMap tiles, no API key) ──
+    function initMiniMap(lat, lng) {
+      if (typeof L === 'undefined') return;
+      const mapEl = document.getElementById('mini-map');
+      if (!mapEl) return;
+      if (!_miniMap) {
+        _miniMap = L.map('mini-map', {
+          zoomControl: false, attributionControl: false,
+          dragging: false, scrollWheelZoom: false, doubleClickZoom: false, touchZoom: false
+        }).setView([lat, lng], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(_miniMap);
+        _miniMarker = L.marker([lat, lng]).addTo(_miniMap);
+      } else {
+        _miniMap.setView([lat, lng], 14);
+        _miniMarker.setLatLng([lat, lng]);
+      }
+      setTimeout(() => _miniMap && _miniMap.invalidateSize(), 200);
+    }
+
+    // ── Reverse geocode via free Nominatim (OpenStreetMap) — no API key ──
+    async function reverseGeocode(lat, lng) {
+      const addressEl = document.getElementById('ylc-address');
+      const labelEl = document.getElementById('location-label');
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`, {
+          headers: { 'Accept-Language': 'en' }
+        });
+        const data = await res.json();
+        const addr = data.address || {};
+        const area = addr.suburb || addr.neighbourhood || addr.city_district || addr.town || addr.village || addr.city || '';
+        const state = addr.state || '';
+        const label = [area, state].filter(Boolean).join(', ') || 'Your current location';
+        if (addressEl) addressEl.textContent = label;
+        if (labelEl) labelEl.textContent = label;
+      } catch (e) {
+        if (addressEl) addressEl.textContent = 'Your current location';
+        if (labelEl) labelEl.textContent = 'Current location';
+      }
+    }
+
+    // ── Load real shops from backend ──
+    async function loadHomeShops() {
+      try {
+        let url = _HOME_API + '/sellers?limit=50';
+        if (_buyerLat !== null && _buyerLng !== null) {
+          url += '&buyerLat=' + _buyerLat + '&buyerLng=' + _buyerLng;
+        }
+        const res  = await fetch(url);
+        const data = await res.json();
+        _allHomeShops = data.sellers || [];
+
+        // Attach distance if buyer GPS is available
+        if (_buyerLat !== null && _buyerLng !== null) {
+          _allHomeShops = _allHomeShops.map(s => ({
+            ...s,
+            distance: (s.latitude && s.longitude)
+              ? _haversine(_buyerLat, _buyerLng, s.latitude, s.longitude)
+              : null
+          }));
+          // Sort by real distance
+          _allHomeShops.sort((a, b) => {
+            if (a.distance === null) return 1;
+            if (b.distance === null) return -1;
+            return a.distance - b.distance;
+          });
+        }
+        _renderHomeShops(_allHomeShops);
+        _renderNearbyList(_allHomeShops);
+        loadRecommendedProducts(_allHomeShops);
+      } catch(e) {
+        const grid = document.getElementById('shops-grid');
+        if (grid) grid.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:40px;grid-column:1/-1;">Unable to load shops right now. Please refresh.</p>';
+      }
+    }
+
+    // ── Recommended For You: real products pulled from nearby sellers ──
+    async function loadRecommendedProducts(shops) {
+      const grid = document.getElementById('recommended-grid');
+      if (!grid) return;
+      const candidates = shops.slice(0, 8);
+      if (!candidates.length) {
+        grid.innerHTML = '<p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">No products to show yet.</p>';
+        return;
+      }
+      try {
+        const results = await Promise.all(candidates.map(async s => {
+          try {
+            const res = await fetch(_HOME_API + '/products?sellerId=' + s._id);
+            const data = await res.json();
+            const products = data.products || data || [];
+            return products.slice(0, 2).map(p => ({ ...p, sellerName: s.businessName, sellerId: s._id }));
+          } catch (e) { return []; }
+        }));
+        const flat = results.flat().filter(p => p && p.name).slice(0, 8);
+        if (!flat.length) {
+          grid.innerHTML = '<p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">No products listed by nearby shops yet.</p>';
+          return;
+        }
+        grid.innerHTML = flat.map(p => {
+          const thumb = (p.images && p.images[0])
+            ? `<img src="${p.images[0]}" alt="${p.name}" onerror="this.parentNode.innerHTML='${_shopIcon(p.category)}'" loading="lazy"/>`
+            : _shopIcon(p.category);
+          const price = p.price ? '₦' + Number(p.price).toLocaleString() : '';
+          return `<div class="rec-card" onclick="goToShop('${p.sellerId}')">
+            <div class="rec-thumb">
+              ${thumb}
+              <button class="rec-save" onclick="event.stopPropagation();this.textContent=this.textContent==='♡'?'❤️':'♡'">♡</button>
+            </div>
+            <div class="rec-info">
+              <span class="rec-name">${p.name}</span>
+              <span class="rec-seller">${p.sellerName || ''}</span>
+              <span class="rec-price">${price}</span>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (e) {
+        grid.innerHTML = '<p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">Unable to load recommendations right now.</p>';
+      }
+    }
+
+    // ── Search filter ──
+    function filterShopsBySearch(query) {
+      query = (query || '').trim().toLowerCase();
+      if (!query) { _renderHomeShops(_allHomeShops); return; }
+      const filtered = _allHomeShops.filter(s =>
+        (s.businessName || '').toLowerCase().includes(query) ||
+        (s.category || '').toLowerCase().includes(query)
+      );
+      _renderHomeShops(filtered);
+    }
+
+    // ── Category filter ──
+    function filterShopsByCategory(cat) {
+      document.getElementById('shops')?.scrollIntoView({ behavior: 'smooth' });
+      if (!cat) { _renderHomeShops(_allHomeShops); return; }
+      const filtered = _allHomeShops.filter(s => (s.category || '').includes(cat));
+      _renderHomeShops(filtered);
+    }
+
+    // ── Shop click handler ──
+    function goToShop(sellerId) {
+      const token = localStorage.getItem('as_token');
+      const role  = localStorage.getItem('as_role');
+      if (token && role === 'buyer') {
+        window.location.href = 'buyer-dashboard.html?shop=' + sellerId;
+      } else {
+        localStorage.setItem('as_redirect_shop', sellerId);
+        window.location.href = 'auth.html';
+      }
+    }
+
+    // ── GPS: ask buyer for location, then reload shops with real distances ──
+    function requestGPS() {
+      const addressEl = document.getElementById('ylc-address');
+      const labelEl = document.getElementById('location-label');
+      if (addressEl) addressEl.textContent = 'Detecting your location…';
+      if (labelEl) labelEl.textContent = 'Detecting…';
+      if (!navigator.geolocation) {
+        if (addressEl) addressEl.textContent = 'Location not supported on this device';
+        if (labelEl) labelEl.textContent = 'Set location';
+        loadHomeShops();
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          _buyerLat = pos.coords.latitude;
+          _buyerLng = pos.coords.longitude;
+          initMiniMap(_buyerLat, _buyerLng);
+          reverseGeocode(_buyerLat, _buyerLng);
+          loadHomeShops();
+        },
+        function() {
+          // GPS denied or unavailable — load shops without distance sorting
+          if (addressEl) addressEl.textContent = 'Location access denied — showing all shops';
+          if (labelEl) labelEl.textContent = 'Enable location';
+          loadHomeShops();
+        },
+        { timeout: 8000, maximumAge: 300000 }
+      );
+    }
+
+    // ── Smart navigation — goes to dashboard if logged in, auth if not ──
+    function goToDashboard(section) {
+      closeMobileMenu();
+      const token = localStorage.getItem('as_token');
+      const role  = localStorage.getItem('as_role');
+      if (token && role === 'buyer') {
+        window.location.href = 'buyer-dashboard.html' + (section === 'orders' ? '#orders' : '');
+      } else if (token && role === 'seller') {
+        window.location.href = 'seller-dashboard.html';
+      } else {
+        window.location.href = 'auth.html';
+      }
+    }
+
+    // ── Boot ──
+    document.addEventListener('DOMContentLoaded', function() {
+      requestGPS();
+    });
+  </script>  <!-- ══ BOTTOM NAV ══ -->
+  <nav class="bottom-nav">
+    <a href="#" class="bn-item active"><span class="bn-icon">🏠</span><span>Home</span></a>
+    <a href="#categories" class="bn-item"><span class="bn-icon">🏷️</span><span>Categories</span></a>
+    <a href="#shops" class="bn-item bn-center"><span class="bn-icon">📍</span><span>Nearby</span></a>
+    <a href="auth.html" class="bn-item"><span class="bn-icon">📦</span><span>Orders</span></a>
+    <a href="auth.html" class="bn-item"><span class="bn-icon">👤</span><span>Account</span></a>
+  </nav>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js').catch(function(err) {
+        console.warn('Service worker registration failed:', err);
+      });
+    });
+  }
+</script>
+</body>
+
+</html>

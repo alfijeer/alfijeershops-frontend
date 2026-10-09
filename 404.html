@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Page Not Found — ALFIJEER</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<meta name="theme-color" content="#001233"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --gold: #FFBE1A; --gold-light: #FFCF4D; --gold-dim: #C99000;
+    --navy-deep: #001233; --navy-mid: #001E4D; --on-navy: #FFFFFF; --on-navy-dim: rgba(255,255,255,0.72);
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--navy-deep); color: var(--on-navy);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,190,26,0.03) 40px, rgba(255,190,26,0.03) 41px),
+      repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,190,26,0.03) 40px, rgba(255,190,26,0.03) 41px);
+  }
+  .wrap { max-width: 440px; }
+  .glyph { font-size: 3.6rem; margin-bottom: 4px; }
+  .code { font-family: 'Cinzel', serif; font-weight: 900; font-size: 4.2rem; color: var(--gold); letter-spacing: 4px; line-height: 1; }
+  h1 { font-family: 'Cinzel', serif; font-size: 1.25rem; margin: 12px 0 10px; }
+  p { color: var(--on-navy-dim); font-size: 0.9rem; line-height: 1.7; margin-bottom: 28px; }
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  a.btn {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    padding: 12px 22px; border-radius: 10px; font-weight: 800; font-size: 0.85rem;
+  }
+  .btn-gold { background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.25); color: var(--on-navy); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="glyph">🧭</div>
+    <div class="code">404</div>
+    <h1>This shop doesn't exist here</h1>
+    <p>The page you're looking for may have moved, or the link might be off. Let's get you back to browsing verified shops near you.</p>
+    <div class="btn-row">
+      <a class="btn btn-gold" href="index.html">🏠 Go Home</a>
+      <a class="btn btn-outline" href="buyer-dashboard.html">🔍 Browse Shops</a>
+    </div>
+  </div>
+</body>
+</html>
