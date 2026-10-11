@@ -8,7 +8,7 @@
 // used across buyer, seller, and admin pages.
 // ══════════════════════════════════════════════════════════
 
-const _API = 'https://arewa-square-backend-production.up.railway.app/api';
+const _API = 'https://alfijeershops-backend-production.up.railway.app/api';
 
 // ── Auth ──
 // Matches the real keys set at login (see auth.html):

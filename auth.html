@@ -861,7 +861,7 @@
       btn.textContent = 'Creating your account…';
 
       try {
-        const res  = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/register', {
+        const res  = await fetch('https://alfijeershops-backend-production.up.railway.app/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fullName: fullname.trim(), email, phone, password: pass, state, city, role: 'buyer' })
@@ -980,7 +980,7 @@
         if (govId)     fd.append('govId',     govId);
         if (shopPhoto) fd.append('shopPhoto', shopPhoto);
 
-        const res  = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/register', {
+        const res  = await fetch('https://alfijeershops-backend-production.up.railway.app/api/auth/register', {
           method: 'POST',
           body: fd
         });
@@ -1047,7 +1047,7 @@
       btn.textContent = 'Sending…';
 
       try {
-        const res = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/forgot-password', {
+        const res = await fetch('https://alfijeershops-backend-production.up.railway.app/api/auth/forgot-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email }),
@@ -1079,7 +1079,7 @@
       btn.textContent = 'Logging in…';
 
       try {
-        const res  = await fetch('https://arewa-square-backend-production.up.railway.app/api/auth/login', {
+        const res  = await fetch('https://alfijeershops-backend-production.up.railway.app/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })

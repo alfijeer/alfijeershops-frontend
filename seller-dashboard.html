@@ -806,7 +806,7 @@
     function formatPrice(n) { return '₦' + Number(n).toLocaleString('en-NG'); }
 
     // Sample seed orders (show how it looks for sellers)
-    const _API = 'https://arewa-square-backend-production.up.railway.app/api';
+    const _API = 'https://alfijeershops-backend-production.up.railway.app/api';
     function _headers(skipContentType) {
       const h = { 'Authorization': 'Bearer ' + localStorage.getItem('as_token') };
       if (!skipContentType) h['Content-Type'] = 'application/json';
