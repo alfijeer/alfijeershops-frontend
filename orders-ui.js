@@ -52,7 +52,9 @@
     BUYER_REPORT_PAYMENT_ISSUE: { label: 'Report a payment problem', danger: true, form: { title: 'Report a payment problem', fields: [REASON] } },
     BUYER_UPLOAD_PROOF: { label: 'Upload payment proof', upload: true },
     BUYER_CONFIRM_RECEIPT: { label: 'I received my order', confirm: 'Confirm that you received the correct order?' },
-    BUYER_DISPUTE: { label: 'Not as ordered', danger: true, form: { title: 'What is wrong with the order?', fields: [REASON] } },
+    BUYER_DISPUTE: { label: 'Not as ordered', danger: true, multipart: true, form: { title: 'What is wrong with the order?',
+      intro: 'Admin will review your report. Photos help a lot, but they are optional.',
+      fields: [REASON, { key: 'evidence', label: 'Photos (optional, up to 3)', type: 'files', hint: 'Show the item you received, or add your payment receipt.' }] } },
     BUYER_CONFIRM_REFUND: { label: 'I received my refund', confirm: 'Confirm that the money is back in your account?' },
     SELLER_ACCEPT: { label: 'Receive order' },
     SELLER_DECLINE: { label: 'Decline', danger: true, confirm: 'Decline this order?' },
@@ -131,6 +133,7 @@
         if (fl.type === 'select') inp = '<select id="' + id + '"><option value="">Choose…</option>' + fl.options.map(function (x) { return '<option>' + esc(x) + '</option>'; }).join('') + '</select>';
         else if (fl.type === 'textarea') inp = '<textarea id="' + id + '" placeholder="' + esc(fl.placeholder || '') + '"></textarea>';
         else if (fl.type === 'file') inp = '<input id="' + id + '" type="file" accept="image/*"/>';
+        else if (fl.type === 'files') inp = '<input id="' + id + '" type="file" accept="image/*" multiple/>' + (fl.hint ? '<div style="font-size:.7rem;color:#5C6B85;margin-top:4px;">' + esc(fl.hint) + '</div>' : '');
         else inp = '<input id="' + id + '" type="' + (fl.type || 'text') + '" placeholder="' + esc(fl.placeholder || '') + '"/>';
         return '<label for="' + id + '">' + esc(fl.label) + (fl.required ? ' *' : '') + '</label>' + inp;
       }).join('');
@@ -144,8 +147,15 @@
           var vals = {};
           for (var i = 0; i < (opts.fields || []).length; i++) {
             var fl = opts.fields[i], el = ov.querySelector('#ou-f-' + fl.key);
-            var v = fl.type === 'file' ? (el.files && el.files[0]) : el.value.trim();
-            if (fl.required && !v) { toast('Please fill in: ' + fl.label, 'error'); return; }
+            var v = fl.type === 'file' ? (el.files && el.files[0]) : fl.type === 'files' ? Array.prototype.slice.call(el.files || []) : el.value.trim();
+            if (fl.type === 'files' && v.length) {
+              if (v.length > 3) { toast('You can attach up to 3 photos.', 'error'); return; }
+              for (var k = 0; k < v.length; k++) {
+                if (!/^image\//.test(v[k].type)) { toast('Please choose photos only (JPG, PNG or WEBP).', 'error'); return; }
+                if (v[k].size > 5 * 1024 * 1024) { toast('Each photo must be 5 MB or less.', 'error'); return; }
+              }
+            }
+            if (fl.required && (!v || (fl.type === 'files' && !v.length))) { toast('Please fill in: ' + fl.label, 'error'); return; }
             vals[fl.key] = v;
           }
           close(vals);
@@ -158,6 +168,15 @@
   function failMsg(data) { return (data && data.message) || 'Something went wrong. Please try again.'; }
   async function post(id, action, body) {
     var res = await fetch(_API + '/orders/' + encodeURIComponent(id) + '/actions/' + action, { method: 'POST', headers: _headers(), body: JSON.stringify(body || {}) });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) throw new Error(failMsg(data));
+    return data;
+  }
+  async function sendDispute(id, v) {
+    var fd = new FormData();
+    fd.append('reason', v.reason);
+    (v.evidence || []).forEach(function (f) { fd.append('evidence', f); });
+    var res = await fetch(_API + '/orders/' + encodeURIComponent(id) + '/dispute', { method: 'POST', headers: { Authorization: 'Bearer ' + localStorage.getItem('as_token') }, body: fd });
     var data = await res.json().catch(function () { return {}; });
     if (!res.ok) throw new Error(failMsg(data));
     return data;
@@ -190,8 +209,8 @@
         if (m.form) { body = await ask({ title: m.form.title, intro: m.form.intro, fields: m.form.fields }); if (!body) return; }
         else if (m.confirm) { if (!(await ask({ title: m.confirm, okText: 'Yes' }))) return; }
         btn.disabled = true;
-        await post(id, action, body);
-        toast('Done ✅', 'success');
+        if (m.multipart) { await sendDispute(id, body); toast('Report sent. Admin will review it.', 'success'); }
+        else { await post(id, action, body); toast('Done ✅', 'success'); }
       }
       if (ctx && ctx.reload) ctx.reload();
     } catch (e) {
@@ -229,6 +248,7 @@
       '<div class="ou-items">' + items + '<div class="ou-row ou-total"><span>Total</span><span>' + money(o.total) + '</span></div></div>' +
       timeline(o) + (next ? '<div class="ou-next">' + esc(next) + '</div>' : '') + (tl ? '<div class="ou-time">⏳ ' + esc(tl) + '</div>' : '') +
       (btns ? '<div class="ou-actions">' + btns + '</div>' : '') +
+      (role === 'buyer' && o.dispute && o.dispute.evidence && o.dispute.evidence.length ? '<div class="ou-sub" style="margin:6px 0;">📎 You attached ' + o.dispute.evidence.length + ' photo' + (o.dispute.evidence.length === 1 ? '' : 's') + ' to your report.</div>' : '') +
       (hist ? '<details class="ou-hist"><summary>History</summary>' + hist + '</details>' : '') + '</div>';
   }
 

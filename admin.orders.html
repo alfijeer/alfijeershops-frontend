@@ -995,6 +995,7 @@
         ${row('Method', p.method)}${row('Amount', p.amount != null ? formatPrice(p.amount) : '')}${row('Reference', p.reference)}${row('Payment status', p.status)}
         ${p.issueReason ? row('Issue reason', p.issueReason) : ''}
         ${o.dispute && o.dispute.reason ? row('Dispute reason', o.dispute.reason) : ''}
+        ${o.dispute && o.dispute.evidenceCount ? '<button class="act-btn act-view" style="margin-top:10px;" onclick="viewEvidence()">🖼 View buyer photos (' + o.dispute.evidenceCount + ')</button><div id="evidence-box"></div>' : ''}
         ${hasProof ? '<button class="act-btn act-view" style="margin-top:10px;" onclick="viewProof()">🧾 View payment proof</button><div id="proof-box"></div>' : '<p style="font-size:0.78rem;color:var(--white-dim);margin-top:8px;">No payment proof uploaded.</p>'}
         <h4 class="od-h">History</h4>${hist}
         ${dec.length ? `<h4 class="od-h">Admin decision</h4>
@@ -1022,6 +1023,20 @@
         if (!res.ok || !/^https:\/\//.test(data.url || '')) throw new Error(data.message || 'No proof available');
         box.innerHTML = `<img src="${esc(data.url)}" alt="Payment proof" style="max-width:100%;border-radius:8px;margin-top:10px;"/>
           <p style="font-size:0.72rem;color:var(--white-dim);margin-top:4px;">This view has been logged.</p>`;
+      } catch (e) { box.innerHTML = '<p style="font-size:0.78rem;color:#C0392B;">' + esc(e.message) + '</p>'; }
+    }
+
+    // Buyer's dispute photos: private links that expire after a few minutes. Every view is logged on the server.
+    async function viewEvidence() {
+      const box = document.getElementById('evidence-box'); if (!cur) return;
+      box.innerHTML = '<p style="font-size:0.78rem;">Loading…</p>';
+      try {
+        const res = await fetch(_API + '/admin/orders/' + encodeURIComponent(cur._id) + '/dispute-evidence', { headers: _headers() });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Could not open the photos');
+        const urls = (data.urls || []).filter(u => /^https:\/\//.test(u));
+        box.innerHTML = urls.map(u => `<img src="${esc(u)}" alt="Buyer photo" style="max-width:100%;border-radius:8px;margin-top:10px;display:block;"/>`).join('') +
+          '<p style="font-size:0.72rem;color:var(--white-dim);margin-top:4px;">These views have been logged.</p>';
       } catch (e) { box.innerHTML = '<p style="font-size:0.78rem;color:#C0392B;">' + esc(e.message) + '</p>'; }
     }
 

@@ -443,6 +443,15 @@
       display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
       overflow: hidden; position: relative;
     }
+    .product-desc { font-size: 0.68rem; color: var(--white-dim); line-height: 1.45; margin: 4px 0 6px; white-space: pre-line;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+    .product-desc.open { display: block; -webkit-line-clamp: unset; }
+    .product-desc-more { font-size: 0.62rem; color: var(--gold-dim); font-weight: 700; margin: -2px 0 6px; cursor: pointer; }
+    @media (max-width: 600px) { .product-grid { grid-template-columns: repeat(2,1fr); } }
+    .gallery-info { color: #fff; max-width: 92%; max-height: 24vh; overflow-y: auto; text-align: center; margin-top: 12px; font-size: 0.85rem; line-height: 1.5; }
+    .gallery-info strong { display: block; font-size: 0.95rem; }
+    .gallery-info .gi-price { color: var(--gold); font-weight: 800; margin: 2px 0 6px; display: block; }
+    .gallery-info .gi-desc { color: rgba(255,255,255,0.85); white-space: pre-line; }
     .product-img-count {
       position: absolute; bottom: 4px; right: 4px;
       background: rgba(0,0,0,0.65); color: #fff; font-size: 0.6rem; font-weight: 700;
@@ -820,29 +829,15 @@
     <!-- ══ SEARCH ══ -->
     <section class="page-section" id="sec-search">
       <div class="search-hero">
-        <h2>Search Shops</h2>
-        <p>Type any product or category — results show verified shops, not just listings</p>
+        <h2>Search Products &amp; Shops</h2>
+        <p>Try a product (Samsung, sneakers, rice), a shop name, or a place. Pick a category to narrow it down.</p>
         <div class="search-bar">
-          <input type="text" placeholder="e.g. shoes, phone, abaya..." id="search-input" oninput="doSearch()" onkeypress="if(event.key==='Enter') doSearch()"/>
+          <input type="text" placeholder="e.g. Samsung, shoes, rice, Musa Phones..." id="search-input" autocomplete="off" oninput="doSearchSoon()" onkeypress="if(event.key==='Enter') doSearch()"/>
           <button onclick="doSearch()">🔍 Search</button>
         </div>
       </div>
-      <div class="cat-pills" id="search-filters">
-        <div class="cat-pill active" onclick="filterCat(this,'all')">All</div>
-        <div class="cat-pill" onclick="filterCat(this,'shoes')">👟 Shoes</div>
-        <div class="cat-pill" onclick="filterCat(this,'fashion')">👕 Fashion</div>
-        <div class="cat-pill" onclick="filterCat(this,'phones')">📱 Phones</div>
-        <div class="cat-pill" onclick="filterCat(this,'electronics')">💻 Electronics</div>
-        <div class="cat-pill" onclick="filterCat(this,'food')">🥘 Food</div>
-        <div class="cat-pill" onclick="filterCat(this,'home')">🏠 Home</div>
-        <div class="cat-pill" onclick="filterCat(this,'health')">💊 Health</div>
-        <div class="cat-pill" onclick="filterCat(this,'services')">🔧 Services</div>
-      </div>
-      <div class="section-heading">
-        <h3>✦ All Verified Shops</h3>
-        <span style="font-size:0.75rem;color:var(--white-dim);">Showing 8 shops</span>
-      </div>
-      <div class="shops-grid" id="search-shops"></div>
+      <div class="cat-pills" id="search-filters" style="flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;"></div>
+      <div id="search-results"></div>
     </section>
 
     <!-- ══ NEARBY ══ -->
@@ -865,51 +860,6 @@
     <section class="page-section" id="sec-categories">
       <div class="section-heading"><h3>✦ Browse by Category</h3></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:32px;" id="category-grid">
-        <div onclick="showCatShops('Fashion, Clothing &amp; Shoes')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">👕</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Fashion</span>
-          <span class="cat-count" data-cat="Fashion, Clothing &amp; Shoes" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Electronics &amp; Appliances')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">📺</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Electronics</span>
-          <span class="cat-count" data-cat="Electronics &amp; Appliances" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Phones &amp; Accessories')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">📱</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Phones</span>
-          <span class="cat-count" data-cat="Phones &amp; Accessories" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Home &amp; Furniture')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">🛋️</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Home &amp; Living</span>
-          <span class="cat-count" data-cat="Home &amp; Furniture" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Food &amp; Groceries')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">🛒</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Groceries</span>
-          <span class="cat-count" data-cat="Food &amp; Groceries" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Computers &amp; Technology')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">💻</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Computers</span>
-          <span class="cat-count" data-cat="Computers &amp; Technology" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Agriculture &amp; Livestock')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">🌾</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Agriculture</span>
-          <span class="cat-count" data-cat="Agriculture &amp; Livestock" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Health &amp; Beauty')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">💊</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Health &amp; Beauty</span>
-          <span class="cat-count" data-cat="Health &amp; Beauty" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
-        <div onclick="showCatShops('Services')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">🔧</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">Services</span>
-          <span class="cat-count" data-cat="Services" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span>
-        </div>
       </div>
       <div id="cat-result" style="display:none;">
         <div class="section-heading"><h3 id="cat-title">✦ Shops</h3></div>
@@ -1070,15 +1020,15 @@
       return 'Shop ' + s;
     }
 
+    const CATEGORIES = [
+      ['Food, Grains & Spices','🌾'], ['Beauty & Personal Care','💄'], ['Household & Cleaning Supplies','🧴'], ['Health & Wellness','💊'],
+      ['Fashion & Clothing','👕'], ['Baby & Kids','🧸'], ['Phones & Electronics','📱'], ['Farm Products','🫘'], ['Home & Furniture','🛋️'],
+      ['Building Materials & Hardware','🧱'], ['Vehicles & Spare Parts','🚗'], ['Business & Industrial Equipment','⚙️'],
+      ['Books, Office & School Supplies','📚'], ['Sports & Outdoor','⚽'], ['Other','📦'],
+    ];
     function _catIcon(cat) {
-      const icons = {
-        'Fashion, Clothing & Shoes':'👕','Electronics & Appliances':'📺',
-        'Phones & Accessories':'📱','Home & Furniture':'🛋️',
-        'Food & Groceries':'🛒','Computers & Technology':'💻',
-        'Agriculture & Livestock':'🌾','Health & Beauty':'💊',
-        'Education & Training':'📚','Services':'🔧','Other':'📦',
-      };
-      return icons[cat] || '🏪';
+      const hit = CATEGORIES.find(c => c[0] === cat);
+      return hit ? hit[1] : '🏪';
     }
 
     function _haversine(lat1, lon1, lat2, lon2) {
@@ -1110,7 +1060,7 @@
 
     async function loadShops() {
       try {
-        let url = _API + '/sellers?limit=100';
+        let url = _API + '/sellers?limit=500';
         if (_buyerLat !== null && _buyerLng !== null) {
           url += '&buyerLat=' + _buyerLat + '&buyerLng=' + _buyerLng;
         }
@@ -1166,6 +1116,7 @@
           _id: p._id,
           name: p.name,
           price: p.price,
+          description: p.description || '',
         }));
         _productCache[sellerId] = products;
         return products;
@@ -1248,6 +1199,8 @@
       track.style.transform = 'translateX(0%)';
 
       renderGalleryChrome();
+      document.getElementById('gallery-info').innerHTML = `<strong>${OrdersUI.esc(product.name)}</strong><span class="gi-price">${formatPrice(product.price)}</span>` +
+        (product.description ? `<span class="gi-desc">${OrdersUI.esc(product.description)}</span>` : '');
       document.getElementById('gallery-overlay').classList.add('open');
     }
 
@@ -1497,10 +1450,10 @@
         ? (s.dist < 1 ? Math.round(s.dist * 1000) + 'm' : s.dist.toFixed(1) + 'km') + ' away'
         : (s.loc || 'Location unavailable');
       return `<div class="shop-card" onclick="openModal('${s._id}')">
-        <div class="shop-thumb">${s.photo ? `<img src="${s.photo}" alt="${s.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy">` : s.icon}<span class="shop-num">${_formatShopNum(s.num)}</span><span class="verified-pill">✅ Verified</span></div>
+        <div class="shop-thumb">${s.photo ? `<img src="${OrdersUI.esc(s.photo)}" alt="${OrdersUI.esc(s.name)}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy">` : s.icon}<span class="shop-num">${_formatShopNum(s.num)}</span><span class="verified-pill">✅ Verified</span></div>
         <div class="shop-body">
-          <h4>${s.name}</h4>
-          <div class="shop-meta-row"><span>🏷️ ${s.cat}</span><span>📍 ${s.loc}</span></div>
+          <h4>${OrdersUI.esc(s.name)}</h4>
+          <div class="shop-meta-row"><span>🏷️ ${OrdersUI.esc(s.cat)}</span><span>📍 ${OrdersUI.esc(s.loc)}</span></div>
           <div class="shop-footer-row">
             <span class="dist-tag">📍 ${distLabel}</span>
             <button class="btn-sm" onclick="event.stopPropagation();openModal('${s._id}')">View Shop</button>
@@ -1543,6 +1496,7 @@
     }
 
     function renderAllSections() {
+      buildCategoryUI();
       renderShops('home-shops', shops.slice(0, 4));
       renderShops('new-shops', shops.slice(4, 8));
       renderShops('search-shops', shops);
@@ -1622,13 +1576,14 @@
         const inCart = cart.items.find(i => i.name === p.name);
         const hasMultiple = p.images.length > 1;
         return `<div class="product-card">
-          <div class="product-img" ${p.images.length > 0 ? `onclick="event.stopPropagation(); openProductGallery(${idx})" style="cursor:pointer;"` : ''}>${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.parentNode.textContent='${p.icon}'" loading="lazy">` : p.icon}${hasMultiple ? `<span class="product-img-count">📷 ${p.images.length}</span>` : ''}</div>
+          <div class="product-img" ${p.images.length > 0 ? `onclick="event.stopPropagation(); openProductGallery(${idx})" style="cursor:pointer;"` : ''}>${p.image ? `<img src="${p.image}" alt="${OrdersUI.esc(p.name)}" style="width:100%;height:100%;object-fit:contain;" onerror="this.parentNode.textContent='${p.icon}'" loading="lazy">` : p.icon}${hasMultiple ? `<span class="product-img-count">📷 ${p.images.length}</span>` : ''}</div>
           <div class="product-info">
-            <p>${p.name}</p>
+            <p>${OrdersUI.esc(p.name)}</p>
             <strong>${formatPrice(p.price)}</strong>
+            ${p.description ? `<div class="product-desc" onclick="event.stopPropagation();this.classList.toggle('open');var m=this.nextElementSibling;if(m)m.textContent=this.classList.contains('open')?'Show less':'Read more'">${OrdersUI.esc(p.description)}</div>${p.description.length > 70 ? '<div class="product-desc-more" onclick="this.previousElementSibling.click()">Read more</div>' : ''}` : ''}
             <button class="btn-add-cart ${inCart ? 'added' : ''}" 
-              id="cart-btn-${p.name.replace(/\s/g,'_')}"
-              onclick="event.stopPropagation(); addToCartFromModal('${s._id}','${s.name.replace(/'/g,"\\'")}','${s.phone || ''}',${JSON.stringify(p).replace(/"/g,'&quot;')}, this)">
+              id="cart-btn-${idx}"
+              onclick="event.stopPropagation(); addToCartFromModal('${OrdersUI.esc(s._id)}','${OrdersUI.esc(String(s.name).replace(/\\/g,'\\\\').replace(/'/g,"\\'"))}','${OrdersUI.esc(s.phone || '')}',${JSON.stringify({ _id: p._id, name: p.name, price: p.price, icon: p.icon, image: p.image }).replace(/"/g,'&quot;')}, this)">
               ${inCart ? '✅ In Cart' : '🛒 Add to Cart'}
             </button>
           </div>
@@ -1659,29 +1614,119 @@
       if (id === 'orders') loadMyOrders();
     }
 
-    function doSearch() {
-      showSection('search');
-      const mainVal = document.getElementById('main-search')?.value || '';
-      const searchInput = document.getElementById('search-input');
-      if (searchInput && mainVal) searchInput.value = mainVal;
-      const q = (searchInput?.value || mainVal || '').trim().toLowerCase();
-      if (!q) { renderShops('search-shops', shops); return; }
-      const filtered = shops.filter(s =>
-        s.name.toLowerCase().includes(q) ||
-        s.cat.toLowerCase().includes(q) ||
-        s.loc.toLowerCase().includes(q)
-      );
-      renderShops('search-shops', filtered);
+    // ══════════ SEARCH ══════════
+    // Products AND shops, by word / brand / category. The server does the matching (GET /api/search);
+    // this code only draws the answer. Every state has a useful screen, including "nothing found".
+    let _searchCat = 'all', _searchTimer = null, _searchCtl = null, _searchSeq = 0;
+    const _E = (v) => OrdersUI.esc(v);
+
+    function buildCategoryUI() {
+      const pills = document.getElementById('search-filters');
+      if (pills) pills.innerHTML = [['all','🔎','All']].concat(CATEGORIES.map(c => [c[0], c[1], c[0]]))
+        .map(c => `<div class="cat-pill ${c[0] === _searchCat ? 'active' : ''}" data-cat="${_E(c[0])}" style="flex:0 0 auto;white-space:nowrap;" onclick="setSearchCat(this.dataset.cat)">${c[1]} ${_E(c[2])}</div>`).join('');
+      const grid = document.getElementById('category-grid');
+      if (grid) grid.innerHTML = CATEGORIES.map(c => `<div data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:2.2rem;display:block;margin-bottom:10px;">${c[1]}</span>
+          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">${_E(c[0])}</span>
+          <span class="cat-count" data-cat="${_E(c[0])}" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span></div>`).join('');
+      if (typeof updateStats === 'function' && shops.length) updateStats();
     }
-    function filterCat(el, cat) {
-      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
+    function setSearchCat(cat) {
+      _searchCat = cat || 'all';
+      document.querySelectorAll('#search-filters .cat-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === _searchCat));
+      return doSearch();
     }
+    // Category grid / shortcut -> the search screen with ONLY that category (any word typed earlier is cleared)
     function showCatShops(cat) {
-      document.getElementById('cat-result').style.display = 'block';
-      document.getElementById('cat-title').textContent = '✦ ' + cat + ' Shops';
-      const filtered = shops.filter(s => s.cat === cat);
-      renderShops('cat-shops', filtered);
+      const box = document.getElementById('search-input'); if (box) box.value = '';
+      showSection('search');
+      return setSearchCat(cat);
+    }
+
+    function doSearchSoon() { clearTimeout(_searchTimer); _searchTimer = setTimeout(doSearch, 350); }   // wait for the person to pause typing
+    async function doSearch() {
+      clearTimeout(_searchTimer);
+      const main = document.getElementById('main-search');
+      const box = document.getElementById('search-input');
+      if (main && main.value.trim() && document.getElementById('sec-home').classList.contains('active')) { box.value = main.value; main.value = ''; }
+      if (!document.getElementById('sec-search').classList.contains('active')) showSection('search');
+      const q = (box.value || '').trim();
+      const out = document.getElementById('search-results');
+
+      if (!q && _searchCat === 'all') {                      // nothing typed: show every verified shop
+        out.innerHTML = _head('All verified shops', shops.length + (shops.length === 1 ? ' shop' : ' shops')) + _shopGrid(shops);
+        return;
+      }
+      if (q.length === 1) { out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Type at least 2 letters…</p>'; return; }
+
+      if (_searchCtl) _searchCtl.abort();                    // a newer search replaces an older one
+      _searchCtl = new AbortController();
+      const mine = ++_searchSeq;
+      out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Searching…</p>';
+      try {
+        const res = await fetch(_API + '/search?q=' + encodeURIComponent(q) + '&category=' + encodeURIComponent(_searchCat), { signal: _searchCtl.signal });
+        const data = await res.json();
+        if (mine !== _searchSeq) return;
+        if (!res.ok) throw new Error(data.message || 'Search failed');
+        renderSearch(data, q);
+      } catch (e) {
+        if (e.name === 'AbortError') return;
+        out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Search is not available right now. Please check your connection and try again.</p>';
+      }
+    }
+
+    function _head(title, sub) { return `<div class="section-heading"><h3>✦ ${_E(title)}</h3><span style="font-size:0.75rem;color:var(--white-dim);">${_E(sub || '')}</span></div>`; }
+    function _shopsFrom(list) {                              // server gives ids; the cards use the data (and distances) already on the page
+      return (list || []).map(x => shops.find(s => s._id === String(x._id))).filter(Boolean);
+    }
+    function _shopGrid(list) {
+      return list.length ? `<div class="shops-grid">${list.map(makeShopCard).join('')}</div>`
+        : '<p style="text-align:center;color:var(--white-dim);padding:30px;">No shops found.</p>';
+    }
+    function _productTiles(list) {
+      return `<div class="shops-grid">${list.map(p => `<div class="shop-card" onclick="openModal('${_E(p.shopId)}')">
+        <div class="shop-thumb">${p.image ? `<img src="${_E(p.image)}" alt="${_E(p.name)}" style="width:100%;height:100%;object-fit:contain;" loading="lazy" onerror="this.style.display='none'">` : _catIcon(p.category)}</div>
+        <div class="shop-body"><h4>${_E(p.name)}</h4>
+          <div class="shop-meta-row"><span>💰 ${formatPrice(p.price)}</span></div>
+          ${p.description ? `<div class="product-desc" style="-webkit-line-clamp:2;">${_E(p.description)}</div>` : ''}
+          <div class="shop-meta-row"><span>🏪 ${_E(p.shopName)}</span><span>📍 ${_E(p.city)}</span></div>
+          <div class="shop-footer-row"><button class="btn-sm" onclick="event.stopPropagation();openModal('${_E(p.shopId)}')">View Shop</button></div></div></div>`).join('')}</div>`;
+    }
+    function _waNum(p) { const d = String(p || '').replace(/\D/g, ''); return d.startsWith('234') ? d : '234' + d.replace(/^0/, ''); }
+    // For shops that MAY stock the item without having listed it: one tap opens WhatsApp with the question written.
+    function _askGrid(list, q) {
+      return `<div class="shops-grid">${list.map(s => { const msg = `Hello, do you have "${q}" in stock? (Found you on ALFIJEER)`;
+        return makeShopCard(s).replace(/<\/div>\s*<\/div>\s*$/, `</div><div style="padding:0 14px 14px;"><a href="https://wa.me/${_waNum(s.whatsapp || s.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:block;text-align:center;background:#25D366;color:#fff;border-radius:8px;padding:9px;font-weight:800;font-size:0.78rem;text-decoration:none;">💬 Ask if they have it</a></div></div>`); }).join('')}</div>`;
+    }
+    function _note(html) { return `<div style="background:rgba(255,190,26,0.12);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:0.84rem;line-height:1.6;color:var(--white);">${html}</div>`; }
+
+    function renderSearch(d, q) {
+      const out = document.getElementById('search-results');
+      const exactShops = _shopsFrom(d.shops), catShops = _shopsFrom(d.categoryShops);
+      const catLabel = (d.inferredCategories || []).join(' / ');
+      const inCat = _searchCat !== 'all' ? ` in ${_E(_searchCat)}` : '';
+      let h = '';
+
+      if (d.mode === 'exact') {
+        h += _head(q ? `Results for “${q}”${_searchCat !== 'all' ? ' · ' + _searchCat : ''}` : `${_searchCat}`,
+          `${d.products.length} product${d.products.length === 1 ? '' : 's'} · ${exactShops.length} shop${exactShops.length === 1 ? '' : 's'}`);
+        if (d.products.length) h += '<h4 style="margin:6px 0 10px;font-size:0.85rem;color:var(--white-dim);">Products</h4>' + _productTiles(d.products);
+        if (exactShops.length) h += '<h4 style="margin:22px 0 10px;font-size:0.85rem;color:var(--white-dim);">Shops</h4>' + _shopGrid(exactShops);
+        if (catShops.length) h += `<h4 style="margin:26px 0 10px;font-size:0.85rem;color:var(--white-dim);">More shops selling ${_E(catLabel)}</h4>` + _shopGrid(catShops);
+      } else if (d.mode === 'related') {
+        h += _note(`<strong>No shop has listed “${_E(q)}”${inCat} yet.</strong><br>${d.similarProducts.length ? 'Here are similar products, ' : 'Here '}${catShops.length ? `and shops that sell ${_E(catLabel)}. They may have it in stock: tap <b>Ask if they have it</b> and the message is ready on WhatsApp.` : 'are options you can look at.'}`);
+        if (d.similarProducts.length) h += '<h4 style="margin:6px 0 10px;font-size:0.85rem;color:var(--white-dim);">Similar products</h4>' + _productTiles(d.similarProducts);
+        if (catShops.length) h += `<h4 style="margin:22px 0 10px;font-size:0.85rem;color:var(--white-dim);">Shops selling ${_E(catLabel)}</h4>` + _askGrid(catShops, q);
+      } else {
+        h += `<div style="text-align:center;padding:36px 12px;"><div style="font-size:2.6rem;">${q ? '🔍' : _catIcon(_searchCat)}</div>
+          <h3 style="margin:10px 0 6px;">${q ? `No results for “${_E(q)}”${inCat}` : `No shops in ${_E(_searchCat)} yet`}</h3>
+          <p style="color:var(--white-dim);font-size:0.84rem;line-height:1.7;max-width:420px;margin:0 auto 16px;">${q
+            ? 'Check the spelling, try fewer or simpler words (for example “Samsung” instead of the full model), or browse a category below.' + (_searchCat !== 'all' ? ' You can also search all categories.' : '')
+            : 'New shops join every week. Meanwhile, browse another category below or see every verified shop.'}</p>
+          ${_searchCat !== 'all' ? '<button class="btn-sm" onclick="setSearchCat(\'all\')" style="margin-bottom:16px;">Search all categories</button>' : ''}</div>
+          <div class="cat-pills" style="justify-content:center;">${(d.categories || []).slice(0, 8).map(c => `<div class="cat-pill" data-cat="${_E(c.name)}" onclick="showCatShops(this.dataset.cat)">${_catIcon(c.name)} ${_E(c.name)} (${c.count})</div>`).join('')}</div>`;
+      }
+      out.innerHTML = h;
     }
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
@@ -1767,6 +1812,7 @@
         if (res.ok) { myOrders = (await res.json()).orders || []; updateOrdersBadge(); }
       } catch (e) {}
     }
+    buildCategoryUI();
     refreshOrdersBadge();
     if (location.hash === '#orders') showSection('orders');
 
@@ -1812,6 +1858,7 @@
     </div>
     <div class="gallery-counter" id="gallery-counter"></div>
     <div class="gallery-dots" id="gallery-dots"></div>
+    <div class="gallery-info" id="gallery-info"></div>
   </div>
 
 </body>
