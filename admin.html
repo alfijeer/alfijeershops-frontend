@@ -1382,13 +1382,13 @@
     function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     // For names placed inside onclick="fn('...')": JS-escape first, then HTML-escape.
     function jsq(v) { return esc(String(v == null ? '' : v).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\s+/g, ' ')); }
-    const ORDER_LABEL = { PENDING:'Pending', ACCEPTED:'Accepted', PAYMENT_SUBMITTED:'Payment Submitted', PAYMENT_CONFIRMED:'Payment Confirmed',
+    const ORDER_LABEL = { PENDING:'Pending', ACCEPTED:'Accepted', TOTAL_SENT:'Total Sent', TOTAL_ACCEPTED:'Total Accepted', PAYMENT_SUBMITTED:'Payment Submitted', PAYMENT_CONFIRMED:'Payment Confirmed',
       DELIVERED:'Delivered', COMPLETED:'Completed', CANCELLED:'Cancelled', PAYMENT_ISSUE:'Payment Issue', DELIVERY_REVIEW:'Delivery Review',
       DISPUTED:'Disputed', REPLACEMENT_PENDING:'Replacement Pending', REFUND_PENDING:'Refund Pending', REFUNDED:'Refunded' };
     function orderPill(s) {
       if (s === 'COMPLETED' || s === 'REFUNDED') return 'status-approved';
       if (s === 'CANCELLED' || s === 'PAYMENT_ISSUE' || s === 'DISPUTED') return 'status-rejected';
-      if (s === 'PENDING' || s === 'DELIVERY_REVIEW' || s === 'REFUND_PENDING') return 'status-pending';
+      if (s === 'PENDING' || s === 'TOTAL_SENT' || s === 'DELIVERY_REVIEW' || s === 'REFUND_PENDING') return 'status-pending';
       return 'status-suspended';
     }
     // Seller trust record (shown only when the backend sends these fields)

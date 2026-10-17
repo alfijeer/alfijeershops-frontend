@@ -879,13 +879,13 @@
     // ── Workflow definitions (match the approved status flow) ──
     const TERMINAL = ['COMPLETED', 'CANCELLED', 'REFUNDED'];
     const ADMIN_NEEDED = ['PAYMENT_ISSUE', 'DELIVERY_REVIEW', 'DISPUTED', 'REFUND_PENDING'];
-    const LABEL = { PENDING:'Pending', ACCEPTED:'Accepted', PAYMENT_SUBMITTED:'Payment Submitted', PAYMENT_CONFIRMED:'Payment Confirmed',
+    const LABEL = { PENDING:'Pending', ACCEPTED:'Accepted', TOTAL_SENT:'Total Sent', TOTAL_ACCEPTED:'Total Accepted', PAYMENT_SUBMITTED:'Payment Submitted', PAYMENT_CONFIRMED:'Payment Confirmed',
       DELIVERED:'Delivered', COMPLETED:'Completed', CANCELLED:'Cancelled', PAYMENT_ISSUE:'Payment Issue', DELIVERY_REVIEW:'Delivery Review',
       DISPUTED:'Disputed', REPLACEMENT_PENDING:'Replacement Pending', REFUND_PENDING:'Refund Pending', REFUNDED:'Refunded' };
     function pillClass(s) {
       if (s === 'COMPLETED' || s === 'REFUNDED') return 'status-approved';
       if (s === 'CANCELLED' || s === 'PAYMENT_ISSUE' || s === 'DISPUTED') return 'status-rejected';
-      if (s === 'PENDING' || s === 'DELIVERY_REVIEW' || s === 'REFUND_PENDING') return 'status-pending';
+      if (s === 'PENDING' || s === 'TOTAL_SENT' || s === 'DELIVERY_REVIEW' || s === 'REFUND_PENDING') return 'status-pending';
       return 'status-suspended';
     }
     // Admin acts only on exceptions. Normal orders move by buyer, seller or timer.
@@ -893,14 +893,14 @@
     function decisionsFor(o) {
       switch (o.status) {
         case 'PAYMENT_ISSUE': return [['PAYMENT_VALID','Payment is valid → Payment Confirmed'], ['PAYMENT_INVALID','Payment is invalid → Cancelled']];
-        case 'DELIVERY_REVIEW': return [['EXTEND','Give seller an extension → Payment Confirmed'], ['REFUND','Seller failed to deliver → Refund Pending']];
+        case 'DELIVERY_REVIEW': return [['EXTEND','Give seller an extension → Payment Confirmed'], ['REFUND', (o.fulfilment === 'DELIVERY' ? 'Seller failed to deliver' : 'Seller failed to hand over the order') + ' → Refund Pending']];
         case 'DISPUTED': {
           const d = [['REJECT','Reject buyer claim → Completed'], ['REFUND','Approve refund → Refund Pending']];
           if ((o.replacementCount || 0) < 1) d.push(['REPLACE','Approve one replacement → Replacement Pending']);
           return d;
         }
         case 'REFUND_PENDING': return [['STRIKE_SELLER','Seller ignored refund order → Apply strike']];
-        case 'PENDING': case 'ACCEPTED': case 'PAYMENT_SUBMITTED': return [['ADMIN_CANCEL','Cancel order (fraud or violation) → Cancelled']];
+        case 'PENDING': case 'ACCEPTED': case 'TOTAL_SENT': case 'TOTAL_ACCEPTED': case 'PAYMENT_SUBMITTED': return [['ADMIN_CANCEL','Cancel order (fraud or violation) → Cancelled']];
         case 'PAYMENT_CONFIRMED': case 'DELIVERED': case 'REPLACEMENT_PENDING': return [['ADMIN_REFUND','Fraud or violation → Refund Pending']];
         default: return [];
       }
@@ -988,10 +988,13 @@
         <h4 class="od-h">Order</h4>
         ${row('Shop', o.shopName || o.sellerName)}${row('Buyer', o.buyerName)}${row('Items', '')}
         <div style="font-size:0.8rem;padding:4px 0 8px;">${items}</div>
+        ${row('Receive by', o.fulfilment === 'DELIVERY' ? 'Delivery' : 'Pickup from shop')}
+        ${o.fulfilment === 'DELIVERY' ? row('Deliver to', [o.delivery && o.delivery.name, o.delivery && o.delivery.phone, o.delivery && o.delivery.address, o.delivery && o.delivery.landmark].filter(Boolean).join(' · ')) + row('Products total', formatPrice(o.productTotal || 0)) + row('Delivery fee', formatPrice(o.deliveryFee || 0)) : ''}
         ${row('Total', formatPrice(o.total))}${row('Placed', fmtDate(o.createdAt))}${row('Last status change', fmtDate(o.statusChangedAt))}
         ${row('Replacements used', o.replacementCount || 0)}
         ${o.cancelReason ? row('Cancel reason', o.cancelReason) + row('Cancelled by', o.cancelledBy) : ''}
         <h4 class="od-h">Payment</h4>
+        ${o.paymentDetails && o.paymentDetails.accountNumber ? row('Paid to', [o.paymentDetails.bankName, o.paymentDetails.accountName, o.paymentDetails.accountNumber].filter(Boolean).join(' · ')) : ''}
         ${row('Method', p.method)}${row('Amount', p.amount != null ? formatPrice(p.amount) : '')}${row('Reference', p.reference)}${row('Payment status', p.status)}
         ${p.issueReason ? row('Issue reason', p.issueReason) : ''}
         ${o.dispute && o.dispute.reason ? row('Dispute reason', o.dispute.reason) : ''}

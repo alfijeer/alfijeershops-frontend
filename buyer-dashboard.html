@@ -639,6 +639,27 @@
     }
     .btn-clear-cart:hover { border-color: #e74c3c; color: #e74c3c; }
 
+    /* ── Pickup / delivery choice in the cart ── */
+    .ful-box { margin-bottom: 14px; }
+    .ful-title { font-size: 0.78rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+    .ful-opt {
+      display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+      padding: 10px 12px; margin-bottom: 8px; border-radius: 8px;
+      border: 1px solid rgba(201,144,0,0.25); background: #fff;
+      text-transform: none; letter-spacing: 0; font-size: 0.8rem; color: var(--white);
+    }
+    .ful-opt:has(input:checked) { border-color: var(--gold); background: rgba(255,190,26,0.1); }
+    .ful-opt input { width: auto; margin-top: 3px; accent-color: var(--gold-dim); }
+    .ful-opt small { display: block; font-size: 0.7rem; font-weight: 600; color: var(--white-dim); margin-top: 2px; }
+    .ful-form { margin: 4px 0 8px; }
+    .ful-form label { margin: 8px 0 4px; }
+    .ful-form input, .ful-form textarea {
+      width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(201,144,0,0.25);
+      font-family: 'Nunito', sans-serif; font-size: 0.82rem; color: var(--white); background: #fff;
+    }
+    .ful-form textarea { min-height: 56px; resize: vertical; }
+    .cart-fee-note { font-size: 0.72rem; color: var(--white-dim); line-height: 1.5; margin: 0 0 12px; }
+
     /* ── ADD TO CART btn inside product card ── */
     .btn-add-cart {
       width: 100%; padding: 7px 10px; margin-top: 6px;
@@ -935,7 +956,22 @@
       <div class="cart-totals">
         <div class="cart-total-row"><span>Items</span><span id="cart-items-count">0</span></div>
         <div class="cart-total-row"><span>Shop</span><span id="cart-footer-shop">—</span></div>
-        <div class="cart-total-row"><span>Total</span><span id="cart-total">₦0</span></div>
+        <div class="cart-total-row"><span id="cart-total-label">Total</span><span id="cart-total">₦0</span></div>
+      </div>
+      <p class="cart-fee-note" id="cart-fee-note" style="display:none;">Delivery fee is not included yet. After the seller accepts, they will add it and send you the final total. You can accept it or cancel before you pay anything.</p>
+      <div class="ful-box" id="ful-box">
+        <div class="ful-title">How do you want to receive your order?</div>
+        <label class="ful-opt"><input type="radio" name="fulfilment" value="PICKUP" checked onchange="updateFulfilmentUI()"/>
+          <span><b>🏪 Pickup from shop</b><small>No delivery fee. You collect the order at the shop.</small></span></label>
+        <label class="ful-opt"><input type="radio" name="fulfilment" value="DELIVERY" onchange="updateFulfilmentUI()"/>
+          <span><b>🛵 Request delivery</b><small>The seller tells you the delivery fee before you pay.</small></span></label>
+        <div class="ful-form" id="ful-form" style="display:none;">
+          <label for="del-name">Customer name *</label><input type="text" id="del-name" maxlength="80" autocomplete="name"/>
+          <label for="del-phone">Phone number *</label><input type="tel" id="del-phone" maxlength="20" autocomplete="tel" placeholder="080XXXXXXXX"/>
+          <label for="del-address">Delivery address *</label><input type="text" id="del-address" maxlength="250" autocomplete="street-address" placeholder="Street, area, town"/>
+          <label for="del-landmark">Landmark (optional)</label><input type="text" id="del-landmark" maxlength="120" placeholder="e.g. Opposite the central mosque"/>
+          <label for="del-note">Delivery note (optional)</label><textarea id="del-note" maxlength="300" placeholder="Anything the rider should know"></textarea>
+        </div>
       </div>
       <button class="btn-send-order" onclick="sendOrder()">📦 Place Order</button>
       <button class="btn-clear-cart" onclick="clearCart()">🗑️ Clear Cart</button>
@@ -947,7 +983,7 @@
     <div class="order-confirm-box">
       <span class="order-success-icon">✅</span>
       <h3>Order Placed!</h3>
-      <p>Your order is with the seller. Wait for them to accept it, then message them on WhatsApp for payment details. Track every step under My Orders.</p>
+      <p id="order-confirm-text">Your order is with the seller. Track every step under My Orders.</p>
       <div class="order-summary-box" id="order-summary-content"></div>
       <a id="order-wa-link" class="btn-ok-order" target="_blank" rel="noopener noreferrer" style="display:none;text-align:center;text-decoration:none;margin-bottom:8px;background:#25D366;color:#fff;">💬 Message the seller on WhatsApp</a>
       <button class="btn-ok-order" onclick="closeOrderConfirm(); showSection('orders')">View My Orders</button>
@@ -1361,6 +1397,7 @@
       footShop.textContent = cart.shopName;
       totalEl.textContent  = formatPrice(getCartTotal());
       countEl.textContent  = getCartItemCount() + ' item(s)';
+      updateFulfilmentUI();
 
       const cartItemsHtml = cart.items.map(item => `
         <div class="cart-item">
@@ -1394,12 +1431,43 @@
       document.getElementById('cart-drawer').classList.remove('open');
     }
 
+    // ── Pickup / delivery choice ──
+    function getFulfilment() {
+      const r = document.querySelector('input[name="fulfilment"]:checked');
+      return r && r.value === 'DELIVERY' ? 'DELIVERY' : 'PICKUP';
+    }
+    function updateFulfilmentUI() {
+      const delivery = getFulfilment() === 'DELIVERY';
+      document.getElementById('ful-form').style.display = delivery ? 'block' : 'none';
+      document.getElementById('cart-fee-note').style.display = delivery ? 'block' : 'none';
+      document.getElementById('cart-total-label').textContent = delivery ? 'Products total' : 'Total';
+      if (delivery) {
+        // save typing: start from the name and phone on the buyer's account (only into empty boxes)
+        const u = (typeof getCurrentUser === 'function' && getCurrentUser()) || {};
+        const nameEl = document.getElementById('del-name'), phoneEl = document.getElementById('del-phone');
+        if (nameEl && !nameEl.value && u.fullName) nameEl.value = u.fullName;
+        if (phoneEl && !phoneEl.value && u.phone) phoneEl.value = u.phone;
+      }
+    }
+    // Returns { fulfilment, delivery? } or null (after telling the buyer what is missing)
+    function readFulfilment() {
+      if (getFulfilment() === 'PICKUP') return { fulfilment: 'PICKUP' };
+      const v = (id) => document.getElementById(id).value.trim();
+      const delivery = { name: v('del-name'), phone: v('del-phone'), address: v('del-address'), landmark: v('del-landmark'), note: v('del-note') };
+      if (delivery.name.length < 2) { showToast('Please enter the customer name for the delivery.', 'error'); return null; }
+      if (!/^\+?\d{10,15}$/.test(delivery.phone.replace(/[\s()-]/g, ''))) { showToast('Please enter a valid phone number for the delivery.', 'error'); return null; }
+      if (delivery.address.length < 5) { showToast('Please enter the full delivery address.', 'error'); return null; }
+      return { fulfilment: 'DELIVERY', delivery };
+    }
+
     async function sendOrder() {
       if (cart.items.length === 0) { showToast('Your cart is empty!', 'error'); return; }
       if (!isLoggedIn()) { window.location.href = 'auth.html'; return; }
       if (!cart.shopId || cart.items.some(i => !i.productId)) {
         showToast('Please clear your cart and add the items again.', 'error'); return;
       }
+      const how = readFulfilment();
+      if (!how) return;
 
       const btn = document.querySelector('.btn-send-order');
       if (btn) { btn.disabled = true; btn.textContent = 'Placing order…'; }
@@ -1408,23 +1476,31 @@
         const res = await fetch(_API + '/orders', {
           method: 'POST',
           headers: _headers(),
-          body: JSON.stringify({ shopId: cart.shopId, items: cart.items.map(i => ({ productId: i.productId, quantity: i.qty })) }),
+          body: JSON.stringify(Object.assign({ shopId: cart.shopId, items: cart.items.map(i => ({ productId: i.productId, quantity: i.qty })) }, how)),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) { showToast(data.message || 'Could not place the order. Please try again.', 'error'); return; }
 
         const order = data.order;
         const total = order.total;
+        const isDel = order.fulfilment === 'DELIVERY';
+        document.getElementById('order-confirm-text').textContent = isDel
+          ? 'Your delivery request is with the seller. When they accept, they will add the delivery fee and send you the final total. You can accept it or cancel before you pay. Track every step under My Orders.'
+          : 'Your order is with the seller. When they accept it, their payment details will appear on your order under My Orders. Track every step there.';
         document.getElementById('order-summary-content').innerHTML =
           `<div class="osr"><span><strong>Order</strong></span><span>${OrdersUI.esc(order.orderId)}</span></div>` +
+          `<div class="osr"><span>Receive by</span><span>${isDel ? '🛵 Delivery' : '🏪 Pickup from shop'}</span></div>` +
           order.items.map(i => `<div class="osr"><span>${OrdersUI.esc(i.name)} × ${i.quantity}</span><span>${formatPrice(i.price * i.quantity)}</span></div>`).join('') +
-          `<div class="osr total" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,144,0,0.15);"><span><strong>Total</strong></span><span>${formatPrice(total)}</span></div>`;
+          (isDel ? `<div class="osr"><span>Delivery fee</span><span>Seller will add it</span></div>` : '') +
+          `<div class="osr total" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,144,0,0.15);"><span><strong>${isDel ? 'Products total' : 'Total'}</strong></span><span>${formatPrice(total)}</span></div>`;
 
         // Optional WhatsApp message to the seller (a button, so phones do not block it)
         const waBtn = document.getElementById('order-wa-link');
         if (cart.shopPhone) {
           const waNumber = '234' + String(cart.shopPhone).replace(/\D/g, '').replace(/^0/, '');
-          const text = `Hello, I just placed order ${order.orderId} on ALFIJEER (${formatPrice(total)}). Please accept it.`;
+          const text = isDel
+            ? `Hello, I just placed order ${order.orderId} on ALFIJEER (${formatPrice(total)} before delivery). Please accept it and send me the delivery fee.`
+            : `Hello, I just placed order ${order.orderId} on ALFIJEER (${formatPrice(total)}). Please accept it.`;
           waBtn.href = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text);
           waBtn.style.display = 'block';
         } else { waBtn.style.display = 'none'; }
@@ -1432,6 +1508,9 @@
         closeCart();
         document.getElementById('order-confirm-modal').classList.add('open');
         cart = { shopId: null, shopNum: null, shopName: null, shopPhone: null, items: [] };
+        document.querySelector('input[name="fulfilment"][value="PICKUP"]').checked = true;
+        ['del-landmark', 'del-note', 'del-address'].forEach(id => { document.getElementById(id).value = ''; });
+        updateFulfilmentUI();
         updateCartBadge();
         refreshOrdersBadge();
       } catch (e) {

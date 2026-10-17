@@ -322,6 +322,11 @@
 
     <!-- ══ DASHBOARD HOME ══ -->
     <section class="page-section active" id="sec-dashboard">
+      <div id="bank-reminder" style="display:none;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;align-items:center;gap:14px;flex-wrap:wrap;">
+        <span style="font-size:1.3rem;">🏦</span>
+        <p style="flex:1;min-width:200px;font-size:0.82rem;color:var(--white);font-weight:700;margin:0;">Complete your payment details before accepting customer orders.</p>
+        <button class="btn-primary" onclick="goToPaymentDetails()">Add payment details</button>
+      </div>
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-top"><div class="stat-icon-box">👁️</div><span class="stat-trend">All Time</span></div>
@@ -548,6 +553,20 @@
           <button class="btn-secondary" onclick="showToast('To change your name or email, please contact support.','info')">Request Account Change</button>
           <button class="btn-secondary" onclick="showToast('Password change is not built yet — coming soon.','info')">Change Password</button>
         </div>
+      </div>
+      <div class="form-card" id="payment-details-card" style="margin-bottom:16px;">
+        <h3 style="font-family:'Cinzel',serif;font-size:0.95rem;color:var(--white);margin-bottom:6px;">Payment Details</h3>
+        <p style="font-size:0.78rem;color:var(--white-dim);margin-bottom:6px;">Buyers pay you directly into this account. Alfijeer never holds your money.</p>
+        <p style="font-size:0.78rem;color:var(--white-dim);margin-bottom:18px;">These bank details will be shown to buyers only after you accept an order and the buyer approves the total amount.</p>
+        <div class="form-grid">
+          <div class="form-group"><label for="pay-bank">Bank Name *</label>
+            <select id="pay-bank" onchange="togglePayBankOther()"><option value="">Select your bank</option></select>
+            <input type="text" id="pay-bank-other" maxlength="60" placeholder="Type your bank name" style="display:none;margin-top:8px;"/>
+          </div>
+          <div class="form-group"><label for="pay-name">Account Name *</label><input type="text" id="pay-name" maxlength="80" autocomplete="off"/></div>
+          <div class="form-group"><label for="pay-number">Account Number *</label><input type="text" id="pay-number" inputmode="numeric" maxlength="10" placeholder="10 digits" autocomplete="off"/></div>
+        </div>
+        <div style="margin-top:16px;"><button class="btn-primary" id="pay-save-btn" onclick="savePaymentDetails()">Save Payment Details</button></div>
       </div>
       <div class="form-card" style="margin-bottom:16px;">
         <h3 style="font-family:'Cinzel',serif;font-size:0.95rem;color:var(--gold);margin-bottom:6px;">Notification Preferences</h3>
@@ -838,7 +857,10 @@
 
         mySeller = data.seller;
         products = data.products || [];
-        localStorage.setItem('as_seller', JSON.stringify(mySeller));
+        // keep the bank account out of browser storage: it is only needed for the Settings form
+        const { bankDetails: _bank, ...sellerForStorage } = mySeller;
+        localStorage.setItem('as_seller', JSON.stringify(sellerForStorage));
+        fillPaymentDetails(_bank, !!mySeller.paymentDetailsComplete);
 
         const isApproved = mySeller.status === 'approved';
         const shopNum = _formatShopNum(mySeller.shopNumber);
@@ -936,6 +958,63 @@
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );
+    }
+
+    // ══════════════════════════════════════
+    //  PAYMENT DETAILS (Settings)
+    // ══════════════════════════════════════
+    const BANKS = ['Access Bank','Citibank Nigeria','Ecobank Nigeria','Fidelity Bank','First Bank of Nigeria','First City Monument Bank (FCMB)','Globus Bank','Guaranty Trust Bank (GTBank)','Heritage Bank','Keystone Bank','Kuda Bank','Moniepoint MFB','OPay','PalmPay','Polaris Bank','Providus Bank','Stanbic IBTC Bank','Standard Chartered Bank','Sterling Bank','SunTrust Bank','Titan Trust Bank','Union Bank of Nigeria','United Bank for Africa (UBA)','Unity Bank','Wema Bank','Zenith Bank'];
+    (function initBankList() {
+      const sel = document.getElementById('pay-bank');
+      if (!sel) return;
+      BANKS.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; sel.appendChild(o); });
+      const other = document.createElement('option'); other.value = '__other'; other.textContent = 'Other bank…'; sel.appendChild(other);
+    })();
+    function togglePayBankOther() {
+      document.getElementById('pay-bank-other').style.display = document.getElementById('pay-bank').value === '__other' ? 'block' : 'none';
+    }
+    function fillPaymentDetails(bank, complete) {
+      const sel = document.getElementById('pay-bank');
+      if (bank && sel) {
+        if (BANKS.includes(bank.bankName)) sel.value = bank.bankName;
+        else if (bank.bankName) { sel.value = '__other'; document.getElementById('pay-bank-other').value = bank.bankName; }
+        togglePayBankOther();
+        document.getElementById('pay-name').value = bank.accountName || '';
+        document.getElementById('pay-number').value = bank.accountNumber || '';
+      }
+      const rem = document.getElementById('bank-reminder');
+      if (rem) rem.style.display = complete ? 'none' : 'flex';
+    }
+    function goToPaymentDetails() {
+      showSection('settings');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', /Settings/.test(n.textContent)));
+      const card = document.getElementById('payment-details-card');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    // orders-ui.js calls this when the server refuses an accept because details are missing
+    window.OrdersUI.onBankRequired = function () {
+      showToast('Complete your payment details before accepting customer orders.', 'error');
+      goToPaymentDetails();
+    };
+    async function savePaymentDetails() {
+      const sel = document.getElementById('pay-bank').value;
+      const bankName = (sel === '__other' ? document.getElementById('pay-bank-other').value : sel).trim();
+      const accountName = document.getElementById('pay-name').value.trim();
+      const accountNumber = document.getElementById('pay-number').value.replace(/[\s-]/g, '');
+      if (bankName.length < 2) { showToast('Please choose your bank.', 'error'); return; }
+      if (accountName.length < 2) { showToast('Please enter the account name.', 'error'); return; }
+      if (!/^\d{10}$/.test(accountNumber)) { showToast('Account number must be exactly 10 digits.', 'error'); return; }
+      const btn = document.getElementById('pay-save-btn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(_API + '/sellers/profile', { method: 'PUT', headers: _headers(), body: JSON.stringify({ bankName, accountName, accountNumber }) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { showToast(data.message || 'Could not save payment details.', 'error'); return; }
+        showToast('✅ Payment details saved', 'success');
+        document.getElementById('bank-reminder').style.display = data.paymentDetailsComplete ? 'none' : 'flex';
+        if (mySeller) mySeller.paymentDetailsComplete = !!data.paymentDetailsComplete;
+      } catch (e) { showToast('Connection error. Try again.', 'error'); }
+      finally { btn.disabled = false; }
     }
 
     async function saveShopProfile() {

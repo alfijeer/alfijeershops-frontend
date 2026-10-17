@@ -681,6 +681,26 @@
                 <p id="shop-name" style="margin-top:8px;font-size:0.78rem;color:var(--gold);"></p>
               </div>
             </div>
+            <h3 style="font-family:'Cinzel',serif;font-size:0.95rem;margin:8px 0 10px;">Payment Information</h3>
+            <div class="notice-box">
+              <span class="notice-icon">🏦</span>
+              <p>These bank details will be shown to buyers only after you accept an order and the buyer approves the total amount.</p>
+            </div>
+            <div class="form-group">
+              <label>Bank Name <span class="required">*</span></label>
+              <select id="seller-bank" onchange="document.getElementById('seller-bank-other').style.display = this.value === '__other' ? 'block' : 'none'">
+                <option value="">Select your bank</option>
+              </select>
+              <input type="text" id="seller-bank-other" maxlength="60" placeholder="Type your bank name" style="display:none;margin-top:8px;"/>
+            </div>
+            <div class="form-group">
+              <label>Account Name <span class="required">*</span></label>
+              <input type="text" id="seller-acc-name" maxlength="80" placeholder="Name on the bank account" autocomplete="off"/>
+            </div>
+            <div class="form-group">
+              <label>Account Number <span class="required">*</span></label>
+              <input type="text" id="seller-acc-number" inputmode="numeric" maxlength="10" placeholder="10-digit account number" autocomplete="off"/>
+            </div>
             <div class="form-group">
               <label>Email Address <span class="required">*</span></label>
               <input type="email" id="seller-email" placeholder="Your email for application status updates"/>
@@ -923,6 +943,14 @@
       );
     }
 
+    const BANKS = ['Access Bank','Citibank Nigeria','Ecobank Nigeria','Fidelity Bank','First Bank of Nigeria','First City Monument Bank (FCMB)','Globus Bank','Guaranty Trust Bank (GTBank)','Heritage Bank','Keystone Bank','Kuda Bank','Moniepoint MFB','OPay','PalmPay','Polaris Bank','Providus Bank','Stanbic IBTC Bank','Standard Chartered Bank','Sterling Bank','SunTrust Bank','Titan Trust Bank','Union Bank of Nigeria','United Bank for Africa (UBA)','Unity Bank','Wema Bank','Zenith Bank'];
+    (function initBankList() {
+      const sel = document.getElementById('seller-bank');
+      if (!sel) return;
+      BANKS.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; sel.appendChild(o); });
+      const other = document.createElement('option'); other.value = '__other'; other.textContent = 'Other bank…'; sel.appendChild(other);
+    })();
+
     async function completeSellerReg(btn) {
       const fullname    = document.getElementById('seller-name')?.value.trim()     || '';
       const bizname     = document.getElementById('seller-bizname')?.value.trim()  || document.getElementById('seller-biz')?.value.trim() || '';
@@ -938,11 +966,18 @@
       const terms       = document.getElementById('seller-terms')?.checked;
       const govId       = document.getElementById('id-upload')?.files?.[0];
       const shopPhoto   = document.getElementById('shop-upload')?.files?.[0];
+      const bankSel     = document.getElementById('seller-bank')?.value || '';
+      const bankName    = (bankSel === '__other' ? (document.getElementById('seller-bank-other')?.value || '') : bankSel).trim();
+      const accName     = document.getElementById('seller-acc-name')?.value.trim() || '';
+      const accNumber   = (document.getElementById('seller-acc-number')?.value || '').replace(/[\s-]/g, '');
 
       if (!fullname)             { showToast('Please enter your full name', 'error');          return; }
       if (!bizname)              { showToast('Please enter your business name', 'error');      return; }
       if (!phone)                { showToast('Please enter your phone number', 'error');       return; }
       if (!state)                { showToast('Please select your state', 'error');             return; }
+      if (bankName.length < 2)   { showToast('Please choose your bank (Payment Information)', 'error'); return; }
+      if (accName.length < 2)    { showToast('Please enter the bank account name', 'error');   return; }
+      if (!/^\d{10}$/.test(accNumber)) { showToast('Account number must be exactly 10 digits', 'error'); return; }
       if (!validateEmail(email)) { showToast('Please enter a valid email address', 'error');   return; }
       if (pass.length < 6)       { showToast('Password must be at least 6 characters', 'error'); return; }
       if (!terms)                { showToast('Please accept the Seller Rules to continue', 'error'); return; }
@@ -977,6 +1012,9 @@
         fd.append('email',          email);
         fd.append('password',       pass);
         fd.append('role',           'seller');
+        fd.append('bankName',       bankName);
+        fd.append('accountName',    accName);
+        fd.append('accountNumber',  accNumber);
         if (govId)     fd.append('govId',     govId);
         if (shopPhoto) fd.append('shopPhoto', shopPhoto);
 
