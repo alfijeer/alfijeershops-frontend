@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ALFIJEER — The Digital Market Place For Nigeria</title>
+  <meta name="description" content="Find verified shops and fresh products near you. Every ALFIJEER seller is checked and has a permanent shop number."/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1339,6 +1339,164 @@
       box-shadow: 0 2px 14px rgba(16,40,28,0.07);
       border-radius: 12px;
     }
+
+    /* ═════════════════════════════════════════════════════════════
+       HOMEPAGE, MOBILE-APP STYLE  (everything here is prefixed hm-)
+    ═════════════════════════════════════════════════════════════ */
+    body { background: #F6F3EA; }
+    .search-bar-wrap { display: none; }
+    .hm-wrap { max-width: 1100px; margin: 0 auto; padding: 0 5% 8px; position: relative; z-index: 2; }
+    .hm-sec { margin-top: 26px; }
+    .hm-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .hm-head h2 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.15rem; line-height: 1.2; color: var(--white); }
+    .hm-head p { font-size: 0.78rem; color: var(--white-dim); margin-top: 2px; }
+    .hm-link { font-size: 0.82rem; font-weight: 800; color: var(--gold-dim); text-decoration: none; padding: 6px 0 6px 10px; white-space: nowrap; }
+    .hm-link-btn { background: none; border: 0; font: inherit; font-weight: 800; color: var(--gold-dim); text-decoration: underline; cursor: pointer; }
+    .hm-empty { grid-column: 1 / -1; padding: 22px 8px; text-align: center; font-size: 0.85rem; color: var(--white-dim); }
+
+    /* top: greeting, headline, search */
+    .hm-top { margin-top: 64px; padding: 26px 5% 6px; max-width: 1100px; margin-left: auto; margin-right: auto; position: relative; z-index: 3; }
+    .hm-hello { font-size: 0.85rem; font-weight: 700; color: var(--gold-dim); }
+    .hm-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(1.45rem, 6.2vw, 2.1rem); line-height: 1.18; color: var(--white); margin: 2px 0 8px; max-width: 16em; }
+    .hm-pulse { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #0E6B3C; background: rgba(18,128,73,0.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
+    .hm-pulse[hidden] { display: none; }
+    .hm-pulse i { width: 8px; height: 8px; border-radius: 50%; background: #128049; box-shadow: 0 0 0 0 rgba(18,128,73,0.5); animation: hmPulse 2s infinite; }
+    @keyframes hmPulse { 70% { box-shadow: 0 0 0 8px rgba(18,128,73,0); } 100% { box-shadow: 0 0 0 0 rgba(18,128,73,0); } }
+    .hm-searchbtn {
+      display: flex; align-items: center; gap: 12px; width: 100%; max-width: 640px; height: 54px; padding: 0 18px;
+      background: #fff; border: 1.5px solid rgba(201,144,0,0.3); border-radius: 16px; cursor: text;
+      font-family: 'Nunito', sans-serif; font-size: 0.92rem; color: var(--white-dim); text-align: left;
+      box-shadow: 0 6px 18px rgba(0,18,51,0.07);
+    }
+    .hm-searchtxt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* banner becomes a rounded promo card */
+    .banner-wrap { padding: 14px 5% 0; }
+    .banner-carousel { border-radius: 20px; box-shadow: 0 8px 22px rgba(0,18,51,0.1); min-height: 0; }
+    .banner-dots { display: none; }
+    .banner-slide img { max-height: 230px; object-fit: contain; margin: 0 auto; }   /* a tall banner can never push the shops off the first screen */
+    .banner-fallback { padding: 22px 20px; }
+
+    /* categories: one swipeable row */
+    .hm-cats { display: flex; gap: 8px; overflow-x: auto; margin: 0 -5%; padding: 2px 5% 8px; scrollbar-width: none; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+    .hm-cats::-webkit-scrollbar, .hm-rail::-webkit-scrollbar, .hm-sheet-cats::-webkit-scrollbar { display: none; }
+    .hm-cat { flex: 0 0 auto; scroll-snap-align: start; display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 999px; border: 1px solid rgba(201,144,0,0.25); background: #fff; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--white); cursor: pointer; }
+    .hm-cat span { font-size: 1.15rem; }
+    .hm-cats, .hm-rail { scroll-padding-left: 5%; }
+    .hm-cat:active, .hm-chip:active { background: rgba(255,190,26,0.25); }
+
+    /* newest shops: swipe rail on phones, grid on larger screens */
+    .hm-rail { display: flex; gap: 12px; overflow-x: auto; margin: 0 -5%; padding: 2px 5% 10px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .hm-shop { flex: 0 0 76%; max-width: 300px; scroll-snap-align: start; background: #fff; border: 1px solid rgba(201,144,0,0.2); border-radius: 18px; overflow: hidden; cursor: pointer; box-shadow: 0 4px 14px rgba(0,18,51,0.06); }
+    .hm-shop:active { transform: scale(0.985); }
+    .hm-shop-img { position: relative; height: 136px; background: linear-gradient(135deg, #F3F9F5, #E3F2E8); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .hm-shop-img img { width: 100%; height: 100%; object-fit: contain; }
+    .hm-ico { font-size: 2.6rem; }
+    .hm-tag { position: absolute; left: 10px; bottom: 10px; background: var(--gold); color: var(--dark); font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.68rem; letter-spacing: 1px; padding: 4px 9px; border-radius: 6px; }
+    .hm-new { position: absolute; left: 10px; top: 10px; background: #128049; color: #fff; font-size: 0.66rem; font-weight: 800; padding: 3px 9px; border-radius: 999px; }
+    .hm-heart { position: absolute; right: 8px; top: 8px; width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer; background: rgba(255,255,255,0.95); color: #B9B2A2; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 6px rgba(0,18,51,0.18); }
+    .hm-heart.on { color: #E0334C; }
+    .hm-shop-body { padding: 12px 14px 14px; }
+    .hm-shop-body h3 { font-size: 0.98rem; font-weight: 800; line-height: 1.25; margin-bottom: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .hm-shop-body p { font-size: 0.78rem; color: var(--white-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hm-shop-body small, .hm-prod-body small { display: block; margin-top: 6px; font-size: 0.72rem; font-weight: 700; color: #0E6B3C; }
+
+    /* newest products */
+    .hm-prods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .hm-prod { background: #fff; border: 1px solid rgba(201,144,0,0.2); border-radius: 16px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; }
+    .hm-prod:active { transform: scale(0.985); }
+    .hm-prod-img { aspect-ratio: 1 / 1; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(201,144,0,0.12); overflow: hidden; }
+    .hm-prod-img img { width: 100%; height: 100%; object-fit: contain; }
+    .hm-prod-body { padding: 10px 12px 12px; }
+    .hm-prod-body h3 { font-size: 0.86rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.2em; }
+    .hm-prod-body b { display: block; margin-top: 4px; font-size: 1.02rem; font-weight: 800; color: var(--dark); }
+    .hm-prod-body p { font-size: 0.73rem; color: var(--white-dim); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* skeletons */
+    .hm-skel { background: linear-gradient(100deg, #ece7da 30%, #f6f3ea 50%, #ece7da 70%); background-size: 300% 100%; animation: hmShim 1.4s infinite linear; border-radius: 16px; }
+    @keyframes hmShim { to { background-position: -150% 0; } }
+    .hm-skel-shop { flex: 0 0 76%; max-width: 300px; height: 220px; }
+    .hm-skel-prod { height: 230px; }
+    .hm-skel-row { height: 66px; margin-bottom: 8px; }
+
+    /* near you */
+    .hm-near { background: #fff; border: 1px solid rgba(201,144,0,0.2); border-radius: 18px; padding: 16px; }
+    .hm-near h2 { font-size: 1.05rem; font-weight: 800; }
+    .hm-near-head p { font-size: 0.8rem; color: var(--white-dim); margin: 2px 0 10px; }
+    .hm-map { height: 120px; border-radius: 12px; overflow: hidden; margin-top: 12px; border: 1px solid rgba(201,144,0,0.15); }
+    .hm-map[hidden], #near-btn[hidden] { display: none; }
+
+    .hm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 12px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; text-decoration: none; cursor: pointer; border: 0; }
+    .hm-btn-gold { background: var(--gold); color: var(--dark); }
+    .hm-btn-ghost { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .hm-btn-line { width: 100%; background: #FFFBEF; color: var(--dark); border: 1.5px solid var(--gold); }
+    .hm-btn:disabled { opacity: 0.6; }
+
+    /* how it works, trust, seller card */
+    .hm-steps { list-style: none; counter-reset: s; display: grid; gap: 10px; }
+    .hm-steps li { counter-increment: s; position: relative; background: #fff; border: 1px solid rgba(201,144,0,0.2); border-radius: 16px; padding: 14px 14px 14px 56px; }
+    .hm-steps li::before { content: counter(s); position: absolute; left: 14px; top: 14px; width: 30px; height: 30px; border-radius: 50%; background: var(--navy-deep); color: var(--gold); font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .hm-steps b { display: block; font-size: 0.95rem; } .hm-steps span { font-size: 0.8rem; color: var(--white-dim); }
+    .hm-trust { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .hm-trust li { font-size: 0.78rem; font-weight: 700; padding: 7px 12px; border-radius: 999px; background: rgba(255,190,26,0.16); }
+    .hm-sell { background: var(--navy-deep); color: #fff; border-radius: 22px; padding: 24px 20px; position: relative; overflow: hidden; }
+    .hm-sell::after { content: '🏪'; position: absolute; right: -6px; bottom: -18px; font-size: 6rem; opacity: 0.12; }
+    .hm-sell h2 { font-family: 'Cinzel', serif; font-size: 1.25rem; line-height: 1.25; margin-bottom: 8px; color: #fff; }
+    .hm-sell p { font-size: 0.86rem; line-height: 1.6; color: var(--on-navy-dim); margin-bottom: 16px; max-width: 30em; }
+    .hm-sell-btns { display: flex; flex-wrap: wrap; gap: 10px; position: relative; z-index: 1; }
+
+    footer { margin-top: 30px; }
+
+    /* search sheet */
+    .hm-sheet { position: fixed; inset: 0; z-index: 3000; background: #F6F3EA; display: flex; flex-direction: column; }
+    .hm-sheet[hidden] { display: none; }
+    .hm-sheet-top { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--navy-deep); }
+    .hm-back { flex: 0 0 44px; height: 44px; border-radius: 12px; border: 0; background: rgba(255,255,255,0.1); color: #fff; font-size: 1.3rem; cursor: pointer; }
+    .hm-sheet-top input { flex: 1; min-width: 0; height: 46px; border-radius: 14px; border: 0; padding: 0 16px; font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--white); background: #fff; outline: none; }
+    .hm-sheet-cats { display: flex; gap: 8px; overflow-x: auto; padding: 10px 12px; scrollbar-width: none; flex: 0 0 auto; }
+    .hm-chip { flex: 0 0 auto; padding: 9px 14px; border-radius: 999px; border: 1px solid rgba(201,144,0,0.28); background: #fff; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--white); cursor: pointer; white-space: nowrap; }
+    .hm-chip.on { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+    .hm-sheet-body { flex: 1; overflow-y: auto; padding: 4px 12px calc(24px + env(safe-area-inset-bottom)); overscroll-behavior: contain; }
+    .hm-sh { margin: 14px 2px 8px; font-size: 0.82rem; font-weight: 800; color: var(--white-dim); }
+    .hm-recent { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hm-hint, .hm-note { font-size: 0.85rem; line-height: 1.6; color: var(--white-dim); padding: 12px 4px; }
+    .hm-note { background: rgba(255,190,26,0.16); color: var(--white); border-radius: 12px; padding: 12px 14px; margin-top: 10px; }
+    .hm-none { text-align: center; padding: 40px 16px; } .hm-none div { font-size: 2.4rem; } .hm-none h3 { margin: 8px 0 4px; font-size: 1rem; } .hm-none p { font-size: 0.85rem; color: var(--white-dim); }
+    .hm-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: #fff; border: 1px solid rgba(201,144,0,0.18); border-radius: 14px; padding: 10px; margin-bottom: 8px; cursor: pointer; font-family: 'Nunito', sans-serif; color: var(--white); }
+    .hm-row:active { background: #FFFBEF; }
+    .hm-row-img { flex: 0 0 52px; height: 52px; border-radius: 12px; background: #F3F9F5; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 1.5rem; }
+    .hm-row-img img { width: 100%; height: 100%; object-fit: cover; }
+    .hm-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .hm-row-main b { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hm-row-main small { font-size: 0.74rem; color: var(--white-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hm-row-price { font-weight: 800; font-size: 0.9rem; flex: 0 0 auto; }
+    .hm-row-go { font-weight: 800; font-size: 0.78rem; color: var(--gold-dim); flex: 0 0 auto; }
+
+    .hm-toast { position: fixed; left: 12px; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; background: var(--navy-deep); color: #fff; padding: 13px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; z-index: 4000; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
+    .hm-toast.show { opacity: 1; transform: none; }
+
+    /* bottom tab bar: navy like the buyer dashboard */
+    .bottom-nav { background: var(--navy-deep); border-top: 0; box-shadow: 0 -4px 20px rgba(0,18,51,0.25); padding: 0 4px env(safe-area-inset-bottom); }
+    .bn-item { height: 62px; justify-content: center; color: var(--on-navy-dim); font-size: 0.68rem; position: relative; }
+    .bn-item .bn-icon { font-size: 1.3rem; line-height: 1; }
+    .bn-item.active { color: var(--gold); }
+    .bn-item.active::before { content: ''; position: absolute; top: 0; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--gold); }
+
+    /* larger screens */
+    @media (min-width: 700px) {
+      .hm-prods { grid-template-columns: repeat(3, 1fr); }
+      .hm-rail { display: grid; grid-template-columns: repeat(3, 1fr); overflow: visible; margin: 0; padding: 2px 0 10px; }
+      .hm-shop, .hm-skel-shop { flex: initial; max-width: none; }
+      .hm-cats { margin: 0; padding: 2px 0 8px; flex-wrap: wrap; overflow: visible; }
+      .hm-steps { grid-template-columns: repeat(3, 1fr); }
+      .hm-sheet { left: 50%; right: auto; width: min(640px, 100%); transform: translateX(-50%); box-shadow: 0 0 0 100vmax rgba(0,18,51,0.45); }
+    }
+    @media (min-width: 1000px) { .hm-prods { grid-template-columns: repeat(6, 1fr); } }
+    @media (prefers-reduced-motion: reduce) { .hm-pulse i, .hm-skel { animation: none; } }
+
+    /* the generic nav{} rule above must not turn the top-bar links into a second white bar */
+    .desktop-nav-links { position: static; height: auto; padding: 0; background: none; backdrop-filter: none; border: 0; justify-content: flex-start; z-index: auto; }
+    @media (min-width: 1080px) { .hamburger { display: none; } }
   </style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
@@ -1370,20 +1528,19 @@
       </button>
       <a href="auth.html" class="header-seller-btn">Become a Seller</a>
       <div class="app-bar-actions">
-      <button class="icon-btn" onclick="window.location.href='auth.html'" aria-label="Notifications">
-        🔔<span class="notif-dot">5</span>
-      </button>
-      <button class="icon-btn" onclick="window.location.href='auth.html'" aria-label="Account">👤</button>
+      <button class="icon-btn" onclick="goToDashboard('account')" aria-label="My account">👤</button>
       </div>
     </div>
   </header>
 
-  <!-- ══ SEARCH BAR ══ -->
-  <div class="search-bar-wrap">
-    <div class="search-bar">
-      <span class="search-icon">🔍</span>
-      <input id="home-search-input" type="text" placeholder="Search for shops, products…" oninput="filterShopsBySearch(this.value)"/>
-    </div>
+  <!-- ══ GREETING + SEARCH ══ -->
+  <div class="hm-top">
+    <p class="hm-hello" id="hello-line">Good day</p>
+    <h1 class="hm-title">What&rsquo;s new in the market today</h1>
+    <p class="hm-pulse" id="hello-pulse" hidden><i></i><span></span></p>
+    <button class="hm-searchbtn" onclick="openSearch()" aria-label="Search products, shops or shop numbers">
+      <span aria-hidden="true">🔍</span><span class="hm-searchtxt">Search a product, shop name or shop number</span>
+    </button>
   </div>
 
   <!-- ══ NAV DRAWER ══ -->
@@ -1539,7 +1696,7 @@
         <a href="#shops" class="banner-slide">
           <img src="./Alfijeer2.png"
                alt="Start Shopping Online in your area today with Alfijeer"
-               onerror="this.style.display='none';document.getElementById('banner-fallback').classList.add('visible')"/>
+               onerror="this.parentNode.style.display='none';document.getElementById('banner-fallback').classList.add('visible')"/>
         </a>
         <!-- Shown only when Alfijeer2.png is not yet uploaded -->
         <div class="banner-fallback" id="banner-fallback">
@@ -1728,103 +1885,73 @@
   </div>
 
 
-  <!-- ══ TOP CATEGORIES ══ -->
-  <section class="section" id="categories" style="padding-top:20px;padding-bottom:20px;">
-    <div class="section-heading-row">
-      <h2 class="mobile-h2">Shop by Categories</h2>
-      <a href="#" onclick="filterShopsByCategory('');return false;" class="view-all-link">View All</a>
-    </div>
-    <div class="categories-grid">
-      <div class="cat-card" onclick="filterShopsByCategory('Food, Grains &amp; Spices')"><span class="cat-icon-badge" style="background:#E8F5E1;">🌾</span><span>Food, Grains &amp; Spices</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Beauty &amp; Personal Care')"><span class="cat-icon-badge" style="background:#FCE4EC;">💄</span><span>Beauty &amp; Personal Care</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Household &amp; Cleaning Supplies')"><span class="cat-icon-badge" style="background:#E0F7F5;">🧴</span><span>Household &amp; Cleaning</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Health &amp; Wellness')"><span class="cat-icon-badge" style="background:#FDEAEA;">💊</span><span>Health &amp; Wellness</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Fashion &amp; Clothing')"><span class="cat-icon-badge" style="background:#E3F0FC;">👕</span><span>Fashion &amp; Clothing</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Baby &amp; Kids')"><span class="cat-icon-badge" style="background:#FFF6DE;">🧸</span><span>Baby &amp; Kids</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Phones &amp; Electronics')"><span class="cat-icon-badge" style="background:#EFE7FB;">📱</span><span>Phones &amp; Electronics</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Farm Products')"><span class="cat-icon-badge" style="background:#F5EDE1;">🫘</span><span>Farm Products</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Home &amp; Furniture')"><span class="cat-icon-badge" style="background:#FDEEE0;">🛋️</span><span>Home &amp; Furniture</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Building Materials &amp; Hardware')"><span class="cat-icon-badge" style="background:#EEF0F2;">🧱</span><span>Building &amp; Hardware</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Vehicles &amp; Spare Parts')"><span class="cat-icon-badge" style="background:#E5EEF7;">🚗</span><span>Vehicles &amp; Spare Parts</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Business &amp; Industrial Equipment')"><span class="cat-icon-badge" style="background:#E9EBEE;">⚙️</span><span>Business &amp; Industrial</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Books, Office &amp; School Supplies')"><span class="cat-icon-badge" style="background:#EAE8FB;">📚</span><span>Books &amp; School Supplies</span><span class="cat-count">—</span></div>
-      <div class="cat-card" onclick="filterShopsByCategory('Sports &amp; Outdoor')"><span class="cat-icon-badge" style="background:#E4F7EE;">⚽</span><span>Sports &amp; Outdoor</span><span class="cat-count">—</span></div>
-    </div>
-  </section>
+  <main class="hm-wrap">
 
+    <!-- Categories: one swipeable row, not fourteen cards -->
+    <section class="hm-sec" id="categories" aria-labelledby="cat-h">
+      <div class="hm-head"><h2 id="cat-h">Shop by category</h2></div>
+      <div class="hm-cats" id="hm-cats"></div>
+    </section>
 
-  <!-- ══ NEARBY / FEATURED SHOPS ══ -->
-  <!-- ══ YOUR LOCATION + NEARBY SHOPS ══ -->
-  <section class="section" style="padding-top:4px;padding-bottom:8px;">
-    <div class="location-shops-row">
-      <div class="your-location-card">
-        <div class="ylc-header">📍 Your Location</div>
-        <div class="ylc-address" id="ylc-address">Detecting your location…</div>
-        <a href="#" class="ylc-change" onclick="requestGPS();return false;">Change Location</a>
-        <div id="mini-map" class="mini-map">
-          <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:var(--white-dim);text-align:center;padding:10px;">🗺️ Map loads once location is detected</div>
+    <!-- Newest shops: newest first, the oldest drop off the end -->
+    <section class="hm-sec" id="shops" aria-labelledby="shops-h">
+      <div class="hm-head">
+        <div><h2 id="shops-h">Just opened</h2><p>The newest verified shops</p></div>
+        <a href="#" class="hm-link" onclick="goBrowse();return false;">See all</a>
+      </div>
+      <div class="hm-rail" id="shops-rail" aria-live="polite">
+        <div class="hm-skel hm-skel-shop"></div><div class="hm-skel hm-skel-shop"></div><div class="hm-skel hm-skel-shop"></div>
+      </div>
+    </section>
+
+    <!-- Newest products -->
+    <section class="hm-sec" id="recommended" aria-labelledby="prod-h">
+      <div class="hm-head">
+        <div><h2 id="prod-h">Fresh arrivals</h2><p>Products shops added most recently</p></div>
+        <a href="#" class="hm-link" onclick="goBrowse();return false;">See all</a>
+      </div>
+      <div class="hm-prods" id="prod-grid" aria-live="polite">
+        <div class="hm-skel hm-skel-prod"></div><div class="hm-skel hm-skel-prod"></div><div class="hm-skel hm-skel-prod"></div><div class="hm-skel hm-skel-prod"></div>
+      </div>
+    </section>
+
+    <!-- Near you: asks for location only when the visitor taps -->
+    <section class="hm-sec" aria-labelledby="near-h">
+      <div class="hm-near" id="near-card">
+        <div class="hm-near-head">
+          <div><h2 id="near-h">Near you</h2><p id="ylc-address">Allow location to see the closest shops first.</p></div>
+        </div>
+        <div id="nearby-list"></div>
+        <button class="hm-btn hm-btn-line" id="near-btn" onclick="requestGPS(true)">📍 Show shops near me</button>
+        <div id="mini-map" class="hm-map" hidden></div>
+      </div>
+    </section>
+
+    <!-- How it works: this really is a sequence -->
+    <section class="hm-sec" aria-labelledby="how-h">
+      <div class="hm-head"><h2 id="how-h">How buying works</h2><a href="#" class="hm-link" onclick="openModal('howitworks-modal');return false;">Learn more</a></div>
+      <ol class="hm-steps">
+        <li><b>Find a verified shop</b><span>Every seller is checked before they can sell.</span></li>
+        <li><b>Place your order</b><span>The seller accepts, then you pay them directly.</span></li>
+        <li><b>Collect or get it delivered</b><span>Something wrong? Our team steps in to help.</span></li>
+      </ol>
+      <ul class="hm-trust">
+        <li>✅ Verified sellers</li><li>🔢 Permanent shop numbers</li><li>🛡️ Dispute help</li><li>💬 Direct WhatsApp</li>
+      </ul>
+    </section>
+
+    <!-- Seller invitation -->
+    <section class="hm-sec">
+      <div class="hm-sell">
+        <h2>Own a shop? Put it on ALFIJEER.</h2>
+        <p>Free to join. Verified sellers get a permanent shop number and show up in front of buyers near them.</p>
+        <div class="hm-sell-btns">
+          <a class="hm-btn hm-btn-gold" href="auth.html?role=seller">🏪 Become a seller</a>
+          <a class="hm-btn hm-btn-ghost" href="auth.html">👤 Join as a buyer</a>
         </div>
       </div>
-      <div class="nearby-shops-card">
-        <div class="nsc-header">
-          <h3>📍 Nearby Shops</h3>
-          <a href="#shops" class="view-all-link">View All</a>
-        </div>
-        <div id="nearby-list">
-          <p style="font-size:0.78rem;color:var(--white-dim);padding:8px 0;">Loading nearby shops…</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══ RECOMMENDED FOR YOU (real products from nearby sellers) ══ -->
-  <section class="section" id="recommended" style="padding-top:8px;padding-bottom:20px;">
-    <div class="section-heading-row">
-      <h2 class="mobile-h2">Recommended For You</h2>
-      <a href="#shops" class="view-all-link">View All</a>
-    </div>
-    <div class="recommended-grid" id="recommended-grid">
-      <p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">Loading products from nearby shops…</p>
-    </div>
-  </section>
-
-
-  <section class="section shops-section" id="shops" style="padding-top:40px;">
-    <div class="section-header">
-      <span class="section-tag">✦ Verified Sellers</span>
-      <h2>Featured Shops</h2>
-      <p>These are some of our verified sellers. Every shop is real, confirmed, and accountable.</p>
-    </div>
-
-    <div class="shops-grid" id="shops-grid">
-      <p style="text-align:center;color:var(--white-dim);padding:40px;grid-column:1/-1;">Loading verified shops…</p>
-    </div>
-  </section>
-
-
-
-  <!-- ══ TRUST BAR ══ -->
-  <div class="trust-bar">
-    <div class="trust-item"><span class="icon">✅</span> <span><strong>All Sellers</strong> Verified</span></div>
-    <div class="trust-item"><span class="icon">🔢</span> <span><strong>Permanent</strong> Shop Numbers</span></div>
-    <div class="trust-item"><span class="icon">📍</span> <span><strong>Location-Based</strong> Discovery</span></div>
-    <div class="trust-item"><span class="icon">🛡️</span> <span><strong>Dispute</strong> Protection</span></div>
-    <div class="trust-item"><span class="icon">📞</span> <span><strong>Direct</strong> WhatsApp Contact</span></div>
-  </div>
-
-
-  <section class="cta-section">
-    <h2>Start Buying & Selling<br/>in Your Area Today</h2>
-    <p>Join the marketplace built for the North. Trusted sellers. Real locations. Zero confusion.</p>
-    <div class="cta-buttons">
-      <a href="auth.html" class="btn-hero-primary">👤 Register as Buyer</a>
-      <a href="auth.html" class="btn-cta-green">🏪 Register as Seller</a>
-    </div>
-  </section>
-
-
-
+    </section>
+  </main>
 
   <!-- ══ FOOTER ══ -->
   <footer>
@@ -1986,324 +2113,291 @@
     });
   </script>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- ══ REAL SHOPS LOADER + GPS ══ -->
+  <!-- ══ HOMEPAGE DATA, SEARCH, LOCATION ══ -->
   <script>
     const _HOME_API = 'https://alfijeershops-backend-production.up.railway.app/api';
-    let _allHomeShops = [];
-    let _buyerLat = null;
-    let _buyerLng = null;
-    let _miniMap = null;
-    let _miniMarker = null;
+    const HOME_SHOPS = 6, HOME_PRODUCTS = 6;           // the homepage stays small: newest in, oldest out
+    const CATS = [
+      ['Food, Grains & Spices','🌾','Food & Grains'], ['Beauty & Personal Care','💄','Beauty'], ['Household & Cleaning Supplies','🧴','Household'],
+      ['Health & Wellness','💊','Health'], ['Fashion & Clothing','👕','Fashion'], ['Baby & Kids','🧸','Baby & Kids'],
+      ['Phones & Electronics','📱','Phones'], ['Farm Products','🫘','Farm'], ['Home & Furniture','🛋️','Home'],
+      ['Building Materials & Hardware','🧱','Building'], ['Vehicles & Spare Parts','🚗','Vehicles'], ['Business & Industrial Equipment','⚙️','Industrial'],
+      ['Books, Office & School Supplies','📚','Books'], ['Sports & Outdoor','⚽','Sports'], ['Other','📦','Other'],
+    ];
+    const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const catIcon = (c) => { const h = CATS.find((x) => x[0] === c); return h ? h[1] : '🏪'; };
+    const money = (n) => '₦' + Number(n || 0).toLocaleString('en-NG');
+    const shopNum = (n) => (n === null || n === undefined || n === '') ? 'Shop' : 'Shop ' + String(n).trim().replace(/^(shop)?\s*#?\s*/i, '');
+    const safeUrl = (u) => (/^https:\/\//.test(u || '') ? u : '');
+    const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+    const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
-    // ── Haversine distance formula (km) ──
-    function _haversine(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    // "3 hours ago", "yesterday", "5 days ago"
+    function ago(iso) {
+      const t = new Date(iso).getTime(); if (!t) return '';
+      const m = Math.max(0, Math.round((Date.now() - t) / 60000));
+      if (m < 2) return 'just now'; if (m < 60) return m + ' min ago';
+      const h = Math.round(m / 60); if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+      const d = Math.round(h / 24); if (d === 1) return 'yesterday'; if (d < 30) return d + ' days ago';
+      const mo = Math.round(d / 30); return mo + (mo === 1 ? ' month ago' : ' months ago');
+    }
+    const isNew = (iso) => Date.now() - new Date(iso).getTime() < 7 * 86400000;
+
+    let _toastT;
+    function toast(msg) {
+      let el = document.getElementById('hm-toast');
+      if (!el) { el = document.createElement('div'); el.id = 'hm-toast'; el.className = 'hm-toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+      el.textContent = msg; el.classList.add('show'); clearTimeout(_toastT); _toastT = setTimeout(() => el.classList.remove('show'), 2600);
     }
 
-    function _shopIcon(cat) {
-      const icons = {
-        'Fashion, Clothing & Shoes':'👕','Phones & Accessories':'📱',
-        'Computers & Technology':'💻','Electronics & Appliances':'📺',
-        'Vehicles & Motorcycles':'🚗','Property & Real Estate':'🏘️',
-        'Agriculture & Livestock':'🌾','Food & Groceries':'🥘',
-        'Home & Furniture':'🏠','Health & Beauty':'💊',
-        'Education & Training':'📚','Services':'🔧','Other':'📦',
-      };
-      return icons[cat] || '🏪';
+    async function getJSON(path, ms) {
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms || 12000);
+      try { const r = await fetch(_HOME_API + path, { signal: ctl.signal }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
+      finally { clearTimeout(t); }
     }
 
-    // ── Format shop number consistently as "Shop 001", regardless of raw backend format
-    //    (handles "#001", "001", "1", "Shop 001", null/undefined) ──
-    function _formatShopNum(num) {
-      if (num === null || num === undefined || num === '') return 'Pending';
-      let s = num.toString().trim().replace(/^(shop)?\s*#?\s*/i, '');
-      if (!s) return 'Pending';
-      return 'Shop ' + s;
+    // ── Greeting ──
+    function renderHello() {
+      const h = new Date().getHours();
+      const part = h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      const u = lsGet('as_user', null); const first = u && u.fullName ? String(u.fullName).trim().split(/\s+/)[0] : '';
+      document.getElementById('hello-line').textContent = first ? part + ', ' + first : part;
     }
 
-    function _renderHomeShops(shops) {
-      const grid = document.getElementById('shops-grid');
-      if (!grid) return;
-      // Limit to 4 shops for homepage sample
-      const sample = shops.slice(0, 4);
-      if (!sample.length) {
-        grid.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:40px;grid-column:1/-1;">No verified shops yet — be the first to register!</p>';
-        return;
-      }
-      grid.innerHTML = sample.map(s => {
-        const distLabel = (s.distance !== null && s.distance !== undefined)
-          ? `<span class="shop-distance">📍 ${s.distance < 1 ? Math.round(s.distance * 1000) + 'm' : s.distance.toFixed(1) + 'km'} away</span>`
-          : `<span class="shop-distance">📍 ${s.city ? s.city + ', ' : ''}${s.state || ''}</span>`;
-
-        const banner = s.shopPhotoUrl
-          ? `<img src="${s.shopPhotoUrl}" alt="${s.businessName}" style="width:100%;height:100%;object-fit:contain;border-radius:8px 8px 0 0;" onerror="this.style.display='none'" loading="lazy"/>`
-          : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">${_shopIcon(s.category)}</div>`;
-
-        return `<div class="shop-card">
-          <div class="shop-img" style="height:140px;border-radius:8px 8px 0 0;overflow:hidden;background:var(--green-mid);">
-            ${banner}
-            <span class="shop-number-badge" style="position:absolute;top:10px;left:10px;">${_formatShopNum(s.shopNumber)}</span>
-            <span class="verified-badge" style="position:absolute;top:10px;right:10px;">✅ Verified</span>
-          </div>
-          <div class="shop-info" style="padding:14px;">
-            <h3 style="font-family:'Cinzel',serif;font-size:0.9rem;color:var(--white);margin-bottom:6px;">${s.businessName || ''}</h3>
-            <div class="shop-meta" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-              <span style="font-size:0.72rem;color:var(--white-dim);">${_shopIcon(s.category)} ${s.category || ''}</span>
-              ${distLabel}
-            </div>
-            <div class="shop-footer" style="display:flex;justify-content:space-between;align-items:center;">
-              <a href="#" class="btn-view-shop" onclick="goToShop('${s._id}');return false;"
-                style="padding:7px 16px;background:var(--gold);color:#FFFFFF;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;border-radius:6px;text-decoration:none;">
-                View Shop
-              </a>
-            </div>
-          </div>
-        </div>`;
-      }).join('');
+    // ── Saved shops (same list the buyer dashboard uses) ──
+    const savedIds = () => lsGet('as_saved_shops', []).map(String);
+    function toggleHeart(id, ev) {
+      ev.stopPropagation(); ev.preventDefault();
+      let ids = savedIds(); const was = ids.includes(String(id));
+      ids = was ? ids.filter((x) => x !== String(id)) : [String(id)].concat(ids);
+      lsSet('as_saved_shops', ids);
+      document.querySelectorAll('.hm-heart[data-id="' + id + '"]').forEach((b) => { b.classList.toggle('on', !was); b.setAttribute('aria-pressed', String(!was)); });
+      toast(was ? 'Removed from saved shops' : 'Shop saved. Find it under Saved.');
     }
 
-    // ── Compact "Nearby Shops" list (Your Location panel) ──
-    function _renderNearbyList(shops) {
-      const list = document.getElementById('nearby-list');
-      if (!list) return;
-      const top = shops.slice(0, 3);
-      if (!top.length) {
-        list.innerHTML = '<p style="font-size:0.78rem;color:var(--white-dim);padding:8px 0;">No verified shops yet in your area.</p>';
-        return;
-      }
-      list.innerHTML = top.map((s, i) => {
-        const distLabel = (s.distance !== null && s.distance !== undefined)
-          ? (s.distance < 1 ? Math.round(s.distance * 1000) + 'm' : s.distance.toFixed(1) + 'km')
-          : (s.city || s.state || '');
-        const thumb = s.shopPhotoUrl
-          ? `<img src="${s.shopPhotoUrl}" alt="${s.businessName || ''}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy"/>`
-          : _shopIcon(s.category);
-        return `<div class="nearby-item" onclick="goToShop('${s._id}')">
-          <span class="nearby-index">${String(i + 1).padStart(2, '0')}</span>
-          <div class="nearby-thumb">${thumb}</div>
-          <div class="nearby-info">
-            <strong>${s.businessName || ''}</strong>
-            <span>${s.category || ''}</span>
-          </div>
-          <div class="nearby-dist">📍 ${distLabel}</div>
-        </div>`;
-      }).join('');
+    // ── Cards ──
+    function shopCard(s) {
+      const photo = safeUrl(s.shopPhotoUrl);
+      const thumb = photo ? `<img src="${esc(photo)}" alt="" loading="lazy" onerror="this.remove()"/>` : `<span class="hm-ico">${catIcon(s.category)}</span>`;
+      const saved = savedIds().includes(String(s._id));
+      return `<article class="hm-shop" onclick="goToShop('${esc(s._id)}')">
+        <div class="hm-shop-img">${thumb}
+          <span class="hm-tag">${esc(shopNum(s.shopNumber))}</span>
+          ${isNew(s.createdAt) ? '<span class="hm-new">New</span>' : ''}
+          <button class="hm-heart ${saved ? 'on' : ''}" data-id="${esc(s._id)}" aria-pressed="${saved}" aria-label="Save ${esc(s.businessName)}" onclick="toggleHeart('${esc(s._id)}', event)">♥</button>
+        </div>
+        <div class="hm-shop-body">
+          <h3>${esc(s.businessName)}</h3>
+          <p>${esc(s.category || '')}${s.city ? ' · ' + esc(s.city) : ''}</p>
+          <small>Opened ${esc(ago(s.createdAt))}</small>
+        </div></article>`;
+    }
+    function productCard(p) {
+      const img = safeUrl(p.image);
+      return `<article class="hm-prod" onclick="goToShop('${esc(p.shopId)}')">
+        <div class="hm-prod-img">${img ? `<img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'hm-ico',textContent:'${catIcon(p.category)}'}))"/>` : `<span class="hm-ico">${catIcon(p.category)}</span>`}</div>
+        <div class="hm-prod-body"><h3>${esc(p.name)}</h3><b>${money(p.price)}</b>
+          <p>${esc(p.shopName)}</p><small>Added ${esc(ago(p.createdAt))}</small></div></article>`;
     }
 
-    // ── Mini map (Leaflet + free OpenStreetMap tiles, no API key) ──
-    function initMiniMap(lat, lng) {
-      if (typeof L === 'undefined') return;
-      const mapEl = document.getElementById('mini-map');
-      if (!mapEl) return;
-      if (!_miniMap) {
-        _miniMap = L.map('mini-map', {
-          zoomControl: false, attributionControl: false,
-          dragging: false, scrollWheelZoom: false, doubleClickZoom: false, touchZoom: false
-        }).setView([lat, lng], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(_miniMap);
-        _miniMarker = L.marker([lat, lng]).addTo(_miniMap);
-      } else {
-        _miniMap.setView([lat, lng], 14);
-        _miniMarker.setLatLng([lat, lng]);
-      }
-      setTimeout(() => _miniMap && _miniMap.invalidateSize(), 200);
+    // ── Load the newest shops and products ──
+    let _shops = [], _products = [], _loadedAt = 0;
+    function paintHome() {
+      const rail = document.getElementById('shops-rail'), grid = document.getElementById('prod-grid');
+      rail.innerHTML = _shops.length ? _shops.map(shopCard).join('') : '<p class="hm-empty">No verified shops yet. Be the first to open one.</p>';
+      grid.innerHTML = _products.length ? _products.map(productCard).join('') : '<p class="hm-empty">No products yet. New arrivals will show up here.</p>';
+      const week = _shops.filter((s) => isNew(s.createdAt)).length, pulse = document.getElementById('hello-pulse');
+      if (week) { pulse.hidden = false; pulse.querySelector('span').textContent = week + (week === 1 ? ' new shop' : ' new shops') + ' opened this week'; } else pulse.hidden = true;
+    }
+    function homeError(retry) {
+      const msg = '<div class="hm-empty">Could not load right now. <button class="hm-link-btn" onclick="loadHome()">Try again</button></div>';
+      if (!_shops.length) document.getElementById('shops-rail').innerHTML = msg;
+      if (!_products.length) document.getElementById('prod-grid').innerHTML = msg;
+    }
+    async function loadHome() {
+      const [s, p] = await Promise.allSettled([getJSON('/sellers?limit=' + HOME_SHOPS), getJSON('/products/latest?limit=' + HOME_PRODUCTS)]);
+      let ok = false;
+      if (s.status === 'fulfilled' && Array.isArray(s.value.sellers)) { _shops = s.value.sellers.slice(0, HOME_SHOPS); ok = true; }
+      if (p.status === 'fulfilled' && Array.isArray(p.value.products)) { _products = p.value.products.slice(0, HOME_PRODUCTS); ok = true; }
+      if (ok) { _loadedAt = Date.now(); lsSet('as_home_v1', { shops: _shops, products: _products }); paintHome(); }
+      else homeError();
     }
 
-    // ── Reverse geocode via free Nominatim (OpenStreetMap) — no API key ──
-    async function reverseGeocode(lat, lng) {
-      const addressEl = document.getElementById('ylc-address');
-      const labelEl = document.getElementById('location-label');
+    // ── Categories row ──
+    document.getElementById('hm-cats').innerHTML = CATS.map((c) =>
+      `<button class="hm-cat" onclick="openSearch('', '${esc(c[0])}')"><span>${c[1]}</span>${esc(c[2])}</button>`).join('');
+
+    // ── Search sheet: products, shop names and shop numbers ──
+    let _sCat = '', _sTimer = null, _sCtl = null, _sSeq = 0;
+    function openSearch(q, cat) {
+      const sheet = document.getElementById('search-sheet'), input = document.getElementById('sheet-input');
+      _sCat = cat || ''; input.value = q || '';
+      sheet.hidden = false; document.body.style.overflow = 'hidden';
+      if (!history.state || !history.state.sheet) history.pushState({ sheet: 1 }, '');
+      renderSheetCats();
+      if (q || _sCat) runSheetSearch(); else renderSheetIdle();
+      setTimeout(() => { if (!_sCat) input.focus(); }, 60);
+    }
+    function closeSearch(fromPop) {
+      document.getElementById('search-sheet').hidden = true; document.body.style.overflow = '';
+      if (!fromPop && history.state && history.state.sheet) history.back();
+    }
+    window.addEventListener('popstate', () => { if (!document.getElementById('search-sheet').hidden) closeSearch(true); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !document.getElementById('search-sheet').hidden) closeSearch(); });
+
+    function renderSheetCats() {
+      document.getElementById('sheet-cats').innerHTML = [['', '🔎', 'All']].concat(CATS.map((c) => [c[0], c[1], c[2]])).map((c) =>
+        `<button class="hm-chip ${c[0] === _sCat ? 'on' : ''}" onclick="pickCat('${esc(c[0])}')">${c[1]} ${esc(c[2])}</button>`).join('');
+    }
+    function pickCat(c) { _sCat = c; renderSheetCats(); runSheetSearch(); }
+    function sheetTyping() { clearTimeout(_sTimer); _sTimer = setTimeout(runSheetSearch, 320); }
+
+    function renderSheetIdle() {
+      const recent = lsGet('as_recent_searches', []);
+      document.getElementById('sheet-body').innerHTML =
+        (recent.length ? `<h4 class="hm-sh">Recent searches</h4><div class="hm-recent">${recent.map((r) => `<button class="hm-chip" data-q="${esc(r)}" onclick="openSearch(this.dataset.q)">🕘 ${esc(r)}</button>`).join('')}</div>` : '') +
+        `<h4 class="hm-sh">Try searching for</h4><div class="hm-recent">${['Samsung', 'Rice', 'Shoes', 'Shop 12'].map((r) => `<button class="hm-chip" onclick="openSearch('${r}')">${r}</button>`).join('')}</div>
+         <p class="hm-hint">Search a product, a shop name, or a shop number like <b>12</b>.</p>`;
+    }
+    const sRow = (inner, id) => `<button class="hm-row" onclick="goToShop('${esc(id)}')">${inner}</button>`;
+    const sProduct = (p) => sRow(`<span class="hm-row-img">${safeUrl(p.image) ? `<img src="${esc(safeUrl(p.image))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(p.category)}</span>
+        <span class="hm-row-main"><b>${esc(p.name)}</b><small>${esc(p.shopName)}${p.city ? ' · ' + esc(p.city) : ''}</small></span><span class="hm-row-price">${money(p.price)}</span>`, p.shopId);
+    const sShop = (s) => sRow(`<span class="hm-row-img">${safeUrl(s.shopPhotoUrl) ? `<img src="${esc(safeUrl(s.shopPhotoUrl))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(s.category)}</span>
+        <span class="hm-row-main"><b>${esc(s.businessName || 'Shop')}</b><small>${esc(shopNum(s.shopNumber))}${s.city ? ' · ' + esc(s.city) : ''}${s.category ? ' · ' + esc(s.category) : ''}</small></span><span class="hm-row-go">View</span>`, s._id);
+
+    async function runSheetSearch() {
+      clearTimeout(_sTimer);
+      const q = document.getElementById('sheet-input').value.trim(), body = document.getElementById('sheet-body');
+      if (!q && !_sCat) { renderSheetIdle(); return; }
+      if (q.length === 1 && !/\d/.test(q)) { body.innerHTML = '<p class="hm-hint">Type at least 2 letters.</p>'; return; }
+      if (_sCtl) _sCtl.abort(); _sCtl = new AbortController(); const mine = ++_sSeq;
+      body.innerHTML = '<div class="hm-skel hm-skel-row"></div><div class="hm-skel hm-skel-row"></div><div class="hm-skel hm-skel-row"></div>';
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`, {
-          headers: { 'Accept-Language': 'en' }
-        });
-        const data = await res.json();
-        const addr = data.address || {};
-        const area = addr.suburb || addr.neighbourhood || addr.city_district || addr.town || addr.village || addr.city || '';
-        const state = addr.state || '';
-        const label = [area, state].filter(Boolean).join(', ') || 'Your current location';
-        if (addressEl) addressEl.textContent = label;
-        if (labelEl) labelEl.textContent = label;
+        const r = await fetch(_HOME_API + '/search?q=' + encodeURIComponent(q) + '&category=' + encodeURIComponent(_sCat || 'all'), { signal: _sCtl.signal });
+        const d = await r.json(); if (mine !== _sSeq) return; if (!r.ok) throw new Error('search');
+        if (q) { const rec = [q].concat(lsGet('as_recent_searches', []).filter((x) => x.toLowerCase() !== q.toLowerCase())).slice(0, 6); lsSet('as_recent_searches', rec); }
+        let h = '';
+        if (d.mode === 'exact') {
+          if (d.shops && d.shops.length) h += '<h4 class="hm-sh">Shops</h4>' + d.shops.map(sShop).join('');
+          if (d.products && d.products.length) h += '<h4 class="hm-sh">Products</h4>' + d.products.map(sProduct).join('');
+          if (d.categoryShops && d.categoryShops.length) h += '<h4 class="hm-sh">More shops that sell this</h4>' + d.categoryShops.map(sShop).join('');
+        } else if (d.mode === 'related') {
+          h += `<p class="hm-note">No shop has listed &ldquo;${esc(q)}&rdquo; yet. Here is what is close.</p>`;
+          if (d.similarProducts && d.similarProducts.length) h += '<h4 class="hm-sh">Similar products</h4>' + d.similarProducts.map(sProduct).join('');
+          if (d.categoryShops && d.categoryShops.length) h += '<h4 class="hm-sh">Shops that may have it</h4>' + d.categoryShops.map(sShop).join('');
+        } else {
+          h += `<div class="hm-none"><div>🔍</div><h3>${q ? 'Nothing found for &ldquo;' + esc(q) + '&rdquo;' : 'No shops in this category yet'}</h3>
+            <p>Check the spelling, use fewer words, or browse a category.</p></div>`;
+        }
+        body.innerHTML = h || '<p class="hm-hint">Nothing to show.</p>';
       } catch (e) {
-        if (addressEl) addressEl.textContent = 'Your current location';
-        if (labelEl) labelEl.textContent = 'Current location';
+        if (e.name === 'AbortError') return;
+        // offline: still search the shops already on the page by name or number
+        const t = q.toLowerCase(), m = t.match(/^(?:shop\s*)?#?\s*0*(\d{1,6})$/);
+        const hit = _shops.filter((s) => (m && Number(s.shopNumber) === Number(m[1])) || (!m && ((s.businessName || '') + ' ' + (s.category || '') + ' ' + (s.city || '')).toLowerCase().includes(t)));
+        body.innerHTML = hit.length ? '<p class="hm-note">You seem to be offline. These shops match.</p>' + hit.map(sShop).join('') : '<p class="hm-hint">Search is not available right now. Check your connection and try again.</p>';
       }
     }
 
-    // ── Load real shops from backend ──
-    async function loadHomeShops() {
-      try {
-        let url = _HOME_API + '/sellers?limit=50';
-        if (_buyerLat !== null && _buyerLng !== null) {
-          url += '&buyerLat=' + _buyerLat + '&buyerLng=' + _buyerLng;
-        }
-        const res  = await fetch(url);
-        const data = await res.json();
-        _allHomeShops = data.sellers || [];
-
-        // Attach distance if buyer GPS is available
-        if (_buyerLat !== null && _buyerLng !== null) {
-          _allHomeShops = _allHomeShops.map(s => ({
-            ...s,
-            distance: (s.latitude && s.longitude)
-              ? _haversine(_buyerLat, _buyerLng, s.latitude, s.longitude)
-              : null
-          }));
-          // Sort by real distance
-          _allHomeShops.sort((a, b) => {
-            if (a.distance === null) return 1;
-            if (b.distance === null) return -1;
-            return a.distance - b.distance;
-          });
-        }
-        _renderHomeShops(_allHomeShops);
-        _renderNearbyList(_allHomeShops);
-        loadRecommendedProducts(_allHomeShops);
-      } catch(e) {
-        const grid = document.getElementById('shops-grid');
-        if (grid) grid.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:40px;grid-column:1/-1;">Unable to load shops right now. Please refresh.</p>';
-      }
-    }
-
-    // ── Recommended For You: real products pulled from nearby sellers ──
-    async function loadRecommendedProducts(shops) {
-      const grid = document.getElementById('recommended-grid');
-      if (!grid) return;
-      const candidates = shops.slice(0, 8);
-      if (!candidates.length) {
-        grid.innerHTML = '<p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">No products to show yet.</p>';
-        return;
-      }
-      try {
-        const results = await Promise.all(candidates.map(async s => {
-          try {
-            const res = await fetch(_HOME_API + '/products?sellerId=' + s._id);
-            const data = await res.json();
-            const products = data.products || data || [];
-            return products.slice(0, 2).map(p => ({ ...p, sellerName: s.businessName, sellerId: s._id }));
-          } catch (e) { return []; }
-        }));
-        const flat = results.flat().filter(p => p && p.name).slice(0, 8);
-        if (!flat.length) {
-          grid.innerHTML = '<p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">No products listed by nearby shops yet.</p>';
-          return;
-        }
-        grid.innerHTML = flat.map(p => {
-          const thumb = (p.images && p.images[0])
-            ? `<img src="${p.images[0]}" alt="${p.name}" onerror="this.parentNode.innerHTML='${_shopIcon(p.category)}'" loading="lazy"/>`
-            : _shopIcon(p.category);
-          const price = p.price ? '₦' + Number(p.price).toLocaleString() : '';
-          return `<div class="rec-card" onclick="goToShop('${p.sellerId}')">
-            <div class="rec-thumb">
-              ${thumb}
-              <button class="rec-save" onclick="event.stopPropagation();this.textContent=this.textContent==='♡'?'❤️':'♡'">♡</button>
-            </div>
-            <div class="rec-info">
-              <span class="rec-name">${p.name}</span>
-              <span class="rec-seller">${p.sellerName || ''}</span>
-              <span class="rec-price">${price}</span>
-            </div>
-          </div>`;
-        }).join('');
-      } catch (e) {
-        grid.innerHTML = '<p style="font-size:0.8rem;color:var(--white-dim);padding:8px 0;grid-column:1/-1;">Unable to load recommendations right now.</p>';
-      }
-    }
-
-    // ── Search filter ──
-    function filterShopsBySearch(query) {
-      query = (query || '').trim().toLowerCase();
-      if (!query) { _renderHomeShops(_allHomeShops); return; }
-      const filtered = _allHomeShops.filter(s =>
-        (s.businessName || '').toLowerCase().includes(query) ||
-        (s.category || '').toLowerCase().includes(query)
-      );
-      _renderHomeShops(filtered);
-    }
-
-    // ── Category filter ──
-    function filterShopsByCategory(cat) {
-      document.getElementById('shops')?.scrollIntoView({ behavior: 'smooth' });
-      if (!cat) { _renderHomeShops(_allHomeShops); return; }
-      const filtered = _allHomeShops.filter(s => (s.category || '').includes(cat));
-      _renderHomeShops(filtered);
-    }
-
-    // ── Shop click handler ──
+    // ── Where to go next ──
     function goToShop(sellerId) {
-      const token = localStorage.getItem('as_token');
-      const role  = localStorage.getItem('as_role');
-      if (token && role === 'buyer') {
-        window.location.href = 'buyer-dashboard.html?shop=' + sellerId;
-      } else {
-        localStorage.setItem('as_redirect_shop', sellerId);
-        window.location.href = 'auth.html';
-      }
+      const token = localStorage.getItem('as_token'), role = localStorage.getItem('as_role');
+      if (token && role === 'buyer') window.location.href = 'buyer-dashboard.html?shop=' + encodeURIComponent(sellerId);
+      else { localStorage.setItem('as_redirect_shop', sellerId); window.location.href = 'auth.html'; }
     }
-
-    // ── GPS: ask buyer for location, then reload shops with real distances ──
-    function requestGPS() {
-      const addressEl = document.getElementById('ylc-address');
-      const labelEl = document.getElementById('location-label');
-      if (addressEl) addressEl.textContent = 'Detecting your location…';
-      if (labelEl) labelEl.textContent = 'Detecting…';
-      if (!navigator.geolocation) {
-        if (addressEl) addressEl.textContent = 'Location not supported on this device';
-        if (labelEl) labelEl.textContent = 'Set location';
-        loadHomeShops();
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        function(pos) {
-          _buyerLat = pos.coords.latitude;
-          _buyerLng = pos.coords.longitude;
-          initMiniMap(_buyerLat, _buyerLng);
-          reverseGeocode(_buyerLat, _buyerLng);
-          loadHomeShops();
-        },
-        function() {
-          // GPS denied or unavailable — load shops without distance sorting
-          if (addressEl) addressEl.textContent = 'Location access denied — showing all shops';
-          if (labelEl) labelEl.textContent = 'Enable location';
-          loadHomeShops();
-        },
-        { timeout: 8000, maximumAge: 300000 }
-      );
+    function goBrowse() {
+      const token = localStorage.getItem('as_token'), role = localStorage.getItem('as_role');
+      window.location.href = (token && role === 'buyer') ? 'buyer-dashboard.html#search' : 'auth.html';
     }
-
-    // ── Smart navigation — goes to dashboard if logged in, auth if not ──
     function goToDashboard(section) {
-      closeMobileMenu();
-      const token = localStorage.getItem('as_token');
-      const role  = localStorage.getItem('as_role');
-      if (token && role === 'buyer') {
-        window.location.href = 'buyer-dashboard.html' + (section === 'orders' ? '#orders' : '');
-      } else if (token && role === 'seller') {
-        window.location.href = 'seller-dashboard.html';
-      } else {
-        window.location.href = 'auth.html';
-      }
+      if (typeof closeMobileMenu === 'function') closeMobileMenu();
+      const token = localStorage.getItem('as_token'), role = localStorage.getItem('as_role');
+      if (token && role === 'buyer') window.location.href = 'buyer-dashboard.html' + ({ orders: '#orders', saved: '#saved', account: '#profile' }[section] || '');
+      else if (token && role === 'seller') window.location.href = 'seller-dashboard.html';
+      else window.location.href = 'auth.html';
     }
 
-    // ── Boot ──
-    document.addEventListener('DOMContentLoaded', function() {
-      requestGPS();
+    // ── Near you (asks for location only when tapped, or if already allowed) ──
+    let _lat = null, _lng = null, _map = null, _marker = null, _leaflet = null;
+    const haversine = (a, b, c, d) => { const R = 6371, r = Math.PI / 180, x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 2 * R * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x)); };
+    function loadLeaflet() {
+      if (_leaflet) return _leaflet;
+      _leaflet = new Promise((resolve, reject) => {
+        const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+        const js = document.createElement('script'); js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; js.onload = () => resolve(window.L); js.onerror = reject; document.head.appendChild(js);
+      });
+      return _leaflet;
+    }
+    async function drawMap(lat, lng) {
+      const el = document.getElementById('mini-map'); el.hidden = false;
+      try {
+        const L = await loadLeaflet();
+        if (!_map) {
+          _map = L.map('mini-map', { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, touchZoom: false }).setView([lat, lng], 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(_map); _marker = L.marker([lat, lng]).addTo(_map);
+        } else { _map.setView([lat, lng], 14); _marker.setLatLng([lat, lng]); }
+        setTimeout(() => _map && _map.invalidateSize(), 200);
+      } catch (e) { el.hidden = true; }
+    }
+    async function placeName(lat, lng) {
+      try {
+        const r = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=14', { headers: { 'Accept-Language': 'en' } });
+        const a = (await r.json()).address || {};
+        return [a.suburb || a.neighbourhood || a.city_district || a.town || a.village || a.city || '', a.state || ''].filter(Boolean).join(', ') || 'Your current location';
+      } catch (e) { return 'Your current location'; }
+    }
+    async function showNearby() {
+      const list = document.getElementById('nearby-list');
+      try {
+        const d = await getJSON('/sellers?limit=100'); const all = (d.sellers || []).filter((s) => s.latitude && s.longitude)
+          .map((s) => Object.assign({}, s, { km: haversine(_lat, _lng, s.latitude, s.longitude) })).sort((a, b) => a.km - b.km).slice(0, 3);
+        list.innerHTML = all.length ? all.map((s) => `<button class="hm-row" onclick="goToShop('${esc(s._id)}')"><span class="hm-row-img">${safeUrl(s.shopPhotoUrl) ? `<img src="${esc(safeUrl(s.shopPhotoUrl))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(s.category)}</span>
+          <span class="hm-row-main"><b>${esc(s.businessName)}</b><small>${esc(shopNum(s.shopNumber))} · ${esc(s.category || '')}</small></span><span class="hm-row-go">${s.km < 1 ? Math.round(s.km * 1000) + ' m' : s.km.toFixed(1) + ' km'}</span></button>`).join('')
+          : '<p class="hm-empty">No shops with a map location near you yet.</p>';
+      } catch (e) { list.innerHTML = '<p class="hm-empty">Could not load nearby shops. <button class="hm-link-btn" onclick="showNearby()">Try again</button></p>'; }
+    }
+    function requestGPS(userTapped) {
+      const label = document.getElementById('location-label'), addr = document.getElementById('ylc-address'), btn = document.getElementById('near-btn');
+      if (!navigator.geolocation) { addr.textContent = 'This phone cannot share its location.'; return; }
+      label.textContent = 'Locating…'; addr.textContent = 'Finding you…'; btn.disabled = true;
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        _lat = pos.coords.latitude; _lng = pos.coords.longitude; btn.hidden = true;
+        drawMap(_lat, _lng); showNearby();
+        const name = await placeName(_lat, _lng); label.textContent = name; addr.textContent = name;
+      }, () => {
+        label.textContent = 'Set location'; btn.disabled = false; btn.hidden = false; btn.textContent = '📍 Try again';
+        addr.textContent = userTapped ? 'Location is blocked. Allow it in your browser settings, then try again.' : 'Allow location to see the closest shops first.';
+      }, { timeout: 10000, maximumAge: 300000 });
+    }
+
+    // ── Boot: show last visit instantly, then refresh; keep fresh while the page is open ──
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHello();
+      const c = lsGet('as_home_v1', null);
+      if (c && Array.isArray(c.shops) && Array.isArray(c.products)) { _shops = c.shops; _products = c.products; paintHome(); }
+      loadHome();
+      if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted') requestGPS(false); }).catch(() => {});
+      setInterval(() => { if (!document.hidden && Date.now() - _loadedAt > 90000) loadHome(); }, 30000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - _loadedAt > 60000) { loadHome(); renderHello(); } });
     });
-  </script>  <!-- ══ BOTTOM NAV ══ -->
-  <nav class="bottom-nav">
-    <a href="#" class="bn-item active"><span class="bn-icon">🏠</span><span>Home</span></a>
-    <a href="#categories" class="bn-item"><span class="bn-icon">🏷️</span><span>Categories</span></a>
-    <a href="#shops" class="bn-item bn-center"><span class="bn-icon">📍</span><span>Nearby</span></a>
-    <a href="auth.html" class="bn-item"><span class="bn-icon">📦</span><span>Orders</span></a>
-    <a href="auth.html" class="bn-item"><span class="bn-icon">👤</span><span>Account</span></a>
+  </script>  <!-- ══ SEARCH SHEET ══ -->
+  <div class="hm-sheet" id="search-sheet" role="dialog" aria-modal="true" aria-label="Search" hidden>
+    <div class="hm-sheet-top">
+      <button class="hm-back" onclick="closeSearch()" aria-label="Close search">←</button>
+      <input id="sheet-input" type="search" enterkeyhint="search" autocomplete="off" placeholder="Product, shop name or number" aria-label="Search" oninput="sheetTyping()" onkeydown="if(event.key==='Enter')runSheetSearch()"/>
+    </div>
+    <div class="hm-sheet-cats" id="sheet-cats"></div>
+    <div class="hm-sheet-body" id="sheet-body"></div>
+  </div>
+
+  <!-- ══ BOTTOM NAV ══ -->
+  <nav class="bottom-nav" aria-label="Main">
+    <a href="#" class="bn-item active" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><span class="bn-icon">🏠</span><span>Home</span></a>
+    <a href="#" class="bn-item" onclick="openSearch();return false;"><span class="bn-icon">🔍</span><span>Search</span></a>
+    <a href="#" class="bn-item" onclick="goToDashboard('saved');return false;"><span class="bn-icon">♥</span><span>Saved</span></a>
+    <a href="#" class="bn-item" onclick="goToDashboard('orders');return false;"><span class="bn-icon">📦</span><span>Orders</span></a>
+    <a href="#" class="bn-item" onclick="goToDashboard('account');return false;"><span class="bn-icon">👤</span><span>Account</span></a>
   </nav>
 <script>
   if ('serviceWorker' in navigator) {

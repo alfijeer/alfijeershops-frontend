@@ -2137,7 +2137,7 @@
     }
     buildCategoryUI();
     refreshOrdersBadge();
-    if (location.hash === '#orders') showSection('orders');
+    { const h = location.hash.replace('#', ''); if (['orders', 'saved', 'profile', 'search'].includes(h)) showSection(h); }
 
     function showToast(message, type) {
       type = type || 'info';
