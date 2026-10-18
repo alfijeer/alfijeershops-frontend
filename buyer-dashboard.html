@@ -715,6 +715,150 @@
       .profile-grid { grid-template-columns: 1fr; }
       .cart-drawer { max-width: 100%; }
     }
+
+    /* ═════════ CART DRAWER: stays inside the screen, Place Order is always reachable ═════════ */
+    html { overflow-x: hidden; }
+    .main { min-width: 0; }
+    .cart-drawer {
+      right: 0; height: 100vh; height: 100dvh; max-width: min(420px, 100vw);
+      transform: translateX(105%); visibility: hidden;
+      transition: transform .35s cubic-bezier(.4,0,.2,1), visibility 0s linear .35s;
+    }
+    .cart-drawer.open { transform: none; visibility: visible; transition-delay: 0s; }
+    .cart-items { flex: 1 1 auto; min-height: 110px; overscroll-behavior: contain; }
+    .cart-footer { flex-direction: column; flex: 0 1 auto; max-height: 68%; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+    .cart-footer-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 4px; }
+    .cart-footer .btn-send-order { flex: 0 0 auto; margin-top: 10px; }
+    .cart-totals { padding: 10px 14px; margin-bottom: 10px; }
+    .ful-form input, .ful-form textarea, .ful-form label { max-width: 100%; }
+    .ful-form input, .ful-form textarea { font-size: 16px; }          /* 16px stops phones zooming the page when a box is tapped */
+    .ful-form input[type="text"], .ful-form input[type="tel"] { padding: 10px 12px; border-radius: 6px; }
+    .ful-opt input[type="radio"] { appearance: auto; -webkit-appearance: radio; background: none; border: 0; box-shadow: none; width: 18px; height: 18px; flex: 0 0 18px; padding: 0; margin-top: 2px; }
+    .ful-form label { font-size: 0.7rem; }
+
+    /* ═════════ SAVE HEART ═════════ */
+    .shop-card { position: relative; }
+    .heart {
+      position: absolute; top: 8px; right: 8px; z-index: 3;
+      width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer;
+      background: rgba(255,255,255,0.94); color: #B9B2A2; font-size: 1.25rem; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 6px rgba(0,18,51,0.18); transition: transform .15s, color .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .heart:active { transform: scale(0.88); }
+    .heart.on { color: #E0334C; }
+    .heart-modal { position: static; box-shadow: none; background: var(--bg2); margin-left: auto; margin-right: 8px; flex: 0 0 40px; }
+    .shop-card .verified-pill { right: 56px; }
+
+    /* ═════════ HOME STRIPS ═════════ */
+    .cat-strip { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 10px; margin-bottom: 14px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .cat-strip::-webkit-scrollbar, .recent-row::-webkit-scrollbar { display: none; }
+    .cat-chip {
+      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+      padding: 9px 14px; border-radius: 999px; border: 1px solid var(--border); background: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--white);
+    }
+    .cat-chip:active { background: rgba(255,190,26,0.2); }
+    .recent-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 8px; scrollbar-width: none; }
+    .recent-chip {
+      flex: 0 0 auto; width: 156px; text-align: left; cursor: pointer; background: #fff;
+      border: 1px solid var(--border); border-radius: 14px; padding: 10px;
+      display: grid; grid-template-columns: 38px 1fr; column-gap: 9px; align-items: center; font-family: 'Nunito', sans-serif;
+    }
+    .rc-ico { grid-row: span 2; width: 38px; height: 38px; border-radius: 10px; background: var(--bg2); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 1.2rem; }
+    .rc-ico img { width: 100%; height: 100%; object-fit: cover; }
+    .rc-name { font-size: 0.78rem; font-weight: 800; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rc-num { font-size: 0.68rem; font-weight: 700; color: var(--gold-dim); }
+
+    .tabbar { display: none; }
+    .sb-ico { display: none; }
+    .sb-txt { display: inline; }
+
+    /* ═════════ PHONE LAYOUT ═════════ */
+    @media (max-width: 700px) {
+      body { background: #F6F3EA; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+      body::before { display: none; }
+
+      .topbar { height: 56px; padding: 0 12px; background: var(--navy-deep); border-bottom: 0; }
+      .topbar-left h1 { color: #fff; font-size: 0.98rem; line-height: 1.2; }
+      .topbar-left p { color: var(--on-navy-dim); font-size: 0.7rem; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 56vw; }
+      .topbar-right { gap: 8px; }
+      .topbar-right .topbar-btn { display: none; }
+      .cart-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.1); border: 0; color: #fff; }
+      .hamburger-btn { width: 40px; height: 40px; }
+
+      .page-section { padding: 14px 14px 28px; animation: none; }
+
+      /* search: one big, thumb-friendly field */
+      .search-hero { background: transparent; border: 0; border-radius: 0; padding: 0; margin: 0 0 14px; text-align: left; overflow: visible; }
+      .search-hero::before { display: none; }
+      .search-hero h2 { font-size: 1.2rem; margin-bottom: 2px; }
+      .search-hero p { font-size: 0.8rem; margin-bottom: 12px; }
+      #sec-search .search-hero h2, #sec-search .search-hero p { display: none; }
+      #sec-search .search-hero { position: sticky; top: 56px; z-index: 40; margin: -14px -14px 8px; padding: 10px 14px; background: #F6F3EA; }
+      .search-bar { gap: 8px; max-width: none; }
+      .search-bar input { height: 50px; padding: 0 16px; font-size: 16px; border-radius: 14px; background: #fff; border: 1.5px solid rgba(201,144,0,0.3); min-width: 0; }
+      .search-bar button { width: 50px; height: 50px; padding: 0; border-radius: 14px; font-size: 1.15rem; flex: 0 0 50px; }
+      .sb-ico { display: inline; } .sb-txt { display: none; }
+
+      .cat-strip { margin: 0 -14px 12px; padding: 2px 14px 8px; }
+      #search-filters { margin: 0 -14px 10px; padding: 2px 14px 8px !important; }
+
+      /* three small facts instead of four big cards */
+      .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+      .stat-card.stat-cats { display: none; }
+      .stat-card { flex-direction: column; justify-content: center; text-align: center; gap: 2px; padding: 12px 6px; border-radius: 14px; }
+      .stat-card:hover { transform: none; }
+      .stat-icon { display: none; }
+      .stat-info .num { font-size: 1.25rem; }
+      .stat-info .lbl { font-size: 0.68rem; }
+
+      .section-heading { margin-bottom: 10px; }
+      .section-heading h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.02rem; }
+
+      /* shop cards: a compact row with the shop number as a stall tag */
+      .shops-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 22px; }
+      .shop-card { display: grid; grid-template-columns: 96px 1fr; border-radius: 16px; }
+      .shop-card:hover { transform: none; box-shadow: none; }
+      .shop-card:active { background: #FFFBEF; }
+      .shop-thumb { height: auto; min-height: 112px; font-size: 2rem; }
+      .shop-thumb img { position: absolute; inset: 0; }
+      .shop-num { top: auto; bottom: 8px; left: 8px; font-size: 0.62rem; padding: 3px 7px; border-radius: 5px; }
+      .verified-pill { display: none; }
+      .shop-body { padding: 10px 52px 10px 12px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+      .shop-body h4 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.25; }
+      .shop-meta-row { flex-wrap: wrap; gap: 2px 10px; margin-bottom: 6px; }
+      .shop-footer-row { border-top: 0; padding-top: 0; gap: 8px; flex-wrap: wrap; }
+      .btn-sm { padding: 7px 14px; border-radius: 8px; }
+      .heart { top: 6px; right: 6px; }
+
+      /* bottom tab bar */
+      .tabbar {
+        display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+        background: var(--navy-deep); padding-bottom: env(safe-area-inset-bottom);
+        box-shadow: 0 -4px 20px rgba(0,18,51,0.25);
+      }
+      .tab {
+        position: relative; flex: 1; height: 62px; background: none; border: 0; cursor: pointer;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+        color: var(--on-navy-dim); font-family: 'Nunito', sans-serif; font-size: 0.68rem; font-weight: 700;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .tab .t-ico { font-size: 1.3rem; line-height: 1; }
+      .tab.active { color: var(--gold); }
+      .tab.active::before { content: ''; position: absolute; top: 0; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--gold); }
+      .t-badge { position: absolute; top: 7px; left: 54%; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #e74c3c; color: #fff; font-style: normal; font-size: 0.62rem; font-weight: 800; align-items: center; justify-content: center; }
+
+      .as-toast { left: 12px !important; right: 12px !important; bottom: calc(76px + env(safe-area-inset-bottom)) !important; max-width: none !important; }
+
+      /* shop window and dialogs slide up from the bottom like an app */
+      .modal-overlay { align-items: flex-end; padding: 0; }
+      .modal { max-width: 100%; max-height: 92vh; max-height: 92dvh; border-radius: 20px 20px 0 0; border-bottom: 0; }
+      .modal-header { padding: 14px 16px; position: sticky; top: 0; background: var(--green-deep); z-index: 5; }
+      .modal-header h3 { font-size: 0.95rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .saved-item { border-radius: 14px; }
+    }
   </style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
@@ -771,7 +915,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <button class="logout-btn" onclick="window.location.href='auth.html'">🚪 Logout</button>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
       <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(201,144,0,0.1);">
         <p style="font-size:0.65rem;color:var(--white-dim);margin-bottom:6px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Need Help?</p>
         <a href="mailto:Support@arewsquare.com" style="display:flex;align-items:center;gap:6px;font-size:0.68rem;color:var(--white-dim);text-decoration:none;margin-bottom:5px;" title="Email Support">✉️ Support@arewsquare.com</a>
@@ -808,11 +952,18 @@
     <section class="page-section active" id="sec-home">
       <div class="search-hero">
         <h2>What are you looking for?</h2>
-        <p>Search any product — we'll show you verified shops near you that sell it</p>
+        <p>Search a product, a shop name or a shop number. We show verified shops that sell it.</p>
         <div class="search-bar">
-          <input type="text" placeholder="e.g. shoes, phone, bag, food..." id="main-search" onkeypress="if(event.key==='Enter') doSearch()"/>
-          <button onclick="doSearch()">🔍 Search</button>
+          <input type="search" enterkeyhint="search" placeholder="Product, shop name or number" id="main-search" autocomplete="off" aria-label="Search products, shops or shop numbers" onkeydown="if(event.key==='Enter') doSearch()"/>
+          <button onclick="doSearch()" aria-label="Search"><span class="sb-ico">🔍</span><span class="sb-txt"> Search</span></button>
         </div>
+      </div>
+
+      <div class="cat-strip" id="home-cats" aria-label="Browse by category"></div>
+
+      <div id="recent-wrap" style="display:none;">
+        <div class="section-heading"><h3>Pick up where you left off</h3></div>
+        <div class="recent-row" id="recent-shops"></div>
       </div>
 
       <div class="stats-row">
@@ -828,21 +979,21 @@
           <div class="stat-icon">📍</div>
           <div class="stat-info"><span class="num" id="stat-nearby">–</span><span class="lbl">Shops Nearby</span></div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card stat-cats">
           <div class="stat-icon">🗂️</div>
           <div class="stat-info"><span class="num" id="stat-categories">–</span><span class="lbl">Categories</span></div>
         </div>
       </div>
 
       <div class="section-heading">
-        <h3>✦ Nearby Shops</h3>
-        <a class="see-all" onclick="showSection('nearby')">See all →</a>
+        <h3 id="home-near-title">Shops to explore</h3>
+        <a class="see-all" onclick="showSection('search')">See all</a>
       </div>
       <div class="shops-grid" id="home-shops"></div>
 
       <div class="section-heading">
-        <h3>✦ New Shops This Week</h3>
-        <a class="see-all" onclick="showSection('search')">Browse all →</a>
+        <h3>More shops</h3>
+        <a class="see-all" onclick="showSection('search')">Browse all</a>
       </div>
       <div class="shops-grid" id="new-shops"></div>
     </section>
@@ -851,10 +1002,10 @@
     <section class="page-section" id="sec-search">
       <div class="search-hero">
         <h2>Search Products &amp; Shops</h2>
-        <p>Try a product (Samsung, sneakers, rice), a shop name, or a place. Pick a category to narrow it down.</p>
+        <p>Try a product (Samsung, rice), a shop name, or a shop number like 12. Pick a category to narrow it down.</p>
         <div class="search-bar">
-          <input type="text" placeholder="e.g. Samsung, shoes, rice, Musa Phones..." id="search-input" autocomplete="off" oninput="doSearchSoon()" onkeypress="if(event.key==='Enter') doSearch()"/>
-          <button onclick="doSearch()">🔍 Search</button>
+          <input type="search" enterkeyhint="search" placeholder="Product, shop name or number" id="search-input" autocomplete="off" aria-label="Search products, shops or shop numbers" oninput="doSearchSoon()" onkeydown="if(event.key==='Enter') doSearch()"/>
+          <button onclick="doSearch()" aria-label="Search"><span class="sb-ico">🔍</span><span class="sb-txt"> Search</span></button>
         </div>
       </div>
       <div class="cat-pills" id="search-filters" style="flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;"></div>
@@ -866,13 +1017,14 @@
       <div style="background:rgba(217,164,0,0.06);border:1px solid rgba(217,164,0,0.2);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;gap:12px;align-items:center;">
         <span style="font-size:1.3rem;">📍</span>
         <div>
-          <p style="font-size:0.85rem;font-weight:700;color:var(--emerald);">Location Active — Kano, Nassarawa LGA</p>
-          <p style="font-size:0.75rem;color:var(--white-dim);">Showing shops closest to your location first</p>
+          <p id="near-status" style="font-size:0.85rem;font-weight:700;color:var(--white);">Finding shops near you…</p>
+          <p id="near-sub" style="font-size:0.75rem;color:var(--white-dim);">Allow location so we can show the closest shops first.</p>
+          <button class="btn-sm" id="near-enable" style="display:none;margin-top:8px;" onclick="requestGPS()">Use my location</button>
         </div>
       </div>
       <div class="section-heading">
         <h3>✦ Shops Near You</h3>
-        <span style="font-size:0.75rem;color:var(--white-dim);">12 shops within 5km</span>
+        <span style="font-size:0.75rem;color:var(--white-dim);" id="near-count"></span>
       </div>
       <div class="shops-grid" id="nearby-shops"></div>
     </section>
@@ -902,7 +1054,7 @@
     <section class="page-section" id="sec-saved">
       <div class="section-heading">
         <h3>✦ Saved Shops</h3>
-        <span style="font-size:0.75rem;color:var(--white-dim);">5 saved</span>
+        <span style="font-size:0.75rem;color:var(--white-dim);" id="saved-count"></span>
       </div>
       <div class="saved-list" id="saved-list"></div>
     </section>
@@ -936,6 +1088,14 @@
 
   </main>
 
+  <nav class="tabbar" id="tabbar" aria-label="Main">
+    <button class="tab active" data-tab="home" onclick="showSection('home')"><span class="t-ico">🏠</span><span>Home</span></button>
+    <button class="tab" data-tab="search" onclick="showSection('search')"><span class="t-ico">🔍</span><span>Search</span></button>
+    <button class="tab" data-tab="saved" onclick="showSection('saved')"><span class="t-ico">♥</span><span>Saved</span></button>
+    <button class="tab" data-tab="orders" onclick="showSection('orders')"><span class="t-ico">📦</span><span>Orders</span><i class="t-badge" id="orders-tab-badge" style="display:none;"></i></button>
+    <button class="tab" data-tab="profile" onclick="showSection('profile')"><span class="t-ico">👤</span><span>Me</span></button>
+  </nav>
+
   <!-- CART OVERLAY + DRAWER -->
   <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
   <div class="cart-drawer" id="cart-drawer">
@@ -953,6 +1113,7 @@
       </div>
     </div>
     <div class="cart-footer" id="cart-footer" style="display:none;">
+      <div class="cart-footer-scroll">
       <div class="cart-totals">
         <div class="cart-total-row"><span>Items</span><span id="cart-items-count">0</span></div>
         <div class="cart-total-row"><span>Shop</span><span id="cart-footer-shop">—</span></div>
@@ -972,6 +1133,7 @@
           <label for="del-landmark">Landmark (optional)</label><input type="text" id="del-landmark" maxlength="120" placeholder="e.g. Opposite the central mosque"/>
           <label for="del-note">Delivery note (optional)</label><textarea id="del-note" maxlength="300" placeholder="Anything the rider should know"></textarea>
         </div>
+      </div>
       </div>
       <button class="btn-send-order" onclick="sendOrder()">📦 Place Order</button>
       <button class="btn-clear-cart" onclick="clearCart()">🗑️ Clear Cart</button>
@@ -995,6 +1157,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3 id="modal-title">Shop Name</h3>
+        <button class="heart heart-modal" id="modal-heart" onclick="toggleSaved(_modalShopId)" aria-label="Save this shop" aria-pressed="false">♥</button>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
       <div class="modal-body">
@@ -1084,14 +1247,49 @@
       try { return JSON.parse(localStorage.getItem('as_saved_shops') || '[]'); }
       catch(e) { return []; }
     }
-    function isSaved(id) { return _savedIds().includes(id); }
-    function toggleSaved(id) {
+    function isSaved(id) { return _savedIds().includes(String(id)); }
+    let _modalShopId = null;
+    function toggleSaved(id, ev) {
+      if (ev) { ev.stopPropagation(); ev.preventDefault(); }
+      id = String(id || '');
+      if (!id) return;
       let ids = _savedIds();
-      if (ids.includes(id)) { ids = ids.filter(x => x !== id); showToast('Removed from saved shops', 'info'); }
-      else { ids.push(id); showToast('Shop saved! 💾', 'success'); }
-      localStorage.setItem('as_saved_shops', JSON.stringify(ids));
+      const wasSaved = ids.includes(id);
+      if (wasSaved) ids = ids.filter(x => x !== id); else ids.unshift(id);
+      try { localStorage.setItem('as_saved_shops', JSON.stringify(ids)); }
+      catch (e) { showToast('Could not save on this phone. Free some space or turn off private browsing.', 'error'); return; }
+      showToast(wasSaved ? 'Removed from saved shops' : 'Shop saved. Find it under Saved.', wasSaved ? 'info' : 'success');
+      syncHearts();
       renderSaved();
       updateStats();
+    }
+    // every heart on the page (cards, shop window, search results) always shows the real state
+    function syncHearts() {
+      document.querySelectorAll('.heart[data-id]').forEach(h => {
+        const on = isSaved(h.dataset.id);
+        h.classList.toggle('on', on); h.setAttribute('aria-pressed', on ? 'true' : 'false');
+        h.setAttribute('aria-label', on ? 'Remove from saved shops' : 'Save this shop');
+      });
+      const mh = document.getElementById('modal-heart');
+      if (mh && _modalShopId) {
+        const on = isSaved(_modalShopId);
+        mh.classList.toggle('on', on); mh.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+    }
+
+    // ── recently opened shops, so a returning buyer can jump straight back ──
+    function _recentIds() { try { return JSON.parse(localStorage.getItem('as_recent_shops') || '[]'); } catch (e) { return []; } }
+    function rememberShop(id) {
+      try { localStorage.setItem('as_recent_shops', JSON.stringify([String(id)].concat(_recentIds().filter(x => x !== String(id))).slice(0, 8))); } catch (e) {}
+    }
+    function renderRecent() {
+      const wrap = document.getElementById('recent-wrap'), el = document.getElementById('recent-shops');
+      if (!wrap || !el) return;
+      const list = _recentIds().map(id => shops.find(s => s._id === id)).filter(Boolean);
+      wrap.style.display = list.length ? 'block' : 'none';
+      el.innerHTML = list.map(s => `<button class="recent-chip" onclick="openModal('${s._id}')">
+        <span class="rc-ico">${s.photo ? `<img src="${_E(s.photo)}" alt="" loading="lazy" onerror="this.remove()">` : s.icon}</span>
+        <span class="rc-name">${_E(s.name)}</span><span class="rc-num">${_E(_formatShopNum(s.num))}</span></button>`).join('');
     }
 
     async function loadShops() {
@@ -1193,7 +1391,18 @@
     function updateStats() {
       const el = (id) => document.getElementById(id);
       if (el('stat-verified')) el('stat-verified').textContent = shops.length;
-      if (el('stat-saved')) el('stat-saved').textContent = _savedIds().length;
+      const savedN = shops.length ? _savedIds().filter(id => shops.some(s => s._id === id)).length : _savedIds().length;
+      if (el('stat-saved')) el('stat-saved').textContent = savedN;
+      if (el('saved-count')) el('saved-count').textContent = savedN + (savedN === 1 ? ' saved' : ' saved');
+      const near = shops.filter(s => s.dist !== null);
+      const hasGps = _buyerLat !== null;
+      if (el('near-status')) {
+        el('near-status').textContent = hasGps ? 'Location is on' : 'Location is off';
+        el('near-sub').textContent = hasGps ? 'Showing the closest shops first.' : 'Allow location so we can show the closest shops first.';
+        el('near-enable').style.display = hasGps ? 'none' : 'inline-block';
+        el('near-count').textContent = hasGps ? near.filter(s => s.dist <= 5).length + ' within 5km' : '';
+      }
+      if (el('home-near-title')) el('home-near-title').textContent = hasGps ? 'Shops near you' : 'Shops to explore';
       if (el('stat-nearby')) el('stat-nearby').textContent = shops.filter(s => s.dist !== null && s.dist <= 5).length;
       const cats = new Set(shops.map(s => s.cat));
       if (el('stat-categories')) el('stat-categories').textContent = cats.size;
@@ -1392,7 +1601,7 @@
 
       emptyEl && (emptyEl.style.display = 'none');
       shopInfo.style.display = 'block';
-      footerEl.style.display = 'block';
+      footerEl.style.display = 'flex';
       shopName.textContent = cart.shopNum + ' — ' + cart.shopName;
       footShop.textContent = cart.shopName;
       totalEl.textContent  = formatPrice(getCartTotal());
@@ -1525,16 +1734,16 @@
     }
 
     function makeShopCard(s) {
-      const distLabel = s.dist !== null && s.dist !== undefined
-        ? (s.dist < 1 ? Math.round(s.dist * 1000) + 'm' : s.dist.toFixed(1) + 'km') + ' away'
-        : (s.loc || 'Location unavailable');
+      const hasDist = s.dist !== null && s.dist !== undefined;
+      const distLabel = hasDist ? (s.dist < 1 ? Math.round(s.dist * 1000) + 'm' : s.dist.toFixed(1) + 'km') + ' away' : '';
       return `<div class="shop-card" onclick="openModal('${s._id}')">
+        <button class="heart ${isSaved(s._id) ? 'on' : ''}" data-id="${_E(s._id)}" onclick="toggleSaved('${s._id}', event)" aria-pressed="${isSaved(s._id)}" aria-label="${isSaved(s._id) ? 'Remove from saved shops' : 'Save this shop'}">♥</button>
         <div class="shop-thumb">${s.photo ? `<img src="${OrdersUI.esc(s.photo)}" alt="${OrdersUI.esc(s.name)}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy">` : s.icon}<span class="shop-num">${_formatShopNum(s.num)}</span><span class="verified-pill">✅ Verified</span></div>
         <div class="shop-body">
           <h4>${OrdersUI.esc(s.name)}</h4>
           <div class="shop-meta-row"><span>🏷️ ${OrdersUI.esc(s.cat)}</span><span>📍 ${OrdersUI.esc(s.loc)}</span></div>
           <div class="shop-footer-row">
-            <span class="dist-tag">📍 ${distLabel}</span>
+            ${hasDist ? `<span class="dist-tag">${distLabel}</span>` : '<span></span>'}
             <button class="btn-sm" onclick="event.stopPropagation();openModal('${s._id}')">View Shop</button>
           </div>
         </div>
@@ -1557,19 +1766,19 @@
       const ids = _savedIds();
       const savedShops = shops.filter(s => ids.includes(s._id));
       if (!savedShops.length) {
-        el.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:40px;">You haven\'t saved any shops yet. Tap the 👁 icon on a shop to save it here.</p>';
+        el.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:40px;">Nothing saved yet.<br><span style="font-size:0.82rem;">Tap the ♥ on any shop to keep it here for next time.</span></p>';
         return;
       }
       el.innerHTML = savedShops.map(s => `
         <div class="saved-item">
           <div class="saved-icon">${s.icon}</div>
           <div class="saved-info">
-            <h4>${_formatShopNum(s.num)} — ${s.name}</h4>
-            <p>🏷️ ${s.cat} &nbsp;|&nbsp; 📍 ${s.loc}</p>
+            <h4>${_formatShopNum(s.num)} — ${_E(s.name)}</h4>
+            <p>🏷️ ${_E(s.cat)} &nbsp;|&nbsp; 📍 ${_E(s.loc)}</p>
           </div>
           <div class="saved-actions">
             <button class="btn-icon" onclick="openModal('${s._id}')" title="View">👁</button>
-            <button class="btn-icon danger" onclick="toggleSaved('${s._id}')" title="Remove">🗑</button>
+            <button class="btn-icon danger" onclick="toggleSaved('${s._id}')" title="Remove from saved" aria-label="Remove from saved">♥</button>
           </div>
         </div>`).join('');
     }
@@ -1581,20 +1790,24 @@
       renderShops('search-shops', shops);
       renderShops('nearby-shops', shops.filter(s => s.dist !== null));
       renderSaved();
+      renderRecent();
+      syncHearts();
     }
 
     async function openModal(shopId) {
       const s = shops.find(x => x._id === shopId);
       if (!s) return;
+      _modalShopId = s._id; rememberShop(s._id); syncHearts();
       document.getElementById('modal-title').textContent = s.name;
       document.getElementById('modal-icon').textContent  = s.icon;
       document.getElementById('modal-num').textContent   = _formatShopNum(s.num);
       document.getElementById('modal-name').textContent  = s.name;
       document.getElementById('modal-cat').textContent   = '🏷️ ' + s.cat;
       document.getElementById('modal-loc').textContent   = '📍 ' + s.loc;
-      document.getElementById('modal-dist').textContent  = (s.dist !== null && s.dist !== undefined)
-        ? (s.dist < 1 ? Math.round(s.dist * 1000) + 'm' : s.dist.toFixed(1) + 'km') + ' away'
-        : (s.loc || '');
+      const distEl = document.getElementById('modal-dist');
+      const hasDist = s.dist !== null && s.dist !== undefined;
+      distEl.textContent = hasDist ? '🧭 ' + (s.dist < 1 ? Math.round(s.dist * 1000) + 'm' : s.dist.toFixed(1) + 'km') + ' away' : '';
+      distEl.style.display = hasDist ? '' : 'none';
       document.getElementById('modal-fullpage-link').href = 'shop-detail.html?id=' + s._id;
 
       // ── Real Call / WhatsApp / Get Directions buttons ──
@@ -1690,7 +1903,11 @@
       const titles = { home:'Buyer Dashboard', search:'Search Shops', nearby:'Nearby Shops', categories:'Categories', saved:'Saved Shops', orders:'My Orders', profile:'My Profile' };
       document.getElementById('page-title').textContent = titles[id] || 'Dashboard';
       if(window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
+      document.querySelectorAll('.tabbar .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+      document.querySelectorAll('.sidebar-nav .nav-item').forEach(n => n.classList.toggle('active', n.getAttribute('onclick') === `showSection('${id}')`));
+      window.scrollTo({ top: 0 });
       if (id === 'orders') loadMyOrders();
+      if (id === 'saved') renderSaved();
     }
 
     // ══════════ SEARCH ══════════
@@ -1703,6 +1920,8 @@
       const pills = document.getElementById('search-filters');
       if (pills) pills.innerHTML = [['all','🔎','All']].concat(CATEGORIES.map(c => [c[0], c[1], c[0]]))
         .map(c => `<div class="cat-pill ${c[0] === _searchCat ? 'active' : ''}" data-cat="${_E(c[0])}" style="flex:0 0 auto;white-space:nowrap;" onclick="setSearchCat(this.dataset.cat)">${c[1]} ${_E(c[2])}</div>`).join('');
+      const strip = document.getElementById('home-cats');
+      if (strip) strip.innerHTML = CATEGORIES.map(c => `<button class="cat-chip" data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)"><span>${c[1]}</span>${_E(c[0])}</button>`).join('');
       const grid = document.getElementById('category-grid');
       if (grid) grid.innerHTML = CATEGORIES.map(c => `<div data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
           <span style="font-size:2.2rem;display:block;margin-bottom:10px;">${c[1]}</span>
@@ -1736,7 +1955,7 @@
         out.innerHTML = _head('All verified shops', shops.length + (shops.length === 1 ? ' shop' : ' shops')) + _shopGrid(shops);
         return;
       }
-      if (q.length === 1) { out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Type at least 2 letters…</p>'; return; }
+      if (q.length === 1 && !/\d/.test(q)) { out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Type at least 2 letters…</p>'; return; }
 
       if (_searchCtl) _searchCtl.abort();                    // a newer search replaces an older one
       _searchCtl = new AbortController();
@@ -1750,8 +1969,28 @@
         renderSearch(data, q);
       } catch (e) {
         if (e.name === 'AbortError') return;
-        out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Search is not available right now. Please check your connection and try again.</p>';
+        // the server could not be reached: still find shops by name, number, place or category from the list already on the phone
+        const local = localShopMatches(q);
+        if (local.length) {
+          out.innerHTML = _note('You seem to be offline, so these are shops matching your search. Product results will come back when your connection does.') + _shopGrid(local);
+          return;
+        }
+        out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Search is not available right now. Check your connection and try again.</p>';
       }
+    }
+
+    // Shops on this phone that match by name, shop number, place or category. Works instantly and without a connection.
+    function localShopMatches(q) {
+      const text = String(q || '').toLowerCase().trim();
+      if (!text) return [];
+      const numM = text.match(/^(?:shop\s*)?#?\s*0*(\d{1,6})$/) || text.match(/\bshop\s*#?\s*0*(\d{1,6})\b/);
+      if (numM) {
+        const hit = shops.filter(s => Number(String(s.num).replace(/\D/g, '')) === Number(numM[1]));
+        if (hit.length) return hit;
+      }
+      const words = text.split(/[^a-z0-9]+/).filter(w => w.length > 1 || /\d/.test(w));
+      if (!words.length) return [];
+      return shops.filter(s => { const hay = (s.name + ' ' + s.cat + ' ' + s.loc).toLowerCase(); return words.every(w => hay.includes(w)); });
     }
 
     function _head(title, sub) { return `<div class="section-heading"><h3>✦ ${_E(title)}</h3><span style="font-size:0.75rem;color:var(--white-dim);">${_E(sub || '')}</span></div>`; }
@@ -1781,7 +2020,10 @@
 
     function renderSearch(d, q) {
       const out = document.getElementById('search-results');
-      const exactShops = _shopsFrom(d.shops), catShops = _shopsFrom(d.categoryShops);
+      const exactShops = _shopsFrom(d.shops);
+      localShopMatches(q).forEach(s => { if (!exactShops.some(x => x._id === s._id)) exactShops.unshift(s); });   // number or name hits always show first
+      const catShops = _shopsFrom(d.categoryShops).filter(s => !exactShops.some(x => x._id === s._id));
+      if (d.mode !== 'exact' && exactShops.length) { d.mode = 'exact'; d.products = d.products || []; }
       const catLabel = (d.inferredCategories || []).join(' / ');
       const inCat = _searchCat !== 'all' ? ` in ${_E(_searchCat)}` : '';
       let h = '';
@@ -1883,6 +2125,8 @@
       const n = myOrders.filter(o => OrdersUI.needsAction(o, 'buyer')).length;
       const b = document.getElementById('orders-nav-badge');
       if (b) { b.textContent = n; b.style.display = n ? 'inline-block' : 'none'; }
+      const tb = document.getElementById('orders-tab-badge');
+      if (tb) { tb.textContent = n; tb.style.display = n ? 'flex' : 'none'; }
     }
     async function refreshOrdersBadge() {
       if (!isLoggedIn() || getRole() !== 'buyer') return;
