@@ -198,6 +198,106 @@
       .form-grid { grid-template-columns:1fr; }
     }
 
+
+    /* ══ SHARE CARD ══ */
+    .share-card { background:linear-gradient(150deg,#001233,#0A294D); color:#fff; border-radius:16px; padding:16px; margin-bottom:18px; box-shadow:0 6px 20px rgba(0,18,51,.18); }
+    .share-head { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+    .share-ic { width:38px; height:38px; border-radius:12px; background:rgba(255,190,26,.18); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .share-head b { display:block; font-size:.95rem; color:var(--gold); }
+    .share-head small { display:block; font-size:.74rem; color:rgba(255,255,255,.72); margin-top:2px; }
+    .share-url { background:rgba(255,255,255,.1); border:1px dashed rgba(255,255,255,.28); border-radius:10px; padding:10px 12px; font-size:.78rem; word-break:break-all; color:#fff; margin-bottom:12px; user-select:all; }
+    .share-btns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .share-btns button { padding:11px 6px; border-radius:10px; border:none; background:var(--gold); color:#001233; font:800 .8rem 'Nunito',sans-serif; cursor:pointer; }
+    .share-btns button:active { transform:scale(.97); }
+    .share-wa { width:100%; margin-top:8px; padding:11px; border-radius:10px; border:1px solid #25D366; background:rgba(37,211,102,.14); color:#7dffa8; font:800 .8rem 'Nunito',sans-serif; cursor:pointer; }
+
+    /* ══ PRODUCT CARDS ══ */
+    .plist { display:flex; flex-direction:column; gap:10px; }
+    .pcard { display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:10px; }
+    .pthumb { width:64px; height:64px; border-radius:12px; background:var(--green-mid); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; overflow:hidden; }
+    .pthumb img { width:100%; height:100%; object-fit:cover; }
+    .pinfo { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+    .pinfo b { font-size:.9rem; color:var(--white); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pprice { color:var(--gold-dim); font-weight:800; font-size:.92rem; }
+    .pinfo small { font-size:.68rem; color:var(--white-dim); }
+    .pact { display:flex; flex-direction:column; gap:6px; }
+    .pact button { min-width:64px; padding:7px 10px; border-radius:8px; }
+    .pempty { text-align:center; padding:40px 20px; color:var(--white-dim); background:#fff; border:1px dashed var(--border); border-radius:14px; }
+    .pempty span { font-size:2.4rem; display:block; margin-bottom:8px; }
+    .pempty p { font-size:.88rem; margin-bottom:14px; }
+
+    /* ══ APP CHROME (hidden on desktop) ══ */
+    .tabbar, .fab { display:none; }
+    .sheet-overlay { display:none; }
+
+    /* ══ MOBILE APP LAYOUT ══ */
+    @media (max-width:900px) {
+      body { display:block; background:#F4F6FA; -webkit-tap-highlight-color:transparent; }
+      body::before { display:none; }
+      .sidebar { display:none; }
+      .hamburger-btn { display:none !important; }
+      .main { margin-left:0; padding-bottom:calc(76px + env(safe-area-inset-bottom)); min-height:100dvh; }
+      .topbar { background:var(--navy-deep); border-bottom:none; height:auto; min-height:58px; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; box-shadow:0 2px 12px rgba(0,18,51,.25); }
+      .topbar-left h1 { color:var(--gold); font-size:1.02rem; }
+      .topbar-left p { color:rgba(255,255,255,.7); font-size:.72rem; max-width:62vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .topbar-right .topbar-btn { display:none; }
+      .btn-add-product { display:none; }
+      .page-section { padding:16px 14px 24px; }
+      .section-heading h3, .page-section h3 { font-size:.95rem; }
+
+      .stats-row { grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+      .stat-card { padding:12px; border-radius:14px; }
+      .stat-top { margin-bottom:6px; }
+      .stat-icon-box { width:32px; height:32px; font-size:.95rem; border-radius:10px; }
+      .stat-num { font-size:1.3rem; }
+      .stat-lbl { font-size:.7rem; }
+      #sec-dashboard > div[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr 1fr 1fr !important; gap:8px !important; margin-bottom:20px !important; }
+      #sec-dashboard > div[style*="grid-template-columns:repeat(3"] button { flex-direction:column; text-align:center; padding:12px 6px !important; font-size:.72rem !important; gap:4px !important; border-radius:14px !important; }
+      #sec-dashboard > div[style*="grid-template-columns:1.5fr"] { grid-template-columns:1fr !important; gap:16px !important; }
+
+      .form-card { padding:16px; border-radius:16px; }
+      .form-grid { grid-template-columns:1fr; gap:14px; }
+      input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea { font-size:16px; padding:13px 14px; border-radius:12px; background:#fff; }
+      .btn-primary, .btn-secondary, .btn-danger { padding:13px 18px; border-radius:12px; }
+      #sec-my-shop .form-card > div[style*="justify-content:space-between"] { flex-wrap:wrap; gap:10px; }
+
+      .order-card { padding:14px; border-radius:14px; }
+      .activity-item { border-radius:12px; }
+      .analytics-card { padding:16px; border-radius:14px; }
+      .contact-table { display:block; overflow-x:auto; }
+
+      .tabbar { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:900; background:#fff; border-top:1px solid rgba(0,18,51,.1); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow:0 -4px 18px rgba(0,18,51,.08); }
+      .tab { flex:1; position:relative; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0; color:#7a8699; font:700 .66rem 'Nunito',sans-serif; cursor:pointer; min-height:48px; }
+      .tab i { font-style:normal; font-size:1.3rem; line-height:1; filter:grayscale(1); opacity:.7; transition:.2s; }
+      .tab.active { color:var(--navy-deep); }
+      .tab.active i { filter:none; opacity:1; transform:translateY(-2px) scale(1.1); }
+      .tab.active::after { content:''; position:absolute; top:-7px; width:26px; height:3px; border-radius:3px; background:var(--gold); }
+      .tab em { position:absolute; top:2px; left:calc(50% + 8px); min-width:17px; height:17px; padding:0 4px; border-radius:9px; background:#e74c3c; color:#fff; font:800 .6rem 'Nunito',sans-serif; align-items:center; justify-content:center; font-style:normal; }
+
+      .fab { position:fixed; right:16px; bottom:calc(84px + env(safe-area-inset-bottom)); width:54px; height:54px; border-radius:50%; background:var(--gold); color:#001233; border:none; font-size:1.9rem; font-weight:800; box-shadow:0 6px 18px rgba(255,190,26,.5); z-index:850; align-items:center; justify-content:center; cursor:pointer; }
+      body[data-sec="products"] .fab, body[data-sec="dashboard"] .fab { display:flex; }
+
+      .sheet-overlay { display:flex; position:fixed; inset:0; z-index:1000; background:rgba(0,18,51,.5); align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
+      .sheet-overlay.open { opacity:1; pointer-events:auto; }
+      .sheet { width:100%; background:#fff; border-radius:22px 22px 0 0; padding:8px 16px calc(18px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s ease; }
+      .sheet-overlay.open .sheet { transform:none; }
+      .sheet-grip { width:40px; height:4px; background:#d5dae3; border-radius:4px; margin:6px auto 12px; }
+      .sheet h4 { font-family:'Cinzel',serif; color:var(--navy-deep); margin-bottom:6px; font-size:1rem; }
+      .sheet-row { display:flex; align-items:center; gap:14px; width:100%; padding:14px 6px; background:none; border:none; border-bottom:1px solid #eef0f5; font:700 .95rem 'Nunito',sans-serif; color:var(--white); text-align:left; text-decoration:none; cursor:pointer; }
+      .sheet-row i { font-style:normal; font-size:1.2rem; width:26px; text-align:center; }
+      .sheet-row.danger { color:#e74c3c; border-bottom:none; }
+
+      .modal-overlay { align-items:flex-end; padding:0; }
+      .modal { max-width:none; max-height:92dvh; border-radius:22px 22px 0 0; border:none; animation:sheetUp .28s ease both; padding-bottom:env(safe-area-inset-bottom); }
+      .modal-header { position:sticky; top:0; background:#fff; z-index:2; padding:16px 18px; }
+      .modal-body { padding:16px 18px 22px; }
+      @keyframes sheetUp { from{transform:translateY(100%)} to{transform:none} }
+    }
+    @media (max-width:360px) {
+      .stat-num { font-size:1.15rem; }
+      .share-btns button { font-size:.74rem; }
+    }
+
     /* Orders section styles */
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
     .order-card {
@@ -281,18 +381,18 @@
 
     <nav class="sidebar-nav">
       <div class="nav-section-label">My Business</div>
-      <a class="nav-item" onclick="showSection('dashboard')"><span class="nav-icon">📊</span> Dashboard</a>
-      <a class="nav-item" onclick="showSection('my-shop')"><span class="nav-icon">🏪</span> My Shop</a>
-      <a class="nav-item" onclick="showSection('products')"><span class="nav-icon">📦</span> My Products</a>
-      <a class="nav-item" onclick="showSection('orders')"><span class="nav-icon">🛒</span> Orders <span id="orders-badge" style="display:none;margin-left:auto;background:#e74c3c;color:#fff;font-size:0.6rem;font-weight:800;padding:2px 7px;border-radius:10px;animation:pulse 1.5s infinite;"></span></a>
-      <a class="nav-item" onclick="showSection('analytics')"><span class="nav-icon">📈</span> Analytics</a>
-      <a class="nav-item" onclick="showSection('contacts')"><span class="nav-icon">📞</span> Contact Requests</a>
+      <a class="nav-item" data-sec="dashboard" onclick="showSection('dashboard')"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item" data-sec="my-shop" onclick="showSection('my-shop')"><span class="nav-icon">🏪</span> My Shop</a>
+      <a class="nav-item" data-sec="products" onclick="showSection('products')"><span class="nav-icon">📦</span> My Products</a>
+      <a class="nav-item" data-sec="orders" onclick="showSection('orders')"><span class="nav-icon">🛒</span> Orders <span id="orders-badge" style="display:none;margin-left:auto;background:#e74c3c;color:#fff;font-size:0.6rem;font-weight:800;padding:2px 7px;border-radius:10px;animation:pulse 1.5s infinite;"></span></a>
+      <a class="nav-item" data-sec="analytics" onclick="showSection('analytics')"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-item" data-sec="contacts" onclick="showSection('contacts')"><span class="nav-icon">📞</span> Contact Requests</a>
       <div class="nav-section-label" style="margin-top:12px;">Account</div>
-      <a class="nav-item" onclick="showSection('settings')"><span class="nav-icon">⚙️</span> Settings</a>
+      <a class="nav-item" data-sec="settings" onclick="showSection('settings')"><span class="nav-icon">⚙️</span> Settings</a>
     </nav>
 
     <div class="sidebar-footer">
-      <button class="logout-btn" onclick="window.location.href='auth.html'">🚪 Logout</button>
+      <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
       <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(201,144,0,0.1);">
         <p style="font-size:0.65rem;color:var(--white-dim);margin-bottom:6px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Need Help?</p>
         <a href="mailto:Alfijeershops@gmail.com" style="display:flex;align-items:center;gap:6px;font-size:0.68rem;color:var(--white-dim);text-decoration:none;margin-bottom:5px;" title="Email Support">✉️ Alfijeershops@gmail.com</a>
@@ -327,6 +427,17 @@
         <p style="flex:1;min-width:200px;font-size:0.82rem;color:var(--white);font-weight:700;margin:0;">Complete your payment details before accepting customer orders.</p>
         <button class="btn-primary" onclick="goToPaymentDetails()">Add payment details</button>
       </div>
+
+      <div class="share-card" id="share-card">
+        <div class="share-head"><span class="share-ic">🔗</span><div><b>Your shop link</b><small id="share-note">Share it so buyers can open your shop directly.</small></div></div>
+        <div class="share-url" id="share-url">Loading…</div>
+        <div class="share-btns">
+          <button onclick="copyShopLink()">📋 Copy</button>
+          <button onclick="shareShopLink()">📤 Share</button>
+          <button onclick="previewShop()">👁️ Preview</button>
+        </div>
+        <button class="share-wa" onclick="shareWhatsApp()">💬 Share on WhatsApp</button>
+      </div>
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-top"><div class="stat-icon-box">👁️</div><span class="stat-trend">All Time</span></div>
@@ -354,7 +465,7 @@
         <button onclick="showSection('my-shop')" style="background:rgba(18,128,73,0.06);border:1px solid rgba(18,128,73,0.15);border-radius:8px;padding:16px;cursor:pointer;color:var(--white);font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:700;transition:all 0.3s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(18,128,73,0.12)'" onmouseout="this.style.background='rgba(18,128,73,0.06)'">
           <span style="font-size:1.2rem;">✏️</span> Edit Shop Info
         </button>
-        <button onclick="showToast('Opening your shop page as buyers see it...','info')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;color:var(--white);font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:700;transition:all 0.3s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.borderColor='var(--border)'">
+        <button onclick="previewShop()" style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;color:var(--white);font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:700;transition:all 0.3s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.borderColor='var(--border)'">
           <span style="font-size:1.2rem;">👁️</span> Preview My Shop
         </button>
       </div>
@@ -475,7 +586,8 @@
         </div>
         <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
           <button class="btn-primary" onclick="saveShopProfile()">Save Changes</button>
-          <button class="btn-secondary" onclick="showToast('Shop preview is your live shop card — exactly what buyers see on the homepage.','info')">👁️ Preview Shop</button>
+          <button class="btn-secondary" onclick="previewShop()">👁️ Preview Shop</button>
+          <button class="btn-secondary" onclick="copyShopLink()">🔗 Copy Shop Link</button>
         </div>
       </div>
     </section>
@@ -483,19 +595,10 @@
     <!-- ══ PRODUCTS ══ -->
     <section class="page-section" id="sec-products">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-        <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--white);">✦ My Products (14)</h3>
+        <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--white);">✦ My Products <span id="products-count">(0)</span></h3>
         <button class="btn-add-product" onclick="openProductModal(null)">+ Add New Product</button>
       </div>
-      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-        <table class="products-table">
-          <thead>
-            <tr>
-              <th>Product</th><th>Name</th><th>Price</th><th>Category</th><th>Date Added</th><th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="products-tbody"></tbody>
-        </table>
-      </div>
+      <div id="products-list" class="plist"></div>
     </section>
 
     <!-- ══ ANALYTICS ══ -->
@@ -622,6 +725,29 @@
 
   </main>
 
+
+  <!-- MOBILE APP CHROME -->
+  <button class="fab" id="fab-add" onclick="openProductModal(null)" aria-label="Add product">＋</button>
+  <nav class="tabbar" aria-label="Seller navigation">
+    <button class="tab" data-sec="dashboard" onclick="showSection('dashboard')"><i>🏠</i><span>Home</span></button>
+    <button class="tab" data-sec="orders" onclick="showSection('orders')"><i>🛒</i><span>Orders</span><em id="tab-orders-badge" style="display:none"></em></button>
+    <button class="tab" data-sec="products" onclick="showSection('products')"><i>📦</i><span>Products</span></button>
+    <button class="tab" data-sec="my-shop" onclick="showSection('my-shop')"><i>🏪</i><span>My Shop</span></button>
+    <button class="tab" id="tab-more" onclick="openMore()"><i>☰</i><span>More</span></button>
+  </nav>
+  <div class="sheet-overlay" id="more-sheet" onclick="if(event.target===this)closeMore()">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h4>More</h4>
+      <button class="sheet-row" onclick="showSection('analytics')"><i>📈</i> Analytics</button>
+      <button class="sheet-row" onclick="showSection('contacts')"><i>📞</i> Contact Requests</button>
+      <button class="sheet-row" onclick="showSection('settings')"><i>⚙️</i> Settings &amp; Payment</button>
+      <a class="sheet-row" href="index.html"><i>🌍</i> Visit Marketplace</a>
+      <a class="sheet-row" href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener"><i>💬</i> Help on WhatsApp</a>
+      <button class="sheet-row danger" onclick="logoutUser()"><i>🚪</i> Log out</button>
+    </div>
+  </div>
+
   <!-- ADD/EDIT PRODUCT MODAL -->
   <div class="modal-overlay" id="product-modal">
     <div class="modal">
@@ -635,30 +761,9 @@
             <label>Product Name *</label>
             <input type="text" id="prod-name" placeholder="e.g. Neutrogena Face Cream"/>
           </div>
-          <div class="form-group">
+          <div class="form-group full">
             <label>Price (₦) *</label>
             <input type="text" inputmode="decimal" id="prod-price" placeholder="e.g. 3500"/>
-          </div>
-          <div class="form-group">
-            <label>Category *</label>
-            <select id="prod-cat">
-              <option value="">Select a category</option>
-              <option value="Food, Grains & Spices">🌾 Food, Grains & Spices</option>
-              <option value="Beauty & Personal Care">💄 Beauty & Personal Care</option>
-              <option value="Household & Cleaning Supplies">🧴 Household & Cleaning Supplies</option>
-              <option value="Health & Wellness">💊 Health & Wellness</option>
-              <option value="Fashion & Clothing">👕 Fashion & Clothing</option>
-              <option value="Baby & Kids">🧸 Baby & Kids</option>
-              <option value="Phones & Electronics">📱 Phones & Electronics</option>
-              <option value="Farm Products">🫘 Farm Products</option>
-              <option value="Home & Furniture">🛋️ Home & Furniture</option>
-              <option value="Building Materials & Hardware">🧱 Building Materials & Hardware</option>
-              <option value="Vehicles & Spare Parts">🚗 Vehicles & Spare Parts</option>
-              <option value="Business & Industrial Equipment">⚙️ Business & Industrial Equipment</option>
-              <option value="Books, Office & School Supplies">📚 Books, Office & School Supplies</option>
-              <option value="Sports & Outdoor">⚽ Sports & Outdoor</option>
-              <option value="Other">📦 Other</option>
-            </select>
           </div>
           <div class="form-group full">
             <label>Description</label>
@@ -669,7 +774,7 @@
             <div class="file-upload" onclick="document.getElementById('prod-imgs').click()">
               <input type="file" id="prod-imgs" accept="image/*" multiple/>
               <span style="font-size:1.6rem;display:block;margin-bottom:8px;">📸</span>
-              <p style="font-size:0.8rem;color:var(--white-dim);"><strong style="color:var(--gold);">Click to upload</strong> product photos</p>
+              <p style="font-size:0.8rem;color:var(--white-dim);"><strong style="color:var(--gold-dim);">Tap to upload</strong> product photos</p>
             </div>
           </div>
         </div>
@@ -683,6 +788,25 @@
 
   <script src="./orders-ui.js"></script>
 <script>
+    // ── Suspended / removed accounts: any API call that says so ends the session ──
+    (function() {
+      const _f = window.fetch.bind(window);
+      window.fetch = async function() {
+        const r = await _f.apply(null, arguments);
+        try {
+          if ((r.status === 403 || r.status === 401) && String(arguments[0]).indexOf('/api/') > -1) {
+            const d = await r.clone().json();
+            if (['ACCOUNT_SUSPENDED','ACCOUNT_DELETED','NO_USER'].indexOf(d.code) > -1) {
+              try { sessionStorage.setItem('as_notice', d.message || 'Your session has ended.'); } catch (e) {}
+              ['as_token','as_role','as_user','as_seller'].forEach(k => localStorage.removeItem(k));
+              window.location.replace('auth.html');
+            }
+          }
+        } catch (e) {}
+        return r;
+      };
+    })();
+
     let products = [];  // real products, loaded from /api/sellers/me
 
     // ── Format shop number consistently as "Shop 001", regardless of raw backend format
@@ -705,30 +829,35 @@
       return icons[cat] || '📦';
     }
 
+    function escH(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
     function renderProducts() {
-      const tbody = document.getElementById('products-tbody');
-      if (!tbody) return;
+      const box = document.getElementById('products-list');
+      if (!box) return;
+      const cnt = document.getElementById('products-count');
+      if (cnt) cnt.textContent = '(' + products.length + ')';
 
       if (mySeller && mySeller.status !== 'approved') {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--white-dim);">You can add products once your shop is approved.${mySeller.status === 'pending' ? ' Your application is still under review.' : ''}</td></tr>`;
+        box.innerHTML = '<div class="pempty"><span>⏳</span><p>You can add products once your shop is approved.' + (mySeller.status === 'pending' ? ' Your application is still under review.' : '') + '</p></div>';
         return;
       }
       if (!products.length) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--white-dim);">No products yet. Click "Add Product" to get started.</td></tr>';
+        box.innerHTML = '<div class="pempty"><span>📦</span><p>No products yet.</p><button class="btn-primary" onclick="openProductModal(null)">+ Add your first product</button></div>';
         return;
       }
-      tbody.innerHTML = products.map(p => `
-        <tr>
-          <td><div class="product-thumb">${p.images && p.images.length > 0 ? '<img src="' + p.images[0] + '" alt="product" onerror="this.style.display=\'none\'" loading="lazy" style="width:100%;height:100%;object-fit:contain;border-radius:6px;"/>' : _catIcon(p.category)}</div></td>
-          <td style="color:var(--white);font-weight:600;">${p.name}</td>
-          <td style="color:var(--gold);font-weight:700;">₦${Number(p.price).toLocaleString()}</td>
-          <td>${p.category}</td>
-          <td>${new Date(p.createdAt).toLocaleDateString('en-GB')}</td>
-          <td><div class="action-btns">
-            <button class="btn-edit" onclick="openProductModal('${p._id}')">Edit</button>
-            <button class="btn-del" onclick="deleteProduct('${p._id}')">Delete</button>
-          </div></td>
-        </tr>`).join('');
+      box.innerHTML = products.map(p => `
+        <div class="pcard">
+          <div class="pthumb">${p.images && p.images.length > 0 ? '<img src="' + escH(p.images[0]) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'"/>' : '📦'}</div>
+          <div class="pinfo">
+            <b>${escH(p.name)}</b>
+            <span class="pprice">₦${Number(p.price).toLocaleString()}</span>
+            <small>Added ${new Date(p.createdAt).toLocaleDateString('en-GB')}</small>
+          </div>
+          <div class="pact">
+            <button class="btn-edit" onclick="openProductModal('${escH(p._id)}')">Edit</button>
+            <button class="btn-del" onclick="deleteProduct('${escH(p._id)}')">Delete</button>
+          </div>
+        </div>`).join('');
     }
 
     let editingProductId = null;
@@ -745,12 +874,10 @@
         if (!p) return;
         document.getElementById('prod-name').value  = p.name || '';
         document.getElementById('prod-price').value = p.price || '';
-        document.getElementById('prod-cat').value   = p.category || '';
         document.getElementById('prod-desc').value  = p.description || '';
       } else {
         document.getElementById('prod-name').value  = '';
         document.getElementById('prod-price').value = '';
-        document.getElementById('prod-cat').value   = '';
         document.getElementById('prod-desc').value  = '';
       }
       document.getElementById('prod-imgs').value = '';
@@ -761,18 +888,15 @@
       const name  = document.getElementById('prod-name')?.value.trim();
       const priceRaw = document.getElementById('prod-price')?.value.trim() || '';
       const price = priceRaw.replace(/[,\s]/g, ''); // sellers naturally type "25,000" — strip commas/spaces before validating
-      const cat   = document.getElementById('prod-cat')?.value;
       const desc  = document.getElementById('prod-desc')?.value.trim() || '';
       const files = document.getElementById('prod-imgs')?.files;
 
       if (!name)  { showToast('Please enter a product name', 'error');  return; }
       if (!price || isNaN(price) || Number(price) <= 0) { showToast('Please enter a valid price (numbers only)', 'error'); return; }
-      if (!cat)   { showToast('Please select a category', 'error');     return; }
 
       const fd = new FormData();
       fd.append('name', name);
       fd.append('price', price);
-      fd.append('category', cat);
       fd.append('description', desc);
       if (files) Array.from(files).forEach(f => fd.append('images', f));
 
@@ -810,17 +934,24 @@
     }
 
     function showSection(id) {
-      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-      document.getElementById('sec-'+id).classList.add('active');
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      if (typeof event !== 'undefined' && event && event.currentTarget) event.currentTarget.classList.add('active');
-      const titles = { dashboard:'Seller Dashboard','my-shop':'My Shop',products:'My Products',orders:'Orders',analytics:'Analytics',contacts:'Contact Requests',settings:'Settings' };
+      const sec = document.getElementById('sec-' + id); if (!sec) return;
+      document.querySelectorAll('.page-section').forEach(x => x.classList.remove('active'));
+      sec.classList.add('active');
+      document.querySelectorAll('[data-sec]').forEach(n => n.classList.toggle('active', n.dataset.sec === id));
+      const moreTab = document.getElementById('tab-more');
+      if (moreTab) moreTab.classList.toggle('active', ['analytics','contacts','settings'].indexOf(id) > -1);
+      const titles = { dashboard:'Dashboard','my-shop':'My Shop',products:'My Products',orders:'Orders',analytics:'Analytics',contacts:'Contact Requests',settings:'Settings' };
       document.getElementById('page-title').textContent = titles[id] || 'Dashboard';
-      if(window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
+      document.body.setAttribute('data-sec', id);
+      closeMore();
+      document.getElementById('sidebar').classList.remove('open');
+      window.scrollTo(0, 0);
       if (id === 'orders')    loadRealOrders();
       if (id === 'analytics') loadAnalytics();
       if (id === 'contacts')  loadContacts();
     }
+    function openMore()  { document.getElementById('more-sheet').classList.add('open'); }
+    function closeMore() { const m = document.getElementById('more-sheet'); if (m) m.classList.remove('open'); }
 
     function formatPrice(n) { return '₦' + Number(n).toLocaleString('en-NG'); }
 
@@ -838,6 +969,53 @@
       const role  = localStorage.getItem('as_role');
       if (!token || role !== 'seller') { window.location.href = 'auth.html'; }
     })();
+
+
+    // ══════════════════════════════════════
+    //  SHOP LINK — preview, copy & share
+    // ══════════════════════════════════════
+    function shopLink() {
+      if (!mySeller || !mySeller._id) return '';
+      return new URL('shop-detail.html?id=' + encodeURIComponent(mySeller._id), window.location.href).href;
+    }
+    function renderShareCard() {
+      const el = document.getElementById('share-url'); if (!el) return;
+      const note = document.getElementById('share-note');
+      el.textContent = shopLink() || 'Not available yet';
+      if (note) note.textContent = (mySeller && mySeller.status === 'approved')
+        ? 'Share it so buyers can open your shop directly.'
+        : 'Your link starts working as soon as your shop is approved.';
+    }
+    function previewShop() {
+      const l = shopLink();
+      if (!l) { showToast('Your shop is still loading — try again in a moment.', 'info'); return; }
+      if (mySeller.status !== 'approved') showToast('Buyers can only see your shop after it is approved.', 'warning');
+      window.open(l, '_blank');
+    }
+    async function copyShopLink() {
+      const l = shopLink();
+      if (!l) { showToast('Your shop is still loading.', 'info'); return; }
+      try { await navigator.clipboard.writeText(l); }
+      catch (e) {
+        const t = document.createElement('textarea'); t.value = l; t.style.position = 'fixed'; t.style.opacity = '0';
+        document.body.appendChild(t); t.select();
+        try { document.execCommand('copy'); } catch (e2) {}
+        t.remove();
+      }
+      showToast('Shop link copied!', 'success');
+    }
+    async function shareShopLink() {
+      const l = shopLink(); if (!l) return;
+      const name = (mySeller && mySeller.businessName) || 'my shop';
+      if (navigator.share) {
+        try { await navigator.share({ title: name + ' on ALFIJEER', text: 'Shop with ' + name + ' on ALFIJEER', url: l }); } catch (e) {}
+      } else { copyShopLink(); }
+    }
+    function shareWhatsApp() {
+      const l = shopLink(); if (!l) return;
+      const name = (mySeller && mySeller.businessName) || 'my shop';
+      window.open('https://wa.me/?text=' + encodeURIComponent('Shop with ' + name + ' on ALFIJEER 🛍️\n' + l), '_blank');
+    }
 
     function logoutUser() {
       ['as_token','as_role','as_user','as_seller'].forEach(k => localStorage.removeItem(k));
@@ -923,6 +1101,7 @@
         if (stateSel && mySeller.state) stateSel.value = mySeller.state;
 
         renderProducts();
+        renderShareCard();
         updateDashboardOverview();
       } catch(e) {
         console.warn('Could not load seller profile:', e);
@@ -1096,6 +1275,8 @@
       set('stat-order-value', formatPrice(done.reduce((s,o) => s + (o.total || 0), 0)));
       const badge = document.getElementById('orders-badge');
       if (badge) { if (needs > 0) { badge.textContent = needs; badge.style.display = 'inline'; } else { badge.style.display = 'none'; } }
+      const tb = document.getElementById('tab-orders-badge');
+      if (tb) { if (needs > 0) { tb.textContent = needs; tb.style.display = 'flex'; } else { tb.style.display = 'none'; } }
     }
 
     // ══════════════════════════════════════
@@ -1170,6 +1351,7 @@
 
     // ── Init ──
     document.addEventListener('DOMContentLoaded', async function() {
+      showSection('dashboard');
       await loadRealSeller();
       loadRealOrders();
       loadAnalytics();
@@ -1188,12 +1370,12 @@
       toast.className = 'as-toast';
       toast.innerHTML = '<span>' + icons[type] + '</span><span>' + message + '</span>';
       Object.assign(toast.style, {
-        position:'fixed', bottom:'28px', right:'28px', zIndex:'9999',
+        position:'fixed', bottom: (window.innerWidth < 900 ? '84px' : '28px'), right: (window.innerWidth < 900 ? '12px' : '28px'), left: (window.innerWidth < 900 ? '12px' : 'auto'), zIndex:'9999',
         background:'#FFFFFF', border:'1px solid ' + colors[type],
         color:'#14203A', padding:'14px 20px', borderRadius:'8px',
         fontFamily:'Nunito, sans-serif', fontSize:'0.9rem', fontWeight:'600',
         display:'flex', alignItems:'center', gap:'10px',
-        boxShadow:'0 4px 24px rgba(16,40,28,0.14)', maxWidth:'340px'
+        boxShadow:'0 4px 24px rgba(16,40,28,0.14)', maxWidth: (window.innerWidth < 900 ? 'none' : '340px')
       });
       document.body.appendChild(toast);
       setTimeout(function(){ toast.remove(); }, 4000);

@@ -10,6 +10,30 @@
 
 const _API = 'https://alfijeershops-backend-production.up.railway.app/api';
 
+
+// ── Suspended / removed accounts ──
+// If any API call says the account is suspended or gone, end the session
+// and send the person to the login page with the reason.
+(function () {
+  if (window.__asFetchGuard) return;
+  window.__asFetchGuard = true;
+  const _f = window.fetch.bind(window);
+  window.fetch = async function () {
+    const r = await _f.apply(null, arguments);
+    try {
+      if ((r.status === 403 || r.status === 401) && String(arguments[0]).indexOf('/api/') > -1) {
+        const d = await r.clone().json();
+        if (['ACCOUNT_SUSPENDED', 'ACCOUNT_DELETED', 'NO_USER'].indexOf(d.code) > -1) {
+          try { sessionStorage.setItem('as_notice', d.message || 'Your session has ended.'); } catch (e) {}
+          ['as_token', 'as_role', 'as_user', 'as_seller'].forEach(k => localStorage.removeItem(k));
+          window.location.replace('auth.html');
+        }
+      }
+    } catch (e) {}
+    return r;
+  };
+})();
+
 // ── Auth ──
 // Matches the real keys set at login (see auth.html):
 //   as_token  → JWT string

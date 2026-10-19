@@ -400,6 +400,61 @@
       .form-row { grid-template-columns: 1fr; }
       .type-selector { grid-template-columns: 1fr; }
     }
+
+    /* ══ NOTICE BANNER ══ */
+    .auth-banner { display:none; align-items:flex-start; gap:10px; background:#FDECEA; border:1px solid rgba(231,76,60,.4); color:#8a1f14; border-radius:12px; padding:12px 14px; margin-bottom:18px; font-size:.85rem; font-weight:700; line-height:1.5; }
+    .auth-banner.show { display:flex; }
+    .auth-banner.info { background:#FFF7E0; border-color:rgba(201,144,0,.4); color:#6b4b00; }
+    .m-hero { display:none; }
+
+    /* ══ MOBILE APP LAYOUT ══ */
+    @media (max-width: 860px) {
+      html, body { background:#001233; }
+      nav { display:none !important; }
+      .auth-wrapper { display:block; padding-top:0; min-height:100dvh; }
+      .auth-right { padding:0; min-height:100dvh; display:flex; flex-direction:column; justify-content:flex-start; }
+
+      .m-hero { display:block; position:relative; overflow:hidden; background:linear-gradient(165deg,#0A294D 0%,#001233 70%); color:#fff; padding:calc(14px + env(safe-area-inset-top)) 20px 52px; text-align:center; }
+      .m-hero::before { content:''; position:absolute; top:-70px; right:-70px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(255,190,26,.22),transparent 70%); }
+      .m-top { position:relative; display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+      .m-back { width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.1); color:#fff; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:1.2rem; }
+      .m-brand { font-family:'Cinzel',serif; font-weight:700; letter-spacing:3px; color:var(--gold); font-size:.95rem; }
+      .m-hero img { position:relative; width:64px; height:64px; object-fit:contain; border-radius:50%; margin-bottom:10px; filter:drop-shadow(0 0 18px rgba(255,190,26,.3)); }
+      .m-hero h1 { position:relative; font-family:'Cinzel',serif; font-size:1.45rem; line-height:1.25; margin-bottom:6px; }
+      .m-hero h1 span { color:var(--gold); }
+      .m-hero p { position:relative; font-size:.84rem; color:rgba(255,255,255,.75); line-height:1.5; max-width:300px; margin:0 auto 14px; }
+      .m-chips { position:relative; display:flex; gap:6px; justify-content:center; flex-wrap:wrap; }
+      .m-chips span { font-size:.68rem; font-weight:700; padding:5px 10px; border-radius:20px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
+
+      .auth-card { flex:1; max-width:none; margin:-26px 0 0; background:#fff; border-radius:26px 26px 0 0; padding:20px 18px calc(30px + env(safe-area-inset-bottom)); position:relative; box-shadow:0 -8px 24px rgba(0,0,0,.15); animation:none; }
+      .page-switcher { border-radius:14px; padding:4px; margin-bottom:22px; background:#EEF1F6; border:none; }
+      .page-btn { padding:12px; border-radius:11px; font-size:.9rem; }
+      .page-btn.active { box-shadow:0 2px 8px rgba(201,144,0,.35); }
+      .card-title { font-size:1.3rem; }
+      .card-subtitle { margin-bottom:22px; font-size:.84rem; }
+
+      input[type="text"], input[type="email"], input[type="tel"], input[type="password"], select, textarea { font-size:16px; padding:14px; border-radius:12px; background:#F4F6FA; border:1.5px solid transparent; min-height:50px; }
+      input:focus, select:focus, textarea:focus { background:#fff; border-color:var(--gold); }
+      textarea { min-height:96px; }
+      .form-group { margin-bottom:16px; }
+      .btn-primary, .btn-emerald { padding:15px; min-height:52px; border-radius:14px; font-size:1rem; box-shadow:0 6px 16px rgba(201,144,0,.28); }
+      .btn-secondary { padding:14px; min-height:50px; border-radius:14px; }
+
+      .type-selector { grid-template-columns:1fr; gap:10px; }
+      .type-card { display:grid; grid-template-columns:48px 1fr; column-gap:14px; align-items:center; text-align:left; padding:14px; border-radius:16px; }
+      .type-card .type-icon { grid-row:1 / span 2; font-size:2rem; margin:0; text-align:center; }
+      .type-card .type-label { margin:0; font-size:.95rem; }
+      .type-card.selected { box-shadow:0 0 0 3px rgba(255,190,26,.25); }
+
+      .step-dot { width:32px; height:32px; }
+      .file-upload { padding:20px 14px; border-radius:14px; }
+      .notice-box { border-radius:12px; }
+      .success-icon { width:72px; height:72px; }
+      .forgot-link { margin-top:-6px; }
+    }
+    @media (max-width: 480px) {
+      .m-hero { padding-bottom:46px; }
+    }
   </style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
@@ -464,7 +519,19 @@
 
     <!-- RIGHT PANEL -->
     <div class="auth-right">
+      <div class="m-hero">
+        <div class="m-top">
+          <a href="index.html" class="m-back" aria-label="Back to home">←</a>
+          <span class="m-brand">ALFIJEER</span>
+          <span style="width:40px"></span>
+        </div>
+        <img src="./Alfijeer1.png" alt="" onerror="this.style.display='none'"/>
+        <h1 id="m-hero-title">Join <span>ALFIJEER</span></h1>
+        <p id="m-hero-sub">The Digital Market Place For Nigeria — verified shops, real sellers.</p>
+        <div class="m-chips"><span>✅ Verified sellers</span><span>📍 Near you</span><span>🛡️ Protected</span></div>
+      </div>
       <div class="auth-card">
+        <div class="auth-banner" id="auth-banner" role="alert"><span id="auth-banner-ic">⚠️</span><span id="auth-banner-text"></span></div>
 
         <!-- Switcher -->
         <div class="page-switcher">
@@ -752,12 +819,12 @@
           <p class="card-subtitle">Login to your ALFIJEER account.</p>
           <div class="form-group">
             <label>Email Address <span class="required">*</span></label>
-            <input type="email" id="login-email" placeholder="your@email.com"/>
+            <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email" inputmode="email" autocapitalize="none"/>
           </div>
           <div class="form-group">
             <label>Password <span class="required">*</span></label>
             <div class="input-wrapper">
-              <input type="password" id="login-pass" placeholder="Your password"/>
+              <input type="password" id="login-pass" placeholder="Your password" autocomplete="current-password"/>
               <button class="toggle-pass" onclick="togglePass('login-pass',this)" type="button">👁</button>
             </div>
           </div>
@@ -800,7 +867,25 @@
         b.classList.toggle('active', (page === 'register' && i === 0) || (page === 'login' && i === 1));
       });
       if (page === 'register') goToStep('type');
+      const heroT = { register:['Join <span>ALFIJEER</span>','The Digital Market Place For Nigeria — verified shops, real sellers.'],
+                      login:['Welcome <span>back</span>','Log in to continue shopping or manage your shop.'],
+                      forgot:['Reset <span>password</span>','We will email you a link to choose a new one.'] }[page];
+      if (heroT) {
+        const t = document.getElementById('m-hero-title'), u = document.getElementById('m-hero-sub');
+        if (t) t.innerHTML = heroT[0]; if (u) u.textContent = heroT[1];
+      }
+      if (page !== 'login') hideBanner();
+      window.scrollTo(0, 0);
     }
+
+    function showBanner(msg, kind) {
+      const b = document.getElementById('auth-banner'); if (!b) return;
+      document.getElementById('auth-banner-text').textContent = msg;
+      document.getElementById('auth-banner-ic').textContent = kind === 'info' ? 'ℹ️' : '⛔';
+      b.classList.toggle('info', kind === 'info');
+      b.classList.add('show');
+    }
+    function hideBanner() { const b = document.getElementById('auth-banner'); if (b) b.classList.remove('show'); }
 
     function selectType(type) {
       selectedType = type;
@@ -833,13 +918,13 @@
       toast.className = 'as-toast';
       toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
       Object.assign(toast.style, {
-        position: 'fixed', bottom: '28px', right: '28px', zIndex: '9999',
+        position: 'fixed', bottom: '20px', right: window.innerWidth < 860 ? '12px' : '28px', left: window.innerWidth < 860 ? '12px' : 'auto', zIndex: '9999',
         background: '#FFFFFF', border: `1px solid ${colors[type]}`,
         color: '#14203A', padding: '14px 20px', borderRadius: '8px',
         fontFamily: 'Nunito, sans-serif', fontSize: '0.9rem', fontWeight: '600',
         display: 'flex', alignItems: 'center', gap: '10px',
         boxShadow: `0 4px 24px rgba(16,40,28,0.14)`,
-        animation: 'slideInToast 0.3s ease', maxWidth: '340px'
+        animation: 'slideInToast 0.3s ease', maxWidth: window.innerWidth < 860 ? 'none' : '340px'
       });
       const style = document.createElement('style');
       style.textContent = `@keyframes slideInToast { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`;
@@ -888,7 +973,9 @@
         });
         const data = await res.json();
         if (!res.ok) {
-          if (res.status === 429) {
+          if (data.code === 'ACCOUNT_SUSPENDED' || data.code === 'ACCOUNT_DELETED') {
+            showBanner(data.message || 'This account cannot log in right now. Contact support.');
+          } else if (res.status === 429) {
             showToast("You've tried a few times in a row — please wait a couple of minutes before trying again.", 'error');
           } else {
             showToast(data.message || 'Registration failed. Please try again.', 'error');
@@ -1155,6 +1242,21 @@
     }
 
     showPage('register');
+
+    // arriving from a suspended / ended session, or with #login / ?mode=login
+    (function () {
+      let notice = null;
+      try { notice = sessionStorage.getItem('as_notice'); sessionStorage.removeItem('as_notice'); } catch (e) {}
+      const wantLogin = location.hash === '#login' || new URLSearchParams(location.search).get('mode') === 'login';
+      if (notice || wantLogin) showPage('login');
+      if (notice) showBanner(notice);
+    })();
+
+    // Enter key submits the login form
+    ['login-email', 'login-pass'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-submit-btn').click(); });
+    });
   </script>
 <script>
   if ('serviceWorker' in navigator) {

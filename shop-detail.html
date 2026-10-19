@@ -290,10 +290,18 @@
         return;
       }
       try {
-        const res = await fetch(_API + '/sellers?limit=200');
-        const data = await res.json();
-        const list = data.sellers || data || [];
-        const s = list.find(x => x._id === _shopId);
+        let s = null;
+        // direct lookup first: works for any approved shop, however many shops exist
+        try {
+          const r1 = await fetch(_API + '/sellers/public/' + encodeURIComponent(_shopId));
+          if (r1.ok) s = (await r1.json()).seller || null;
+        } catch (e) {}
+        if (!s) {
+          const res = await fetch(_API + '/sellers?limit=200');
+          const data = await res.json();
+          const list = data.sellers || data || [];
+          s = list.find(x => x._id === _shopId) || null;
+        }
         if (!s) {
           document.getElementById('sd-name').textContent = 'Shop not found';
           return;
