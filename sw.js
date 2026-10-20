@@ -11,7 +11,7 @@
 // returning visitors pick up the new version instead of a stale cache.
 // ══════════════════════════════════════════════════════════
 
-const CACHE_VERSION = 'alfijeer-v7'; // bumped from arewa-square-v1 for the rebrand — forces returning visitors to pull fresh (correctly-branded) assets instead of serving stale cached ones
+const CACHE_VERSION = 'alfijeer-v8'; // bumped from arewa-square-v1 for the rebrand — forces returning visitors to pull fresh (correctly-branded) assets instead of serving stale cached ones
 const API_HOST = 'alfijeershops-backend-production.up.railway.app';
 
 const APP_SHELL = [
@@ -32,6 +32,11 @@ const APP_SHELL = [
   './google-maps-config.js',
   './manifest.json',
   './Alfijeer1.png',
+  './pwa.js',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/maskable-512.png',
+  './icons/apple-touch-icon.png',
 ];
 
 // ── Install: pre-cache the app shell ──
