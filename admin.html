@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-no-platform-guard>
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
@@ -725,10 +725,159 @@
       .admin-table-wrap { overflow-x: auto; }
       table.admin-table { min-width: 640px; }
     }
+
+    /* ══ NEW ADMIN SECTIONS ══ */
+    .offline-strip { background:#e74c3c; color:#fff; padding:10px 18px; font-size:.82rem; cursor:pointer; text-align:center; position:sticky; top:64px; z-index:40; }
+    .an-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:12px; }
+    .kpi { background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:2px; }
+    .kpi-l { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--white-dim); }
+    .kpi-n { font-family:'Cinzel',serif; font-size:1.7rem; font-weight:700; color:var(--white); line-height:1.2; }
+    .an-kpis.small .kpi-n { font-size:1.15rem; }
+    .kpi-d { font-size:.72rem; font-weight:800; }
+    .kpi-d.up { color:#16803C; } .kpi-d.down { color:#C0392B; } .kpi-d.flat { color:var(--white-dim); }
+    .an-callout { background:#FFF7E0; border:1px solid rgba(201,144,0,.4); border-left:4px solid #C99000; border-radius:12px; padding:12px 14px; margin:16px 0 4px; font-size:.84rem; line-height:1.6; cursor:pointer; }
+    .chip-scroll { display:flex; gap:8px; overflow-x:auto; padding:14px 0 12px; scrollbar-width:none; }
+    .chip-scroll::-webkit-scrollbar { display:none; }
+    .chip { flex-shrink:0; padding:9px 14px; border-radius:20px; border:1px solid var(--border); background:#fff; font:800 .76rem 'Nunito',sans-serif; color:var(--white-dim); cursor:pointer; white-space:nowrap; }
+    .chip.on { background:var(--dark); color:var(--gold); border-color:var(--dark); }
+    .an-sort { padding:10px 12px; border-radius:9px; border:1px solid var(--border); background:#fff; font:700 .8rem 'Nunito',sans-serif; color:var(--white); }
+    table.an-table { min-width:1100px; }
+    table.an-table th.num, table.an-table td.num { text-align:right; font-variant-numeric:tabular-nums; }
+    table.an-table td.num b { color:var(--white); }
+    table.an-table td.zero { color:#b6bfcd; }
+    table.an-table th:first-child, table.an-table td:first-child { position:sticky; left:0; background:#fff; z-index:1; box-shadow:2px 0 0 var(--border); }
+    .an-desktop { overflow-x:auto; }
+    .an-mobile { display:none; }
+    .act-chip { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.68rem; font-weight:800; white-space:nowrap; }
+    .act-VERY_ACTIVE { background:#FFE9D6; color:#C2540A; } .act-ACTIVE { background:rgba(74,222,128,.15); color:#16803C; }
+    .act-QUIET { background:#EEF1F6; color:#5C6B85; } .act-STOPPED { background:rgba(231,76,60,.13); color:#C0392B; }
+    .act-NO_ORDERS { background:#F3F4F7; color:#8a94a6; }
+    .alert-tag { display:inline-block; margin:3px 4px 0 0; padding:2px 8px; border-radius:6px; background:rgba(231,76,60,.1); color:#C0392B; font-size:.66rem; font-weight:800; }
+    .an-note { font-size:.74rem; color:var(--white-dim); line-height:1.7; margin-top:14px; }
+
+    .form-card-a { background:#fff; border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:16px; }
+    .form-card-a h3 { font-family:'Cinzel',serif; font-size:1rem; color:var(--white); margin-bottom:6px; }
+    .form-card-a .hint { font-size:.8rem; color:var(--white-dim); line-height:1.65; margin-bottom:14px; }
+    .fl { display:block; font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--white-dim); margin:14px 0 6px; }
+    .form-card-a input[type=text], .form-card-a textarea, .form-card-a select { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font:600 16px 'Nunito',sans-serif; color:var(--white); background:#fff; outline:none; }
+    .form-card-a textarea { min-height:100px; resize:vertical; }
+    .form-card-a input:focus, .form-card-a textarea:focus, .form-card-a select:focus { border-color:var(--gold); }
+    .seg { display:flex; gap:6px; flex-wrap:wrap; }
+    .seg button { flex:1; min-width:90px; padding:11px 8px; border-radius:12px; border:1.5px solid var(--border); background:#fff; font:800 .78rem 'Nunito',sans-serif; color:var(--white-dim); cursor:pointer; }
+    .seg button.on { border-color:var(--gold); background:#FFF7E0; color:#6b4b00; }
+    .tpl-row { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; scrollbar-width:none; }
+    .tpl-row::-webkit-scrollbar { display:none; }
+    .tpl { flex-shrink:0; padding:8px 12px; border-radius:20px; border:1px dashed var(--gold-dim); background:#FFFBEF; font:800 .72rem 'Nunito',sans-serif; color:#6b4b00; cursor:pointer; white-space:nowrap; }
+    .check { display:flex; gap:10px; align-items:center; margin:16px 0 4px; font-size:.84rem; font-weight:700; color:var(--white); text-transform:none; letter-spacing:0; }
+    .check input { width:20px; height:20px; accent-color:#C99000; }
+    .btn-gold { background:var(--gold); color:var(--dark); border:0; border-radius:12px; padding:14px 20px; font:800 .9rem 'Nunito',sans-serif; cursor:pointer; margin-top:16px; }
+    .btn-gold:disabled { opacity:.5; }
+    .btn-gold.danger { background:#e74c3c; color:#fff; }
+    .btn-ghost { background:#fff; color:var(--white-dim); border:1.5px solid var(--border); border-radius:12px; padding:14px 18px; font:800 .86rem 'Nunito',sans-serif; cursor:pointer; margin-top:16px; }
+    .btn-row { display:flex; gap:10px; flex-wrap:wrap; } .btn-row > button { flex:1; min-width:140px; }
+    .muted { color:var(--white-dim); font-size:.8rem; }
+    .status-hero { display:flex; gap:14px; align-items:center; border-radius:16px; padding:16px 18px; margin-bottom:16px; background:#E9F8EF; border:1px solid rgba(22,128,60,.3); }
+    .status-hero.off { background:#FDECEA; border-color:rgba(231,76,60,.45); }
+    .status-hero .sh-ic { font-size:1.9rem; }
+    .status-hero b { display:block; font-size:1rem; color:var(--white); } .status-hero small { color:var(--white-dim); font-size:.8rem; }
+    .ann-item { background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:10px; }
+    .ann-item.hidden-ann { opacity:.6; }
+    .ann-top { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px; }
+    .ann-item b { font-size:.92rem; color:var(--white); } .ann-item p { font-size:.82rem; color:var(--white-dim); line-height:1.6; white-space:pre-line; margin:4px 0 10px; }
+    .ann-meta { font-size:.7rem; color:var(--white-dim); }
+    .main { min-width:0; }
+    .page-section { min-width:0; max-width:100%; }
+    .an-sort { width:auto; min-width:170px; }
+    .tabbar, .fab, .sheet-overlay { display:none; }
+
+    /* ══ MOBILE APP LAYOUT ══ */
+    @media (max-width:900px) {
+      body { display:block; background:#F4F6FA; -webkit-tap-highlight-color:transparent; }
+      body::before { display:none; }
+      .sidebar { display:none; }
+      .hamburger-btn { display:none !important; }
+      .main { margin-left:0; padding-bottom:calc(80px + env(safe-area-inset-bottom)); min-height:100dvh; }
+      .topbar { background:var(--navy-deep); border-bottom:none; height:auto; min-height:58px; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; box-shadow:0 2px 12px rgba(0,18,51,.25); }
+      .topbar-left h1 { color:var(--gold); font-size:1.02rem; }
+      .topbar-left p { color:rgba(255,255,255,.7); font-size:.72rem; max-width:64vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .topbar-btn { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.18); color:#fff; }
+      .offline-strip { top:0; position:static; }
+      .page-section { padding:16px 14px 24px; }
+      .stats-row { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+      .stat-card { min-width:0; gap:8px; } .stat-info { min-width:0; } .stat-info .num { font-size:1.2rem; } .stat-info .lbl { font-size:.68rem; }
+      .stat-icon { font-size:1.2rem; }
+      .stat-card { padding:12px; border-radius:14px; }
+      .an-kpis { grid-template-columns:1fr 1fr; gap:10px; }
+      .kpi { padding:12px; border-radius:14px; } .kpi-n { font-size:1.45rem; } .an-kpis.small .kpi-n { font-size:1.05rem; }
+      .admin-search { max-width:none; min-width:0; flex:1 1 100%; }
+      .admin-search input { font-size:16px; padding:13px 14px 13px 38px; border-radius:12px; }
+      .an-sort { flex:1 1 100%; font-size:16px; padding:12px; border-radius:12px; }
+      .tab-row { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
+      .tab-row::-webkit-scrollbar { display:none; }
+      .tab-btn { flex-shrink:0; }
+
+      /* tables become cards */
+      .admin-table-wrap { background:none; border:none; overflow:visible; border-radius:0; }
+      table.admin-table { min-width:0 !important; display:block; }
+      table.admin-table thead { display:none; }
+      table.admin-table tbody { display:block; }
+      table.admin-table tr { display:block; background:#fff; border:1px solid var(--border); border-radius:16px; padding:12px 14px; margin-bottom:10px; }
+      table.admin-table td { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:6px 0; border:none; text-align:right; font-size:.82rem; }
+      table.admin-table td::before { content:attr(data-label); font-size:.66rem; font-weight:800; color:var(--white-dim); text-transform:uppercase; letter-spacing:.3px; text-align:left; flex-shrink:0; }
+      table.admin-table td:first-child { display:block; text-align:left; padding-bottom:10px; margin-bottom:4px; border-bottom:1px dashed var(--border); }
+      table.admin-table td:first-child::before, table.admin-table td:last-child::before { display:none; }
+      table.admin-table td:last-child:not(:first-child) { display:block; text-align:left; padding-top:10px; }
+      table.admin-table .empty-row td { display:block; text-align:center; }
+      table.admin-table .empty-row td::before { display:none; }
+      table.admin-table tr:hover td { background:none; }
+      .row-actions .act-btn { padding:10px 14px; border-radius:10px; font-size:.78rem; }
+      .an-desktop { display:none; }
+      .an-mobile { display:block; }
+
+      .shop-an { background:#fff; border:1px solid var(--border); border-radius:18px; padding:14px; margin-bottom:12px; }
+      .shop-an .hd { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
+      .shop-an .hd b { display:block; font-size:.95rem; color:var(--white); } .shop-an .hd small { color:var(--white-dim); font-size:.72rem; }
+      .shop-an .strip { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:12px; }
+      .shop-an .strip div { background:#F6F8FB; border-radius:12px; padding:8px 4px; text-align:center; }
+      .shop-an .strip span { display:block; font-family:'Cinzel',serif; font-weight:700; font-size:1.2rem; color:var(--white); }
+      .shop-an .strip small { font-size:.62rem; font-weight:800; color:var(--white-dim); text-transform:uppercase; }
+      .shop-an .strip div.zero span { color:#b6bfcd; }
+      .shop-an .grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; font-size:.78rem; }
+      .shop-an .grid div { display:flex; justify-content:space-between; border-bottom:1px solid #f0f2f6; padding:4px 0; color:var(--white-dim); }
+      .shop-an .grid b { color:var(--white); }
+
+      .tabbar { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:900; background:#fff; border-top:1px solid rgba(0,18,51,.1); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow:0 -4px 18px rgba(0,18,51,.08); }
+      .tab { flex:1; position:relative; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0; color:#7a8699; font:700 .66rem 'Nunito',sans-serif; cursor:pointer; min-height:48px; }
+      .tab i { font-style:normal; font-size:1.3rem; line-height:1; filter:grayscale(1); opacity:.7; transition:.2s; }
+      .tab.active { color:var(--navy-deep); }
+      .tab.active i { filter:none; opacity:1; transform:translateY(-2px) scale(1.1); }
+      .tab.active::after { content:''; position:absolute; top:-7px; width:26px; height:3px; border-radius:3px; background:var(--gold); }
+      .tab em { position:absolute; top:2px; left:calc(50% + 8px); min-width:17px; height:17px; padding:0 4px; border-radius:9px; background:#e74c3c; color:#fff; font:800 .6rem 'Nunito',sans-serif; align-items:center; justify-content:center; font-style:normal; display:flex; }
+
+      .sheet-overlay { display:flex; position:fixed; inset:0; z-index:1000; background:rgba(0,18,51,.5); align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
+      .sheet-overlay.open { opacity:1; pointer-events:auto; }
+      .sheet { width:100%; background:#fff; border-radius:22px 22px 0 0; padding:8px 16px calc(18px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s ease; max-height:85dvh; overflow-y:auto; }
+      .sheet-overlay.open .sheet { transform:none; }
+      .sheet-grip { width:40px; height:4px; background:#d5dae3; border-radius:4px; margin:6px auto 12px; }
+      .sheet h4 { font-family:'Cinzel',serif; color:var(--navy-deep); margin-bottom:6px; font-size:1rem; }
+      .sheet-row { display:flex; align-items:center; gap:14px; width:100%; padding:14px 6px; background:none; border:none; border-bottom:1px solid #eef0f5; font:700 .95rem 'Nunito',sans-serif; color:var(--white); text-align:left; text-decoration:none; cursor:pointer; }
+      .sheet-row i { font-style:normal; font-size:1.2rem; width:26px; text-align:center; }
+      .sheet-row.danger { color:#e74c3c; border-bottom:none; }
+      .sheet-row .sb { margin-left:auto; background:#e74c3c; color:#fff; font:800 .62rem 'Nunito',sans-serif; padding:3px 8px; border-radius:10px; font-style:normal; }
+
+      .modal-overlay { align-items:flex-end; padding:0; }
+      .modal { max-width:none !important; width:100%; max-height:92dvh; border-radius:22px 22px 0 0; border:none; animation:sheetUp .28s ease both; padding-bottom:env(safe-area-inset-bottom); overflow-y:auto; }
+      .modal-header { position:sticky; top:0; background:#fff; z-index:2; padding:16px 18px; }
+      .modal-body { padding:16px 18px 22px; }
+      .modal input[type=text], .modal textarea, .reject-reason { font-size:16px; }
+      .btn-cancel, .btn-confirm-danger { padding:13px 18px; border-radius:12px; flex:1; }
+      @keyframes sheetUp { from{transform:translateY(100%)} to{transform:none} }
+    }
 </style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
 <script src="./api.js"></script>
+<script src="./platform.js"></script>
 <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png"/>
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -777,6 +926,16 @@
       <a class="nav-item" onclick="window.location.href='admin.orders.html'">
         <span class="nav-icon">💳</span> Orders
       </a>
+      <a class="nav-item" data-sec="analysis" onclick="showSection('analysis')">
+        <span class="nav-icon">📊</span> Order Analysis
+      </a>
+      <div class="nav-section-label" style="margin-top:12px;">Control</div>
+      <a class="nav-item" data-sec="announce" onclick="showSection('announce')">
+        <span class="nav-icon">📢</span> Announcements
+      </a>
+      <a class="nav-item" data-sec="settings" onclick="showSection('settings')">
+        <span class="nav-icon">⚙️</span> Platform Settings <span id="settings-nav-dot" style="display:none;margin-left:auto;width:9px;height:9px;border-radius:50%;background:#e74c3c;"></span>
+      </a>
     </nav>
 
     <div class="sidebar-footer">
@@ -799,6 +958,10 @@
       <div class="topbar-right">
         <button class="topbar-btn" title="Refresh" onclick="refreshAll()">↻</button>
       </div>
+    </div>
+
+    <div id="offline-strip" class="offline-strip" style="display:none;" onclick="showSection('settings')">
+      🛠️ <b>Platform is OFFLINE</b> — visitors see the maintenance screen. <u>Manage</u>
     </div>
 
     <!-- ══ DASHBOARD ══ -->
@@ -872,6 +1035,115 @@
           <tbody id="disputes-body"><tr class="empty-row"><td colspan="6">Loading…</td></tr></tbody>
         </table>
       </div>
+    </section>
+
+    <!-- ══ ORDER ANALYSIS ══ -->
+    <section class="page-section" id="sec-analysis">
+      <div class="an-kpis">
+        <div class="kpi"><span class="kpi-l">Orders today</span><span class="kpi-n" id="k-today">–</span><span class="kpi-d" id="k-today-d"></span></div>
+        <div class="kpi"><span class="kpi-l">This week</span><span class="kpi-n" id="k-week">–</span></div>
+        <div class="kpi"><span class="kpi-l">This month</span><span class="kpi-n" id="k-month">–</span></div>
+        <div class="kpi"><span class="kpi-l">All time</span><span class="kpi-n" id="k-total">–</span></div>
+      </div>
+      <div class="an-kpis small">
+        <div class="kpi"><span class="kpi-l">Completed</span><span class="kpi-n" id="k-completed">–</span></div>
+        <div class="kpi"><span class="kpi-l">Cancelled</span><span class="kpi-n" id="k-cancelled">–</span></div>
+        <div class="kpi"><span class="kpi-l">Payment issues</span><span class="kpi-n" id="k-pay">–</span></div>
+        <div class="kpi"><span class="kpi-l">Revenue</span><span class="kpi-n" id="k-rev">–</span></div>
+      </div>
+
+      <div id="an-callout" class="an-callout" style="display:none;"></div>
+
+      <div class="chip-scroll" id="an-chips"></div>
+      <div class="admin-toolbar">
+        <div class="admin-search"><span class="icon">🔍</span><input type="text" id="an-search" placeholder="Search shop name or number…" oninput="renderAnalysis()"/></div>
+        <select id="an-sort" class="an-sort" onchange="renderAnalysis()">
+          <option value="today">Sort: Today</option>
+          <option value="week">Sort: This week</option>
+          <option value="month">Sort: This month</option>
+          <option value="total">Sort: All time</option>
+          <option value="last">Sort: Last order</option>
+          <option value="name">Sort: Shop number</option>
+        </select>
+      </div>
+
+      <div class="admin-table-wrap an-desktop">
+        <table class="admin-table an-table">
+          <thead><tr>
+            <th>Shop</th><th class="num">Today</th><th class="num">Yesterday</th><th class="num">Week</th><th class="num">Month</th><th class="num">Total</th>
+            <th class="num">Completed</th><th class="num">Cancelled</th><th class="num">Pay issues</th><th class="num">Revenue</th><th class="num">Avg/day</th><th>Last order</th><th>Status</th>
+          </tr></thead>
+          <tbody id="an-body"><tr class="empty-row"><td colspan="13">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div id="an-cards" class="an-mobile"></div>
+      <p class="an-note">“Today” starts at midnight Lagos time; a week starts on Monday; a month starts on the 1st. Avg/day counts from the shop’s first order. Revenue is the value of completed orders.
+        <b>Very active</b> = 10+ orders this week · <b>Quiet</b> = 2 or fewer this month · <b>Stopped</b> = no order for 14+ days.</p>
+    </section>
+
+    <!-- ══ ANNOUNCEMENTS ══ -->
+    <section class="page-section" id="sec-announce">
+      <div class="form-card-a">
+        <h3>📢 New announcement</h3>
+        <p class="hint">Appears at the top of the dashboard. Tell sellers exactly what you need from them.</p>
+        <div class="tpl-row" id="tpl-row"></div>
+        <label class="fl">Who should see it?</label>
+        <div class="seg" id="ann-aud">
+          <button type="button" class="on" data-v="sellers" onclick="segPick('ann-aud',this)">🏪 Sellers</button>
+          <button type="button" data-v="buyers" onclick="segPick('ann-aud',this)">🧍 Buyers</button>
+          <button type="button" data-v="all" onclick="segPick('ann-aud',this)">🌍 Everyone</button>
+        </div>
+        <label class="fl">Importance</label>
+        <div class="seg" id="ann-type">
+          <button type="button" class="on" data-v="info" onclick="segPick('ann-type',this)">📢 Info</button>
+          <button type="button" data-v="important" onclick="segPick('ann-type',this)">⭐ Important</button>
+          <button type="button" data-v="warning" onclick="segPick('ann-type',this)">⚠️ Warning</button>
+        </div>
+        <label class="fl" for="ann-title">Title</label>
+        <input type="text" id="ann-title" maxlength="120" placeholder="e.g. Please upload clear product photos"/>
+        <label class="fl" for="ann-msg">Message</label>
+        <textarea id="ann-msg" maxlength="1500" placeholder="Say clearly what you want sellers to do, and by when."></textarea>
+        <label class="fl" for="ann-exp">Show for</label>
+        <select id="ann-exp">
+          <option value="1">1 day</option><option value="3">3 days</option><option value="7" selected>7 days</option>
+          <option value="30">30 days</option><option value="">Until I hide it</option>
+        </select>
+        <label class="check"><input type="checkbox" id="ann-notify"/> <span>Also send a notification to their phones</span></label>
+        <button class="btn-gold" id="ann-post" onclick="postAnnouncement()">Post announcement</button>
+      </div>
+      <div class="section-heading" style="margin-top:22px;"><h3>Posted announcements</h3></div>
+      <div id="ann-list"><p class="muted">Loading…</p></div>
+    </section>
+
+    <!-- ══ PLATFORM SETTINGS ══ -->
+    <section class="page-section" id="sec-settings">
+      <div class="status-hero" id="status-hero">
+        <span class="sh-ic" id="sh-ic">✅</span>
+        <div><b id="sh-title">Platform is LIVE</b><small id="sh-sub">Everyone can browse and order.</small></div>
+      </div>
+
+      <div class="form-card-a">
+        <h3>🛠️ Maintenance mode</h3>
+        <p class="hint">Takes the whole platform offline. Visitors, buyers and sellers see a friendly “We’ll be right back” screen. <b>You (admin) can still sign in and work.</b></p>
+        <label class="fl" for="mt-msg">Message visitors will see</label>
+        <textarea id="mt-msg" maxlength="400" placeholder="ALFIJEER is down for a short maintenance. We will be back shortly."></textarea>
+        <label class="fl" for="mt-eta">Expected return (optional)</label>
+        <input type="text" id="mt-eta" maxlength="80" placeholder="e.g. Back by 4:00 pm today"/>
+        <div class="btn-row">
+          <button class="btn-ghost" onclick="previewMaintenance()">👁 Preview screen</button>
+          <button class="btn-ghost" id="mt-save" style="display:none" onclick="saveMaintenanceText()">💾 Save message</button>
+          <button class="btn-gold" id="mt-btn" onclick="toggleMaintenance()">Take platform offline</button>
+        </div>
+      </div>
+
+      <div class="form-card-a">
+        <h3>⏸ Pause new orders</h3>
+        <p class="hint">A softer option. Visitors can still browse shops and products, but nobody can place a new order. Orders already in progress continue normally.</p>
+        <label class="fl" for="op-msg">Message buyers will see (optional)</label>
+        <input type="text" id="op-msg" maxlength="300" placeholder="Ordering is paused for a moment. Please try again soon."/>
+        <div class="btn-row"><button class="btn-gold" id="op-btn" onclick="toggleOrdersPaused()">Pause new orders</button></div>
+      </div>
+      <p class="muted" id="settings-updated"></p>
     </section>
   </main>
 
@@ -966,6 +1238,42 @@
     </div>
   </div>
 
+  <!-- CONFIRM SHEET -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header"><h3 id="cf-title">Are you sure?</h3><button class="modal-close" onclick="resolveConfirm(false)">✕</button></div>
+      <div class="modal-body">
+        <p style="font-size:0.86rem;color:var(--white-dim);line-height:1.6;" id="cf-text"></p>
+        <div class="modal-footer-row" style="margin-top:16px;">
+          <button class="btn-cancel" onclick="resolveConfirm(false)">Cancel</button>
+          <button class="btn-confirm-danger" id="cf-ok" onclick="resolveConfirm(true)">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE APP CHROME -->
+  <nav class="tabbar" aria-label="Admin navigation">
+    <button class="tab" data-sec="home" onclick="showSection('home')"><i>🏠</i><span>Home</span></button>
+    <button class="tab" data-sec="pending" onclick="showSection('pending')"><i>⏳</i><span>Approvals</span><em id="tab-pending-badge" style="display:none"></em></button>
+    <button class="tab" onclick="window.location.href='admin.orders.html'"><i>💳</i><span>Orders</span></button>
+    <button class="tab" data-sec="analysis" onclick="showSection('analysis')"><i>📊</i><span>Analysis</span></button>
+    <button class="tab" id="tab-more" onclick="openMore()"><i>☰</i><span>More</span><em id="tab-more-badge" style="display:none"></em></button>
+  </nav>
+  <div class="sheet-overlay" id="more-sheet" onclick="if(event.target===this)closeMore()">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h4>More</h4>
+      <button class="sheet-row" onclick="showSection('sellers')"><i>🏪</i> All sellers</button>
+      <button class="sheet-row" onclick="showSection('buyers')"><i>🧍</i> Buyers</button>
+      <button class="sheet-row" onclick="showSection('disputes')"><i>⚠️</i> Issues &amp; disputes <em id="sheet-issues-badge" class="sb" style="display:none"></em></button>
+      <button class="sheet-row" onclick="showSection('announce')"><i>📢</i> Announcements</button>
+      <button class="sheet-row" onclick="showSection('settings')"><i>⚙️</i> Platform settings <em id="sheet-off-badge" class="sb" style="display:none">OFFLINE</em></button>
+      <a class="sheet-row" href="index.html"><i>🌍</i> View marketplace</a>
+      <button class="sheet-row danger" onclick="adminLogout()"><i>🚪</i> Log out</button>
+    </div>
+  </div>
+
   <div class="sd-toast-placeholder"></div>
   <script>
     // _API is declared once in api.js, loaded above in <head>
@@ -994,16 +1302,20 @@
     function showToastSafe(msg, type) { if (typeof showToast === 'function') showToast(msg, type); else alert(msg); }
 
     function adminLogout() {
-      ['as_token', 'as_role', 'as_user'].forEach(k => localStorage.removeItem(k));
+      if (window.asPushOff) window.asPushOff();
+      ['as_token', 'as_role', 'as_user', 'as_seller'].forEach(k => localStorage.removeItem(k));
       window.location.href = 'auth.html';
     }
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
     function showSection(name) {
-      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-      document.getElementById('sec-' + name).classList.add('active');
-      document.querySelectorAll('.nav-item[data-sec]').forEach(a => a.classList.toggle('active', a.dataset.sec === name));
+      const sec = document.getElementById('sec-' + name); if (!sec) return;
+      document.querySelectorAll('.page-section').forEach(x => x.classList.remove('active'));
+      sec.classList.add('active');
+      document.querySelectorAll('[data-sec]').forEach(a => a.classList.toggle('active', a.dataset.sec === name));
+      const moreTab = document.getElementById('tab-more');
+      if (moreTab) moreTab.classList.toggle('active', ['sellers','buyers','disputes','announce','settings'].indexOf(name) > -1);
       history.replaceState(null, '', name === 'home' ? window.location.pathname : '#' + name);
       const titles = {
         home: ['Admin Dashboard', 'Manage sellers, buyers, and platform activity'],
@@ -1011,12 +1323,22 @@
         sellers: ['All Sellers', 'Every shop on the platform'],
         buyers: ['Buyers', 'Everyone shopping on ALFIJEER'],
         disputes: ['Issues & Disputes', 'Orders waiting for an admin decision'],
+        analysis: ['Order Analysis', 'What every shop is doing, right now'],
+        announce: ['Announcements', 'Tell sellers what you need from them'],
+        settings: ['Platform Settings', 'Maintenance mode and order controls'],
       };
       const t = titles[name] || ['Admin Dashboard', ''];
       document.getElementById('page-title').textContent = t[0];
       document.getElementById('page-sub').textContent = t[1];
-      if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar').classList.remove('open');
+      closeMore();
+      window.scrollTo(0, 0);
+      if (name === 'analysis') loadAnalysis();
+      if (name === 'announce') loadAnnouncements();
+      if (name === 'settings') loadSettings();
     }
+    function openMore()  { document.getElementById('more-sheet').classList.add('open'); }
+    function closeMore() { const m = document.getElementById('more-sheet'); if (m) m.classList.remove('open'); }
 
     function _catIcon(cat) {
       const icons = {
@@ -1359,7 +1681,12 @@
       }
     }
 
-    function refreshAll() { loadSellers(); loadBuyers(); showToastSafe('Refreshed', 'info'); }
+    function refreshAll() {
+      loadSellers(); loadBuyers(); loadIssues(); loadSettings();
+      if (document.getElementById('sec-analysis').classList.contains('active')) loadAnalysis();
+      if (document.getElementById('sec-announce').classList.contains('active')) loadAnnouncements();
+      showToastSafe('Refreshed', 'info');
+    }
 
     function showToast(message, type) {
       type = type || 'info';
@@ -1373,12 +1700,12 @@
       var tx = document.createElement('span'); tx.textContent = message;
       toast.appendChild(ic); toast.appendChild(tx);
       Object.assign(toast.style, {
-        position:'fixed', bottom:'28px', right:'28px', zIndex:'9999',
+        position:'fixed', bottom: (window.innerWidth < 900 ? '84px' : '28px'), right: (window.innerWidth < 900 ? '12px' : '28px'), left: (window.innerWidth < 900 ? '12px' : 'auto'), zIndex:'9999',
         background:'#FFFFFF', border:'1px solid ' + colors[type],
         color:'#14203A', padding:'14px 20px', borderRadius:'8px',
         fontFamily:'Nunito, sans-serif', fontSize:'0.9rem', fontWeight:'600',
         display:'flex', alignItems:'center', gap:'10px',
-        boxShadow:'0 4px 24px rgba(16,40,28,0.14)', maxWidth:'340px'
+        boxShadow:'0 4px 24px rgba(16,40,28,0.14)', maxWidth: (window.innerWidth < 900 ? 'none' : '340px')
       });
       document.body.appendChild(toast);
       setTimeout(function(){ toast.remove(); }, 4000);
@@ -1435,13 +1762,299 @@
       }
     }
 
+    // ════════════════════════════════════════════
+    //  Shared helpers for the newer sections
+    // ════════════════════════════════════════════
+    async function adm(path, method, body) {
+      const res = await fetch(_API + path, { method: method || 'GET', headers: _headers(), body: body ? JSON.stringify(body) : undefined });
+      let data = {}; try { data = await res.json(); } catch (e) {}
+      if (!res.ok) throw new Error(data.message || ('Request failed (' + res.status + ')'));
+      return data;
+    }
+    const fmtN = (n) => Number(n || 0).toLocaleString('en-NG');
+    const money = (n) => '₦' + Number(n || 0).toLocaleString('en-NG');
+
+    let _confirmResolve = null;
+    function askConfirm(title, text, okLabel, danger) {
+      document.getElementById('cf-title').textContent = title;
+      document.getElementById('cf-text').textContent = text;
+      const ok = document.getElementById('cf-ok');
+      ok.textContent = okLabel || 'Confirm';
+      ok.style.background = danger === false ? 'var(--gold)' : '#e74c3c';
+      ok.style.color = danger === false ? 'var(--dark)' : '#fff';
+      document.getElementById('confirm-modal').classList.add('open');
+      return new Promise(r => { _confirmResolve = r; });
+    }
+    function resolveConfirm(v) {
+      document.getElementById('confirm-modal').classList.remove('open');
+      if (_confirmResolve) { _confirmResolve(v); _confirmResolve = null; }
+    }
+
+    // phone-friendly tables: give every cell its column name so rows can turn into cards
+    function labelTables() {
+      document.querySelectorAll('table.admin-table:not(.an-table)').forEach(t => {
+        const heads = Array.from(t.querySelectorAll('thead th')).map(h => h.textContent.trim());
+        t.querySelectorAll('tbody tr:not(.empty-row)').forEach(tr => Array.from(tr.children).forEach((td, i) => { if (heads[i] !== undefined) td.setAttribute('data-label', heads[i]); }));
+      });
+    }
+    document.querySelectorAll('table.admin-table:not(.an-table) tbody').forEach(tb => new MutationObserver(labelTables).observe(tb, { childList: true }));
+
+    // keep the bottom-bar badges in step with the sidebar badges
+    function syncBadges() {
+      const read = (id) => { const e = document.getElementById(id); return e && e.style.display !== 'none' ? e.textContent.trim() : ''; };
+      const set = (id, v) => { const e = document.getElementById(id); if (!e) return; e.textContent = v; e.style.display = v ? '' : 'none'; };
+      const pending = read('pending-nav-badge'), issues = read('issues-nav-badge');
+      set('tab-pending-badge', pending);
+      set('sheet-issues-badge', issues);
+      const off = curSettings && curSettings.maintenance.enabled;
+      set('tab-more-badge', off ? '!' : issues);
+    }
+    ['pending-nav-badge', 'issues-nav-badge'].forEach(id => { const e = document.getElementById(id); if (e) new MutationObserver(syncBadges).observe(e, { attributes: true, childList: true, characterData: true, subtree: true }); });
+
+    // ════════════════════════════════════════════
+    //  ORDER ANALYSIS
+    // ════════════════════════════════════════════
+    let anData = null, anFilter = 'all';
+    const ACT = { VERY_ACTIVE: ['🔥', 'Very active'], ACTIVE: ['✅', 'Active'], QUIET: ['🌙', 'Quiet'], STOPPED: ['⛔', 'Stopped'], NO_ORDERS: ['○', 'No orders yet'] };
+    const ALERT_TXT = { OVERDUE: '⏰ Overdue orders', HIGH_CANCEL_RATE: '❌ High cancellations', HIGH_DISPUTE_RATE: '⚖️ High disputes', DISPUTE: '⚖️ Dispute' };
+
+    async function loadAnalysis() {
+      try {
+        anData = await adm('/admin/analytics/shops');
+        paintAnalysisSummary();
+        renderAnalysis();
+      } catch (e) {
+        document.getElementById('an-body').innerHTML = '<tr class="empty-row"><td colspan="13">Could not load order analysis (' + esc(e.message) + ').</td></tr>';
+        document.getElementById('an-cards').innerHTML = '<p class="muted" style="padding:20px;text-align:center;">Could not load order analysis (' + esc(e.message) + ').</p>';
+      }
+    }
+
+    function paintAnalysisSummary() {
+      const s = anData.summary, set = (id, v) => { document.getElementById(id).textContent = v; };
+      set('k-today', fmtN(s.today)); set('k-week', fmtN(s.week)); set('k-month', fmtN(s.month)); set('k-total', fmtN(s.total));
+      set('k-completed', fmtN(s.completed)); set('k-cancelled', fmtN(s.cancelled)); set('k-pay', fmtN(s.paymentIssues)); set('k-rev', money(s.revenue));
+      const d = document.getElementById('k-today-d'), diff = s.today - s.yesterday;
+      d.className = 'kpi-d ' + (diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat');
+      d.textContent = (diff > 0 ? '▲ ' + diff + ' more' : diff < 0 ? '▼ ' + Math.abs(diff) + ' fewer' : 'Same as') + ' than yesterday (' + s.yesterday + ')';
+      if (diff === 0) d.textContent = 'Same as yesterday (' + s.yesterday + ')';
+
+      const call = [];
+      if (s.stopped) call.push('⛔ <b>' + s.stopped + ' shop' + (s.stopped > 1 ? 's' : '') + '</b> got no orders for 14+ days — they may need support, or may have stopped operating. <u>Show them</u>');
+      if (s.overdue) call.push('⏰ <b>' + s.overdue + ' open order' + (s.overdue > 1 ? 's are' : ' is') + '</b> past the deadline.');
+      const box = document.getElementById('an-callout');
+      box.style.display = call.length ? 'block' : 'none';
+      box.innerHTML = call.join('<br>');
+      box.onclick = () => { if (s.stopped) { setAnFilter('STOPPED'); } };
+
+      const chips = [['all', 'All shops', s.shops], ['VERY_ACTIVE', '🔥 Very active', s.veryActive], ['ACTIVE', '✅ Active', s.active], ['QUIET', '🌙 Quiet', s.quiet],
+        ['STOPPED', '⛔ Stopped', s.stopped], ['NO_ORDERS', '○ No orders yet', s.noOrders], ['ATTENTION', '🚩 Needs attention', s.needsAttention]];
+      document.getElementById('an-chips').innerHTML = chips.map(c => `<button class="chip ${anFilter === c[0] ? 'on' : ''}" onclick="setAnFilter('${c[0]}')">${c[1]} · ${c[2]}</button>`).join('');
+    }
+    function setAnFilter(f) { anFilter = f; paintAnalysisSummary(); renderAnalysis(); }
+
+    function lastOrderText(d) {
+      if (!d) return '—';
+      const t = new Date(d), st = anData.periodStarts;
+      const hm = t.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Lagos' });
+      if (t >= new Date(st.today)) return 'Today ' + hm;
+      if (t >= new Date(st.yesterday)) return 'Yesterday ' + hm;
+      const days = Math.floor((new Date(st.today) - t) / 86400000) + 1;
+      return days < 30 ? days + ' days ago' : t.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Africa/Lagos' });
+    }
+    function waLink(phone) {
+      let n = String(phone || '').replace(/\D/g, ''); if (!n) return '';
+      if (n.startsWith('0')) n = '234' + n.slice(1);
+      return 'https://wa.me/' + n;
+    }
+    const numCell = (v, bold) => `<td class="num ${v ? '' : 'zero'}">${bold && v ? '<b>' + fmtN(v) + '</b>' : fmtN(v)}</td>`;
+
+    function renderAnalysis() {
+      if (!anData) return;
+      const q = (document.getElementById('an-search').value || '').trim().toLowerCase();
+      const sort = document.getElementById('an-sort').value;
+      let rows = anData.shops.filter(r => {
+        if (anFilter === 'ATTENTION') { if (!(r.activity === 'STOPPED' || r.alerts.length)) return false; }
+        else if (anFilter !== 'all' && r.activity !== anFilter) return false;
+        if (!q) return true;
+        return (r.shopName || '').toLowerCase().includes(q) || String(r.shopNumber).includes(q.replace(/^shop\s*#?0*/, '')) || _formatShopNum(r.shopNumber).toLowerCase().includes(q);
+      });
+      const key = { today: r => r.today, week: r => r.week, month: r => r.month, total: r => r.total, last: r => r.lastOrderAt ? new Date(r.lastOrderAt).getTime() : 0 };
+      if (sort === 'name') rows.sort((a, b) => Number(a.shopNumber) - Number(b.shopNumber));
+      else rows.sort((a, b) => key[sort](b) - key[sort](a) || b.total - a.total);
+
+      const body = document.getElementById('an-body'), cards = document.getElementById('an-cards');
+      if (!rows.length) {
+        body.innerHTML = '<tr class="empty-row"><td colspan="13">No shops match.</td></tr>';
+        cards.innerHTML = '<p class="muted" style="padding:24px;text-align:center;">No shops match.</p>';
+        return;
+      }
+      const chip = r => `<span class="act-chip act-${r.activity}">${ACT[r.activity][0]} ${ACT[r.activity][1]}</span>`;
+      const tags = r => r.alerts.map(a => `<span class="alert-tag">${ALERT_TXT[a] || a}</span>`).join('');
+      const wa = r => { const l = waLink(r.phone); return l ? ` <a href="${l}" target="_blank" rel="noopener" title="Message the shop on WhatsApp" style="text-decoration:none;">💬</a>` : ''; };
+
+      body.innerHTML = rows.map(r => `<tr>
+        <td><div class="name" style="font-weight:800;">${esc(r.shopName || 'Unnamed')}</div><div class="sub" style="font-size:.7rem;color:var(--white-dim);">${_formatShopNum(r.shopNumber)}${r.city ? ' · ' + esc(r.city) : ''}</div></td>
+        ${numCell(r.today, true)}${numCell(r.yesterday)}${numCell(r.week, true)}${numCell(r.month)}${numCell(r.total)}
+        ${numCell(r.completed)}${numCell(r.cancelled)}${numCell(r.paymentIssues)}
+        <td class="num ${r.revenue ? '' : 'zero'}">${money(r.revenue)}</td>
+        <td class="num ${r.avgPerDay ? '' : 'zero'}">${r.avgPerDay}</td>
+        <td style="white-space:nowrap;">${lastOrderText(r.lastOrderAt)}</td>
+        <td>${chip(r)}${wa(r)}<div>${tags(r)}</div></td></tr>`).join('');
+
+      cards.innerHTML = rows.map(r => `<div class="shop-an">
+        <div class="hd"><div><b>${esc(r.shopName || 'Unnamed')}</b><small>${_formatShopNum(r.shopNumber)}${r.city ? ' · ' + esc(r.city) : ''}</small></div><div style="text-align:right;">${chip(r)}${wa(r)}</div></div>
+        <div class="strip">
+          <div class="${r.today ? '' : 'zero'}"><span>${fmtN(r.today)}</span><small>Today</small></div>
+          <div class="${r.week ? '' : 'zero'}"><span>${fmtN(r.week)}</span><small>Week</small></div>
+          <div class="${r.month ? '' : 'zero'}"><span>${fmtN(r.month)}</span><small>Month</small></div>
+          <div class="${r.total ? '' : 'zero'}"><span>${fmtN(r.total)}</span><small>Total</small></div>
+        </div>
+        <div class="grid">
+          <div>Yesterday <b>${fmtN(r.yesterday)}</b></div><div>Avg / day <b>${r.avgPerDay}</b></div>
+          <div>Completed <b>${fmtN(r.completed)}</b></div><div>Cancelled <b>${fmtN(r.cancelled)}</b></div>
+          <div>Pay issues <b>${fmtN(r.paymentIssues)}</b></div><div>Revenue <b>${money(r.revenue)}</b></div>
+          <div style="grid-column:1/-1;">Last order <b>${lastOrderText(r.lastOrderAt)}</b></div>
+        </div>
+        ${r.alerts.length ? '<div style="margin-top:8px;">' + tags(r) + '</div>' : ''}
+      </div>`).join('');
+    }
+
+    // ════════════════════════════════════════════
+    //  ANNOUNCEMENTS
+    // ════════════════════════════════════════════
+    const TEMPLATES = [
+      ['📸 Clear photos', 'Please upload clear product photos', 'Shops with clear, bright photos get more orders. Please make sure every product has at least one clear photo that shows the item well.'],
+      ['🏦 Payment details', 'Please complete your payment details', 'Go to Settings → Payment Details and add your bank account. You cannot accept customer orders until this is done.'],
+      ['⏰ Reply quickly', 'Accept or decline new orders within 24 hours', 'Orders left waiting are cancelled automatically and count against your shop. Please open your Orders tab at least once a day.'],
+      ['📍 Shop location', 'Please set your shop location', 'Open My Shop and tap “Use my current location”, so buyers near you can find your shop and get directions.'],
+      ['🚚 Delivery totals', 'Send delivery totals quickly', 'When a buyer asks for delivery, please send the total (products + delivery fee) as soon as you can so the order keeps moving.'],
+      ['📦 Keep stock updated', 'Keep your products up to date', 'Please delete products you no longer have, and update prices that changed, so buyers are never disappointed.']
+    ];
+    document.getElementById('tpl-row').innerHTML = TEMPLATES.map((t, i) => `<button type="button" class="tpl" onclick="useTemplate(${i})">${t[0]}</button>`).join('');
+    function useTemplate(i) {
+      document.getElementById('ann-title').value = TEMPLATES[i][1];
+      document.getElementById('ann-msg').value = TEMPLATES[i][2];
+      segSet('ann-aud', 'sellers'); segSet('ann-type', 'important');
+    }
+    function segPick(id, btn) { document.querySelectorAll('#' + id + ' button').forEach(b => b.classList.toggle('on', b === btn)); }
+    function segSet(id, v) { document.querySelectorAll('#' + id + ' button').forEach(b => b.classList.toggle('on', b.dataset.v === v)); }
+    function segGet(id) { const b = document.querySelector('#' + id + ' button.on'); return b ? b.dataset.v : null; }
+
+    async function postAnnouncement() {
+      const title = document.getElementById('ann-title').value.trim(), message = document.getElementById('ann-msg').value.trim();
+      if (title.length < 3) return showToast('Add a short title.', 'error');
+      if (message.length < 5) return showToast('Write the message.', 'error');
+      const days = document.getElementById('ann-exp').value;
+      const body = { title, message, audience: segGet('ann-aud'), type: segGet('ann-type'), notify: document.getElementById('ann-notify').checked,
+        expiresAt: days ? new Date(Date.now() + Number(days) * 86400000).toISOString() : null };
+      const btn = document.getElementById('ann-post'); btn.disabled = true; btn.textContent = 'Posting…';
+      try {
+        const r = await adm('/admin/announcements', 'POST', body);
+        showToast('Announcement posted' + (body.notify ? ' · ' + r.notified + ' phone(s) notified' : ''), 'success');
+        document.getElementById('ann-title').value = ''; document.getElementById('ann-msg').value = ''; document.getElementById('ann-notify').checked = false;
+        loadAnnouncements();
+      } catch (e) { showToast(e.message, 'error'); }
+      btn.disabled = false; btn.textContent = 'Post announcement';
+    }
+
+    async function loadAnnouncements() {
+      const box = document.getElementById('ann-list');
+      try {
+        const d = await adm('/admin/announcements');
+        const list = d.announcements || [];
+        if (!list.length) { box.innerHTML = '<p class="muted">Nothing posted yet.</p>'; return; }
+        const aud = { sellers: '🏪 Sellers', buyers: '🧍 Buyers', all: '🌍 Everyone' };
+        box.innerHTML = list.map(a => {
+          const expired = a.expiresAt && new Date(a.expiresAt) < new Date();
+          const st = !a.active ? ['Hidden', 'status-suspended'] : expired ? ['Expired', 'status-suspended'] : ['Live', 'status-approved'];
+          return `<div class="ann-item ${a.active && !expired ? '' : 'hidden-ann'}">
+            <div class="ann-top"><span class="status-pill ${st[1]}">${st[0]}</span><span class="ann-meta">${aud[a.audience] || ''} · ${esc(a.type)} · ${new Date(a.createdAt).toLocaleDateString('en-GB')}${a.expiresAt ? ' · until ' + new Date(a.expiresAt).toLocaleDateString('en-GB') : ''}</span></div>
+            <b>${esc(a.title)}</b><p>${esc(a.message)}</p>
+            <div class="row-actions">
+              <button class="act-btn act-suspend" onclick="toggleAnnouncement('${esc(a._id)}', ${a.active ? 'false' : 'true'})">${a.active ? '🙈 Hide' : '👁 Show again'}</button>
+              <button class="act-btn act-reject" onclick="deleteAnnouncement('${esc(a._id)}')">🗑 Delete</button>
+            </div></div>`;
+        }).join('');
+      } catch (e) { box.innerHTML = '<p class="muted">Could not load announcements (' + esc(e.message) + ').</p>'; }
+    }
+    async function toggleAnnouncement(id, active) {
+      try { await adm('/admin/announcements/' + id, 'PUT', { active }); loadAnnouncements(); } catch (e) { showToast(e.message, 'error'); }
+    }
+    async function deleteAnnouncement(id) {
+      if (!(await askConfirm('Delete announcement?', 'It will disappear for everyone and cannot be brought back.', 'Delete'))) return;
+      try { await adm('/admin/announcements/' + id, 'DELETE'); loadAnnouncements(); } catch (e) { showToast(e.message, 'error'); }
+    }
+
+    // ════════════════════════════════════════════
+    //  PLATFORM SETTINGS
+    // ════════════════════════════════════════════
+    let curSettings = null;
+    async function loadSettings() {
+      try { curSettings = await adm('/admin/settings'); paintSettings(true); } catch (e) { /* the page still works without it */ }
+    }
+    function paintSettings(fillFields) {
+      const s = curSettings; if (!s) return;
+      const off = s.maintenance.enabled;
+      document.getElementById('status-hero').classList.toggle('off', off);
+      document.getElementById('sh-ic').textContent = off ? '🛠️' : '✅';
+      document.getElementById('sh-title').textContent = off ? 'Platform is OFFLINE' : 'Platform is LIVE';
+      document.getElementById('sh-sub').textContent = off ? 'Visitors see the maintenance screen. Only admins can use the platform.'
+        : s.ordersPaused ? 'Browsing works, but new orders are paused.' : 'Everyone can browse and order.';
+      const mt = document.getElementById('mt-btn');
+      mt.textContent = off ? 'Bring platform back online' : 'Take platform offline';
+      mt.className = 'btn-gold' + (off ? '' : ' danger');
+      document.getElementById('mt-save').style.display = off ? '' : 'none';
+      const op = document.getElementById('op-btn');
+      op.textContent = s.ordersPaused ? 'Resume new orders' : 'Pause new orders';
+      op.className = 'btn-gold' + (s.ordersPaused ? '' : ' danger');
+      if (fillFields) {
+        document.getElementById('mt-msg').value = s.maintenance.message || '';
+        document.getElementById('mt-eta').value = s.maintenance.eta || '';
+        document.getElementById('op-msg').value = s.ordersPausedMessage || '';
+      }
+      document.getElementById('offline-strip').style.display = off ? 'block' : 'none';
+      document.getElementById('settings-nav-dot').style.display = (off || s.ordersPaused) ? 'inline-block' : 'none';
+      const ob = document.getElementById('sheet-off-badge'); ob.style.display = off ? '' : 'none';
+      document.getElementById('settings-updated').textContent = s.updatedAt ? 'Last changed ' + new Date(s.updatedAt).toLocaleString('en-GB') : '';
+      syncBadges();
+    }
+    async function saveSettings(patch, okMsg) {
+      try { curSettings = await adm('/admin/settings', 'PUT', patch); paintSettings(true); showToast(okMsg, 'success'); }
+      catch (e) { showToast(e.message, 'error'); }
+    }
+    const mtFields = () => ({ message: document.getElementById('mt-msg').value.trim(), eta: document.getElementById('mt-eta').value.trim() });
+
+    async function toggleMaintenance() {
+      const turnOn = !(curSettings && curSettings.maintenance.enabled);
+      const ok = await askConfirm(turnOn ? 'Take ALFIJEER offline?' : 'Bring ALFIJEER back online?',
+        turnOn ? 'Everyone except admins will see the maintenance screen straight away. Buyers and sellers cannot use the platform until you bring it back.'
+               : 'Buyers and sellers will be able to use ALFIJEER again immediately.',
+        turnOn ? 'Take offline' : 'Bring online', turnOn);
+      if (!ok) return;
+      await saveSettings({ maintenance: Object.assign({ enabled: turnOn }, mtFields()) }, turnOn ? 'Platform is now OFFLINE' : 'Platform is back ONLINE');
+    }
+    function saveMaintenanceText() { saveSettings({ maintenance: mtFields() }, 'Maintenance message updated'); }
+    function previewMaintenance() {
+      const f = mtFields();
+      window.AlfPlatform.showMaintenance({ message: f.message || 'ALFIJEER is down for a short maintenance. We are making things better and will be back shortly.', eta: f.eta }, { preview: true });
+    }
+    async function toggleOrdersPaused() {
+      const pause = !(curSettings && curSettings.ordersPaused);
+      const ok = await askConfirm(pause ? 'Pause new orders?' : 'Resume new orders?',
+        pause ? 'Buyers can still browse, but nobody can place a new order until you resume. Orders already in progress continue.' : 'Buyers will be able to place orders again.',
+        pause ? 'Pause orders' : 'Resume orders', pause);
+      if (!ok) return;
+      await saveSettings({ ordersPaused: pause, ordersPausedMessage: document.getElementById('op-msg').value.trim() }, pause ? 'New orders are paused' : 'Orders resumed');
+    }
+
     loadSellers();
     loadBuyers();
     loadIssues();
+    loadSettings();
 
     // Honor links like admin.html#buyers (used by admin.orders.html's sidebar)
     (function openSectionFromHash() {
-      const validSections = ['home', 'pending', 'sellers', 'buyers', 'disputes'];
+      const validSections = ['home', 'pending', 'sellers', 'buyers', 'disputes', 'analysis', 'announce', 'settings'];
       const hash = window.location.hash.replace('#', '');
       if (validSections.includes(hash)) showSection(hash);
     })();
@@ -1455,5 +2068,6 @@
       });
     }
   </script>
+<script src="/pwa.js" defer></script>
 </body>
 </html>

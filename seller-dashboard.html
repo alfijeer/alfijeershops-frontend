@@ -366,6 +366,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ALFIJEER"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<script src="./platform.js"></script>
 </head>
 <body>
 
@@ -428,6 +429,7 @@
 
     <!-- ══ DASHBOARD HOME ══ -->
     <section class="page-section active" id="sec-dashboard">
+      <div id="ann-box"></div>
       <div id="bank-reminder" style="display:none;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;align-items:center;gap:14px;flex-wrap:wrap;">
         <span style="font-size:1.3rem;">🏦</span>
         <p style="flex:1;min-width:200px;font-size:0.82rem;color:var(--white);font-weight:700;margin:0;">Complete your payment details before accepting customer orders.</p>
@@ -1024,6 +1026,7 @@
     }
 
     function logoutUser() {
+      if (window.asPushOff) window.asPushOff();
       ['as_token','as_role','as_user','as_seller'].forEach(k => localStorage.removeItem(k));
       window.location.href = 'auth.html';
     }

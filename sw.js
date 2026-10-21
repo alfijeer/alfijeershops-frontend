@@ -11,7 +11,7 @@
 // returning visitors pick up the new version instead of a stale cache.
 // ══════════════════════════════════════════════════════════
 
-const CACHE_VERSION = 'alfijeer-v8'; // bumped from arewa-square-v1 for the rebrand — forces returning visitors to pull fresh (correctly-branded) assets instead of serving stale cached ones
+const CACHE_VERSION = 'alfijeer-v10'; // bumped from arewa-square-v1 for the rebrand — forces returning visitors to pull fresh (correctly-branded) assets instead of serving stale cached ones
 const API_HOST = 'alfijeershops-backend-production.up.railway.app';
 
 const APP_SHELL = [
@@ -33,6 +33,7 @@ const APP_SHELL = [
   './manifest.json',
   './Alfijeer1.png',
   './pwa.js',
+  './platform.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-512.png',
@@ -111,4 +112,30 @@ self.addEventListener('fetch', (event) => {
         .catch(() => cached);
     })
   );
+});
+
+
+// ── Push notifications (new order, payment confirmed, ...) ──
+self.addEventListener('push', (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = { title: 'ALFIJEER', body: event.data ? event.data.text() : '' }; }
+  event.waitUntil(self.registration.showNotification(d.title || 'ALFIJEER', {
+    body: d.body || '',
+    icon: '/icons/icon-192.png',
+    badge: '/icons/favicon-48.png',
+    tag: d.tag || 'alfijeer',
+    renotify: true,
+    data: { url: d.url || '/index.html' }
+  }));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = new URL((event.notification.data && event.notification.data.url) || '/index.html', self.location.origin).href;
+  event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+    for (const c of list) {
+      if (c.url.split('?')[0] === target.split('?')[0] && 'focus' in c) return c.focus();
+    }
+    return self.clients.openWindow(target);
+  }));
 });

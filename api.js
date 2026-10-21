@@ -70,6 +70,7 @@ function _headers() {
 }
 
 function logout(redirectTo) {
+  if (window.asPushOff) window.asPushOff();
   localStorage.removeItem('as_token');
   localStorage.removeItem('as_role');
   localStorage.removeItem('as_user');

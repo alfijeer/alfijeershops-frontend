@@ -464,6 +464,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ALFIJEER"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<script src="./platform.js"></script>
 </head>
 <body>
 
@@ -979,7 +980,7 @@
         });
         const data = await res.json();
         if (!res.ok) {
-          if (data.code === 'ACCOUNT_SUSPENDED' || data.code === 'ACCOUNT_DELETED') {
+          if (data.code === 'ACCOUNT_SUSPENDED' || data.code === 'ACCOUNT_DELETED' || data.code === 'MAINTENANCE') {
             showBanner(data.message || 'This account cannot log in right now. Contact support.');
           } else if (res.status === 429) {
             showToast("You've tried a few times in a row — please wait a couple of minutes before trying again.", 'error');
@@ -1254,7 +1255,7 @@
       let notice = null;
       try { notice = sessionStorage.getItem('as_notice'); sessionStorage.removeItem('as_notice'); } catch (e) {}
       const wantLogin = location.hash === '#login' || new URLSearchParams(location.search).get('mode') === 'login';
-      if (notice || wantLogin) showPage('login');
+      if (notice || wantLogin || /staff=1/.test(location.search)) showPage('login');
       if (notice) showBanner(notice);
     })();
 
