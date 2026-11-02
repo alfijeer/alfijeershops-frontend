@@ -40,7 +40,7 @@
     }
     body::before {
       content: '';
-      position: fixed; inset: 0;
+      position: fixed; top:0; right:0; bottom:0; left:0;
       background-image:
         repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(201,144,0,0.02) 50px, rgba(201,144,0,0.02) 51px),
         repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(201,144,0,0.02) 50px, rgba(201,144,0,0.02) 51px);
@@ -356,7 +356,7 @@
 
     /* Shop detail modal overlay */
     .modal-overlay {
-      display: none; position: fixed; inset: 0;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.65); z-index: 999;
       align-items: center; justify-content: center; padding: 20px;
     }
@@ -460,7 +460,7 @@
 
     /* ── PRODUCT PHOTO GALLERY (lightbox) — swipeable carousel ── */
     .gallery-overlay {
-      display: none; position: fixed; inset: 0; z-index: 2000;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0; z-index: 2000;
       background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
       flex-direction: column;
     }
@@ -527,7 +527,7 @@
 
     /* ── CART DRAWER ── */
     .cart-overlay {
-      display: none; position: fixed; inset: 0;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.55); z-index: 1100;
     }
     .cart-overlay.open { display: block; }
@@ -672,7 +672,7 @@
 
     /* Order confirmation modal */
     .order-confirm-modal {
-      display: none; position: fixed; inset: 0;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.7); z-index: 1400;
       align-items: center; justify-content: center; padding: 20px;
     }
@@ -720,7 +720,7 @@
     html { overflow-x: hidden; }
     .main { min-width: 0; }
     .cart-drawer {
-      right: 0; height: 100vh; height: 100dvh; max-width: min(420px, 100vw);
+      right: 0; height: 100vh; height: 100dvh; max-width: 420px; max-width: min(420px, 100vw);
       transform: translateX(105%); visibility: hidden;
       transition: transform .35s cubic-bezier(.4,0,.2,1), visibility 0s linear .35s;
     }
@@ -823,7 +823,7 @@
       .shop-card:hover { transform: none; box-shadow: none; }
       .shop-card:active { background: #FFFBEF; }
       .shop-thumb { height: auto; min-height: 112px; font-size: 2rem; }
-      .shop-thumb img { position: absolute; inset: 0; }
+      .shop-thumb img { position: absolute; top:0; right:0; bottom:0; left:0; }
       .shop-num { top: auto; bottom: 8px; left: 8px; font-size: 0.62rem; padding: 3px 7px; border-radius: 5px; }
       .verified-pill { display: none; }
       .shop-body { padding: 10px 52px 10px 12px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }

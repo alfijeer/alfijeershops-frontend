@@ -33,7 +33,7 @@
     }
     body { font-family:'Nunito',sans-serif; background:var(--green-deep); color:var(--white); min-height:100vh; display:flex; }
     body::before {
-      content:''; position:fixed; inset:0;
+      content:''; position:fixed; top:0; right:0; bottom:0; left:0;
       background-image: repeating-linear-gradient(45deg,transparent,transparent 50px,rgba(201,144,0,0.02) 50px,rgba(201,144,0,0.02) 51px),repeating-linear-gradient(-45deg,transparent,transparent 50px,rgba(201,144,0,0.02) 50px,rgba(201,144,0,0.02) 51px);
       pointer-events:none; z-index:0;
     }
@@ -174,7 +174,7 @@
     .type-badge.saved { background:rgba(201,144,0,0.1); color:var(--gold); border:1px solid rgba(201,144,0,0.2); }
 
     /* Add product modal */
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(16,40,28,0.65); z-index:999; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay { display:none; position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(16,40,28,0.65); z-index:999; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.open { display:flex; }
     .modal { background:var(--green-deep); border:1px solid var(--border); border-radius:12px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; animation:fadeUp 0.3s ease both; }
     .modal-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
@@ -199,17 +199,6 @@
     }
 
 
-    /* ══ SHARE CARD ══ */
-    .share-card { background:linear-gradient(150deg,#001233,#0A294D); color:#fff; border-radius:16px; padding:16px; margin-bottom:18px; box-shadow:0 6px 20px rgba(0,18,51,.18); }
-    .share-head { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
-    .share-ic { width:38px; height:38px; border-radius:12px; background:rgba(255,190,26,.18); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-    .share-head b { display:block; font-size:.95rem; color:var(--gold); }
-    .share-head small { display:block; font-size:.74rem; color:rgba(255,255,255,.72); margin-top:2px; }
-    .share-url { background:rgba(255,255,255,.1); border:1px dashed rgba(255,255,255,.28); border-radius:10px; padding:10px 12px; font-size:.78rem; word-break:break-all; color:#fff; margin-bottom:12px; user-select:all; }
-    .share-btns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-    .share-btns button { padding:11px 6px; border-radius:10px; border:none; background:var(--gold); color:#001233; font:800 .8rem 'Nunito',sans-serif; cursor:pointer; }
-    .share-btns button:active { transform:scale(.97); }
-    .share-wa { width:100%; margin-top:8px; padding:11px; border-radius:10px; border:1px solid #25D366; background:rgba(37,211,102,.14); color:#7dffa8; font:800 .8rem 'Nunito',sans-serif; cursor:pointer; }
 
     /* ══ PRODUCT CARDS ══ */
     .plist { display:flex; flex-direction:column; gap:10px; }
@@ -236,7 +225,7 @@
       body::before { display:none; }
       .sidebar { display:none; }
       .hamburger-btn { display:none !important; }
-      .main { margin-left:0; padding-bottom:calc(76px + env(safe-area-inset-bottom)); min-height:100dvh; }
+      .main { margin-left:0; padding-bottom:calc(76px + env(safe-area-inset-bottom)); min-height:100vh; min-height:100dvh; }
       .topbar { background:var(--navy-deep); border-bottom:none; height:auto; min-height:58px; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; box-shadow:0 2px 12px rgba(0,18,51,.25); }
       .topbar-left h1 { color:var(--gold); font-size:1.02rem; }
       .topbar-left p { color:rgba(255,255,255,.7); font-size:.72rem; max-width:62vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -277,7 +266,7 @@
       .fab { position:fixed; right:16px; bottom:calc(84px + env(safe-area-inset-bottom)); width:54px; height:54px; border-radius:50%; background:var(--gold); color:#001233; border:none; font-size:1.9rem; font-weight:800; box-shadow:0 6px 18px rgba(255,190,26,.5); z-index:850; align-items:center; justify-content:center; cursor:pointer; }
       body[data-sec="products"] .fab, body[data-sec="dashboard"] .fab { display:flex; }
 
-      .sheet-overlay { display:flex; position:fixed; inset:0; z-index:1000; background:rgba(0,18,51,.5); align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
+      .sheet-overlay { display:flex; position:fixed; top:0; right:0; bottom:0; left:0; z-index:1000; background:rgba(0,18,51,.5); align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
       .sheet-overlay.open { opacity:1; pointer-events:auto; }
       .sheet { width:100%; background:#fff; border-radius:22px 22px 0 0; padding:8px 16px calc(18px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s ease; }
       .sheet-overlay.open .sheet { transform:none; }
@@ -288,14 +277,13 @@
       .sheet-row.danger { color:#e74c3c; border-bottom:none; }
 
       .modal-overlay { align-items:flex-end; padding:0; }
-      .modal { max-width:none; max-height:92dvh; border-radius:22px 22px 0 0; border:none; animation:sheetUp .28s ease both; padding-bottom:env(safe-area-inset-bottom); }
+      .modal { max-width:none; max-height:92vh; max-height:92dvh; border-radius:22px 22px 0 0; border:none; animation:sheetUp .28s ease both; padding-bottom:env(safe-area-inset-bottom); }
       .modal-header { position:sticky; top:0; background:#fff; z-index:2; padding:16px 18px; }
       .modal-body { padding:16px 18px 22px; }
       @keyframes sheetUp { from{transform:translateY(100%)} to{transform:none} }
     }
     @media (max-width:360px) {
       .stat-num { font-size:1.15rem; }
-      .share-btns button { font-size:.74rem; }
     }
 
     /* Orders section styles */
@@ -436,16 +424,6 @@
         <button class="btn-primary" onclick="goToPaymentDetails()">Add payment details</button>
       </div>
 
-      <div class="share-card" id="share-card">
-        <div class="share-head"><span class="share-ic">🔗</span><div><b>Your shop link</b><small id="share-note">Share it so buyers can open your shop directly.</small></div></div>
-        <div class="share-url" id="share-url">Loading…</div>
-        <div class="share-btns">
-          <button onclick="copyShopLink()">📋 Copy</button>
-          <button onclick="shareShopLink()">📤 Share</button>
-          <button onclick="previewShop()">👁️ Preview</button>
-        </div>
-        <button class="share-wa" onclick="shareWhatsApp()">💬 Share on WhatsApp</button>
-      </div>
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-top"><div class="stat-icon-box">👁️</div><span class="stat-trend">All Time</span></div>
@@ -986,14 +964,6 @@
       if (!mySeller || !mySeller._id) return '';
       return new URL('shop-detail.html?id=' + encodeURIComponent(mySeller._id), window.location.href).href;
     }
-    function renderShareCard() {
-      const el = document.getElementById('share-url'); if (!el) return;
-      const note = document.getElementById('share-note');
-      el.textContent = shopLink() || 'Not available yet';
-      if (note) note.textContent = (mySeller && mySeller.status === 'approved')
-        ? 'Share it so buyers can open your shop directly.'
-        : 'Your link starts working as soon as your shop is approved.';
-    }
     function previewShop() {
       const l = shopLink();
       if (!l) { showToast('Your shop is still loading — try again in a moment.', 'info'); return; }
@@ -1011,18 +981,6 @@
         t.remove();
       }
       showToast('Shop link copied!', 'success');
-    }
-    async function shareShopLink() {
-      const l = shopLink(); if (!l) return;
-      const name = (mySeller && mySeller.businessName) || 'my shop';
-      if (navigator.share) {
-        try { await navigator.share({ title: name + ' on ALFIJEER', text: 'Shop with ' + name + ' on ALFIJEER', url: l }); } catch (e) {}
-      } else { copyShopLink(); }
-    }
-    function shareWhatsApp() {
-      const l = shopLink(); if (!l) return;
-      const name = (mySeller && mySeller.businessName) || 'my shop';
-      window.open('https://wa.me/?text=' + encodeURIComponent('Shop with ' + name + ' on ALFIJEER 🛍️\n' + l), '_blank');
     }
 
     function logoutUser() {
@@ -1110,7 +1068,6 @@
         if (stateSel && mySeller.state) stateSel.value = mySeller.state;
 
         renderProducts();
-        renderShareCard();
         updateDashboardOverview();
       } catch(e) {
         console.warn('Could not load seller profile:', e);

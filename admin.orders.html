@@ -41,7 +41,7 @@
     }
     body::before {
       content: '';
-      position: fixed; inset: 0;
+      position: fixed; top:0; right:0; bottom:0; left:0;
       background-image:
         repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(201,144,0,0.02) 50px, rgba(201,144,0,0.02) 51px),
         repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(201,144,0,0.02) 50px, rgba(201,144,0,0.02) 51px);
@@ -357,7 +357,7 @@
 
     /* Shop detail modal overlay */
     .modal-overlay {
-      display: none; position: fixed; inset: 0;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.65); z-index: 999;
       align-items: center; justify-content: center; padding: 20px;
     }
@@ -469,7 +469,7 @@
 
     /* ── CART DRAWER ── */
     .cart-overlay {
-      display: none; position: fixed; inset: 0;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.55); z-index: 1100;
     }
     .cart-overlay.open { display: block; }
@@ -593,7 +593,7 @@
 
     /* Order confirmation modal */
     .order-confirm-modal {
-      display: none; position: fixed; inset: 0;
+      display: none; position: fixed; top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.7); z-index: 1400;
       align-items: center; justify-content: center; padding: 20px;
     }
@@ -804,7 +804,7 @@
       body::before { display:none; }
       .sidebar { display:none; }
       .hamburger-btn { display:none !important; }
-      .main { margin-left:0; padding-bottom:calc(80px + env(safe-area-inset-bottom)); min-height:100dvh; }
+      .main { margin-left:0; padding-bottom:calc(80px + env(safe-area-inset-bottom)); min-height:100vh; min-height:100dvh; }
       .topbar { background:var(--navy-deep); border-bottom:none; height:auto; min-height:58px; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; box-shadow:0 2px 12px rgba(0,18,51,.25); }
       .topbar-left h1 { color:var(--gold); font-size:1.02rem; }
       .topbar-left p { color:rgba(255,255,255,.7); font-size:.72rem; max-width:64vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -862,9 +862,9 @@
       .tab.active::after { content:''; position:absolute; top:-7px; width:26px; height:3px; border-radius:3px; background:var(--gold); }
       .tab em { position:absolute; top:2px; left:calc(50% + 8px); min-width:17px; height:17px; padding:0 4px; border-radius:9px; background:#e74c3c; color:#fff; font:800 .6rem 'Nunito',sans-serif; align-items:center; justify-content:center; font-style:normal; display:flex; }
 
-      .sheet-overlay { display:flex; position:fixed; inset:0; z-index:1000; background:rgba(0,18,51,.5); align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
+      .sheet-overlay { display:flex; position:fixed; top:0; right:0; bottom:0; left:0; z-index:1000; background:rgba(0,18,51,.5); align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
       .sheet-overlay.open { opacity:1; pointer-events:auto; }
-      .sheet { width:100%; background:#fff; border-radius:22px 22px 0 0; padding:8px 16px calc(18px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s ease; max-height:85dvh; overflow-y:auto; }
+      .sheet { width:100%; background:#fff; border-radius:22px 22px 0 0; padding:8px 16px calc(18px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s ease; max-height:85vh; max-height:85dvh; overflow-y:auto; }
       .sheet-overlay.open .sheet { transform:none; }
       .sheet-grip { width:40px; height:4px; background:#d5dae3; border-radius:4px; margin:6px auto 12px; }
       .sheet h4 { font-family:'Cinzel',serif; color:var(--navy-deep); margin-bottom:6px; font-size:1rem; }
@@ -874,7 +874,7 @@
       .sheet-row .sb { margin-left:auto; background:#e74c3c; color:#fff; font:800 .62rem 'Nunito',sans-serif; padding:3px 8px; border-radius:10px; font-style:normal; }
 
       .modal-overlay { align-items:flex-end; padding:0; }
-      .modal { max-width:none !important; width:100%; max-height:92dvh; border-radius:22px 22px 0 0; border:none; animation:sheetUp .28s ease both; padding-bottom:env(safe-area-inset-bottom); overflow-y:auto; }
+      .modal { max-width:none !important; width:100%; max-height:92vh; max-height:92dvh; border-radius:22px 22px 0 0; border:none; animation:sheetUp .28s ease both; padding-bottom:env(safe-area-inset-bottom); overflow-y:auto; }
       .modal-header { position:sticky; top:0; background:#fff; z-index:2; padding:16px 18px; }
       .modal-body { padding:16px 18px 22px; }
       .modal input[type=text], .modal textarea, .reject-reason { font-size:16px; }

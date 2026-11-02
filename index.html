@@ -43,7 +43,7 @@
     body::before {
       content: '';
       position: fixed;
-      inset: 0;
+      top:0; right:0; bottom:0; left:0;
       background-image:
         repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,144,0,0.03) 40px, rgba(201,144,0,0.03) 41px),
         repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(201,144,0,0.03) 40px, rgba(201,144,0,0.03) 41px);
@@ -739,7 +739,7 @@
     .cta-section::before {
       content: '';
       position: absolute;
-      inset: 0;
+      top:0; right:0; bottom:0; left:0;
       background: radial-gradient(ellipse at center, rgba(201,144,0,0.08) 0%, transparent 70%);
       pointer-events: none;
     }
@@ -801,7 +801,7 @@
       z-index: 2;
       background: var(--navy-deep);
       border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 60px 5% calc(30px + 76px);
+      padding: 60px 5% 30px;
     }
 
     .footer-grid {
@@ -967,7 +967,7 @@
     .info-modal-overlay {
       display: none;
       position: fixed;
-      inset: 0;
+      top:0; right:0; bottom:0; left:0;
       background: rgba(16,40,28,0.55);
       z-index: 2000;
       align-items: center;
@@ -1188,7 +1188,7 @@
        NAV DRAWER
     ════════════════════════════════ */
     .drawer-overlay {
-      position: fixed; inset: 0; z-index: 2000;
+      position: fixed; top:0; right:0; bottom:0; left:0; z-index: 2000;
       background: rgba(16,40,28,0.35);
       opacity: 0; pointer-events: none;
       transition: opacity 0.3s;
@@ -1254,7 +1254,11 @@
       .bottom-nav { display: none; }
     }
     @media (max-width: 768px) {
-      body { padding-bottom: 76px; } /* clears the fixed bottom nav so content/footer isn't hidden underneath it */
+      /* The footer (last element) clears the fixed bottom nav once; no extra body padding */
+      body { padding-bottom: 0; }
+      footer { padding: 36px 5% calc(76px + env(safe-area-inset-bottom)); }
+      .footer-grid { gap: 24px; margin-bottom: 24px; }
+      .footer-bottom { padding-top: 18px; }
     }
 
     @media (min-width: 860px) {
@@ -1479,7 +1483,7 @@
     footer { margin-top: 30px; }
 
     /* search sheet */
-    .hm-sheet { position: fixed; inset: 0; z-index: 3000; background: #F6F3EA; display: flex; flex-direction: column; }
+    .hm-sheet { position: fixed; top:0; right:0; bottom:0; left:0; z-index: 3000; background: #F6F3EA; display: flex; flex-direction: column; }
     .hm-sheet[hidden] { display: none; }
     .hm-sheet-top { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--navy-deep); }
     .hm-back { flex: 0 0 44px; height: 44px; border-radius: 12px; border: 0; background: rgba(255,255,255,0.1); color: #fff; font-size: 1.3rem; cursor: pointer; }
@@ -1507,7 +1511,7 @@
     .hm-toast.show { opacity: 1; transform: none; }
 
     /* bottom tab bar: navy like the buyer dashboard */
-    .bottom-nav { background: var(--navy-deep); border-top: 0; box-shadow: 0 -4px 20px rgba(0,18,51,0.25); padding: 0 4px env(safe-area-inset-bottom); }
+    .bottom-nav { top: auto; height: auto; z-index: 1100; background: var(--navy-deep); border-top: 0; box-shadow: 0 -4px 20px rgba(0,18,51,0.25); padding: 0 4px env(safe-area-inset-bottom); }
     .bn-item { height: 62px; justify-content: center; color: var(--on-navy-dim); font-size: 0.68rem; position: relative; }
     .bn-item .bn-icon { font-size: 1.3rem; line-height: 1; }
     .bn-item.active { color: var(--gold); }
@@ -1528,6 +1532,13 @@
     /* the generic nav{} rule above must not turn the top-bar links into a second white bar */
     .desktop-nav-links { position: static; height: auto; padding: 0; background: none; backdrop-filter: none; border: 0; justify-content: flex-start; z-index: auto; }
     @media (min-width: 1080px) { .hamburger { display: none; } }
+    /* older browsers without aspect-ratio */
+    @supports not (aspect-ratio: 1 / 1) {
+      .banner-carousel { min-height: 150px; }
+      .banner-carousel.ready { min-height: 0; }
+      .hm-prod-img { height: 160px; }
+      .rec-thumb { height: 140px; }
+    }
   </style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
