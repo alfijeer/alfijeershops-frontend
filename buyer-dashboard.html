@@ -1227,8 +1227,9 @@
       return 'Shop ' + s;
     }
 
+    const catLabel = c => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     const CATEGORIES = [
-      ['Food, Grains & Spices','🌾'], ['Beauty & Personal Care','💄'], ['Household & Cleaning Supplies','🧴'], ['Health & Wellness','💊'],
+      ['Food, Grains & Spices','🍴'], ['Beauty & Personal Care','💄'], ['Household & Cleaning Supplies','🧴'], ['Health & Wellness','💊'],
       ['Fashion & Clothing','👕'], ['Baby & Kids','🧸'], ['Phones & Electronics','📱'], ['Farm Products','🫘'], ['Home & Furniture','🛋️'],
       ['Building Materials & Hardware','🧱'], ['Vehicles & Spare Parts','🚗'], ['Business & Industrial Equipment','⚙️'],
       ['Books, Office & School Supplies','📚'], ['Sports & Outdoor','⚽'], ['Other','📦'],
@@ -1749,7 +1750,7 @@
         <div class="shop-thumb">${s.photo ? `<img src="${OrdersUI.esc(s.photo)}" alt="${OrdersUI.esc(s.name)}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy">` : s.icon}<span class="shop-num">${_formatShopNum(s.num)}</span><span class="verified-pill">✅ Verified</span></div>
         <div class="shop-body">
           <h4>${OrdersUI.esc(s.name)}</h4>
-          <div class="shop-meta-row"><span>🏷️ ${OrdersUI.esc(s.cat)}</span><span>📍 ${OrdersUI.esc(s.loc)}</span></div>
+          <div class="shop-meta-row"><span>🏷️ ${OrdersUI.esc(catLabel(s.cat))}</span><span>📍 ${OrdersUI.esc(s.loc)}</span></div>
           <div class="shop-footer-row">
             ${hasDist ? `<span class="dist-tag">${distLabel}</span>` : '<span></span>'}
             <button class="btn-sm" onclick="event.stopPropagation();openModal('${s._id}')">View Shop</button>
@@ -1782,7 +1783,7 @@
           <div class="saved-icon">${s.icon}</div>
           <div class="saved-info">
             <h4>${_formatShopNum(s.num)} — ${_E(s.name)}</h4>
-            <p>🏷️ ${_E(s.cat)} &nbsp;|&nbsp; 📍 ${_E(s.loc)}</p>
+            <p>🏷️ ${_E(catLabel(s.cat))} &nbsp;|&nbsp; 📍 ${_E(s.loc)}</p>
           </div>
           <div class="saved-actions">
             <button class="btn-icon" onclick="openModal('${s._id}')" title="View">👁</button>
@@ -1810,7 +1811,7 @@
       document.getElementById('modal-icon').textContent  = s.icon;
       document.getElementById('modal-num').textContent   = _formatShopNum(s.num);
       document.getElementById('modal-name').textContent  = s.name;
-      document.getElementById('modal-cat').textContent   = '🏷️ ' + s.cat;
+      document.getElementById('modal-cat').textContent   = '🏷️ ' + catLabel(s.cat);
       document.getElementById('modal-loc').textContent   = '📍 ' + s.loc;
       const distEl = document.getElementById('modal-dist');
       const hasDist = s.dist !== null && s.dist !== undefined;
@@ -1926,14 +1927,14 @@
 
     function buildCategoryUI() {
       const pills = document.getElementById('search-filters');
-      if (pills) pills.innerHTML = [['all','🔎','All']].concat(CATEGORIES.map(c => [c[0], c[1], c[0]]))
+      if (pills) pills.innerHTML = [['all','🔎','All']].concat(CATEGORIES.map(c => [c[0], c[1], catLabel(c[0])]))
         .map(c => `<div class="cat-pill ${c[0] === _searchCat ? 'active' : ''}" data-cat="${_E(c[0])}" style="flex:0 0 auto;white-space:nowrap;" onclick="setSearchCat(this.dataset.cat)">${c[1]} ${_E(c[2])}</div>`).join('');
       const strip = document.getElementById('home-cats');
-      if (strip) strip.innerHTML = CATEGORIES.map(c => `<button class="cat-chip" data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)"><span>${c[1]}</span>${_E(c[0])}</button>`).join('');
+      if (strip) strip.innerHTML = CATEGORIES.map(c => `<button class="cat-chip" data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)"><span>${c[1]}</span>${_E(catLabel(c[0]))}</button>`).join('');
       const grid = document.getElementById('category-grid');
       if (grid) grid.innerHTML = CATEGORIES.map(c => `<div data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
           <span style="font-size:2.2rem;display:block;margin-bottom:10px;">${c[1]}</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">${_E(c[0])}</span>
+          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">${_E(catLabel(c[0]))}</span>
           <span class="cat-count" data-cat="${_E(c[0])}" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span></div>`).join('');
       if (typeof updateStats === 'function' && shops.length) updateStats();
     }
@@ -2053,7 +2054,7 @@
             ? 'Check the spelling, try fewer or simpler words (for example “Samsung” instead of the full model), or browse a category below.' + (_searchCat !== 'all' ? ' You can also search all categories.' : '')
             : 'New shops join every week. Meanwhile, browse another category below or see every verified shop.'}</p>
           ${_searchCat !== 'all' ? '<button class="btn-sm" onclick="setSearchCat(\'all\')" style="margin-bottom:16px;">Search all categories</button>' : ''}</div>
-          <div class="cat-pills" style="justify-content:center;">${(d.categories || []).slice(0, 8).map(c => `<div class="cat-pill" data-cat="${_E(c.name)}" onclick="showCatShops(this.dataset.cat)">${_catIcon(c.name)} ${_E(c.name)} (${c.count})</div>`).join('')}</div>`;
+          <div class="cat-pills" style="justify-content:center;">${(d.categories || []).slice(0, 8).map(c => `<div class="cat-pill" data-cat="${_E(c.name)}" onclick="showCatShops(this.dataset.cat)">${_catIcon(c.name)} ${_E(catLabel(c.name))} (${c.count})</div>`).join('')}</div>`;
       }
       out.innerHTML = h;
     }

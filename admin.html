@@ -1340,11 +1340,12 @@
     function openMore()  { document.getElementById('more-sheet').classList.add('open'); }
     function closeMore() { const m = document.getElementById('more-sheet'); if (m) m.classList.remove('open'); }
 
+    const catLabel = c => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     function _catIcon(cat) {
       const icons = {
         'Fashion, Clothing & Shoes':'👕','Electronics & Appliances':'📺',
         'Phones & Accessories':'📱','Home & Furniture':'🛋️',
-        'Food & Groceries':'🛒','Computers & Technology':'💻',
+        'Food & Groceries':'🛒','Food, Grains & Spices':'🍴','Computers & Technology':'💻',
         'Agriculture & Livestock':'🌾','Health & Beauty':'💊',
         'Education & Training':'📚','Services':'🔧','Other':'📦',
       };
@@ -1417,7 +1418,7 @@
       body.innerHTML = recent.length ? recent.map(s => `
         <tr>
           <td>${shopCellHtml(s)}</td>
-          <td>${esc(s.category || '—')}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
           <td>${_timeAgo(s.createdAt)}</td>
           <td>${statusPillHtml(s)}</td>
         </tr>
@@ -1447,7 +1448,7 @@
         <tr data-search="${esc((s.businessName||'').toLowerCase())} ${esc((s.category||'').toLowerCase())}">
           <td>${shopCellHtml(s)}</td>
           <td>${esc(s.phone || s.whatsappNumber || '—')}</td>
-          <td>${esc(s.category || '—')}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
           <td>${esc(s.city || s.address || s.state || '—')}</td>
           <td>${_timeAgo(s.createdAt)}</td>
           <td>
@@ -1484,7 +1485,7 @@
         else actions = `<span style="color:var(--white-dim);font-size:0.75rem;">—</span>`;
         return `<tr data-search="${esc((s.businessName||'').toLowerCase())} ${esc((s.category||'').toLowerCase())}">
           <td>${shopCellHtml(s)}</td>
-          <td>${esc(s.category || '—')}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
           <td>${esc(s.city || s.address || s.state || '—')}</td>
           <td>${statusPillHtml(s)}</td>
           <td><div class="row-actions">${actions}<button class="act-btn act-view" onclick="openEditSellerModal('${esc(s._id)}')">✎ Edit</button><a class="act-btn act-view" href="shop-detail.html?id=${esc(s._id)}" target="_blank">👁 View</a><button class="act-btn act-reject" onclick="openDeleteModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}','sellers')">🗑 Delete</button></div></td>
