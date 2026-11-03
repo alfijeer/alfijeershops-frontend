@@ -1532,6 +1532,43 @@
     /* the generic nav{} rule above must not turn the top-bar links into a second white bar */
     .desktop-nav-links { position: static; height: auto; padding: 0; background: none; backdrop-filter: none; border: 0; justify-content: flex-start; z-index: auto; }
     @media (min-width: 1080px) { .hamburger { display: none; } }
+  
+    /* ════════════════════════════════
+       SLIM MOBILE FOOTER + DRAWER SUPPORT
+    ════════════════════════════════ */
+    .m-footer { display: none; }
+    .drawer-support { display: flex; align-items: center; gap: 12px; margin: 14px 16px 6px; padding: 12px 14px; background: rgba(37,211,102,0.10); border: 1px solid rgba(37,211,102,0.35); border-radius: 12px; text-decoration: none; color: var(--white); }
+    .drawer-support > span { font-size: 1.5rem; }
+    .drawer-support b { display: block; font-size: 0.9rem; }
+    .drawer-support small { display: block; font-size: 0.74rem; color: var(--white-dim); margin-top: 2px; }
+
+    @media (max-width: 768px) {
+      .desk-footer { display: none; }
+      .m-footer {
+        display: block; position: relative; z-index: 2;
+        margin-top: 30px; background: var(--navy-deep);
+        padding: 26px 5% calc(28px + env(safe-area-inset-bottom));
+        text-align: center;
+      }
+      .mf-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; text-align: left; }
+      .mf-brand b { display: block; font-family: 'Cinzel', serif; color: #fff; font-size: 1.05rem; letter-spacing: 1px; }
+      .mf-brand span { display: block; font-size: 0.72rem; color: var(--on-navy-dim); margin-top: 2px; }
+      .mf-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+      .mf-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #fff; text-decoration: none; font-size: 0.78rem; font-weight: 800; }
+      .mf-btn span { font-size: 1.25rem; line-height: 1; }
+      .mf-social { display: flex; justify-content: center; gap: 12px; margin-bottom: 18px; }
+      .mf-social a { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; text-decoration: none; font-weight: 800; font-size: 0.85rem; }
+      .mf-links { font-size: 0.8rem; margin-bottom: 12px; }
+      .mf-links a { color: var(--gold); text-decoration: none; font-weight: 700; padding: 6px 4px; display: inline-block; }
+      .mf-links i { color: var(--on-navy-dim); font-style: normal; margin: 0 6px; }
+      .mf-copy { font-size: 0.72rem; color: var(--on-navy-dim); line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; }
+      .mf-copy b { color: var(--gold); }
+    }
+    /* bottom bar slides away while the footer is on screen */
+    .bottom-nav { transition: transform .25s ease; }
+    .bottom-nav.at-footer { transform: translateY(100%); pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) { .bottom-nav { transition: none; } }
+
     /* older browsers without aspect-ratio */
     @supports not (aspect-ratio: 1 / 1) {
       .banner-carousel { min-height: 150px; }
@@ -1539,7 +1576,7 @@
       .hm-prod-img { height: 160px; }
       .rec-thumb { height: 140px; }
     }
-  </style>
+</style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
 <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png"/>
@@ -1585,7 +1622,7 @@
   <!-- ══ GREETING + SEARCH ══ -->
   <div class="hm-top">
     <p class="hm-hello" id="hello-line">Good day</p>
-    <h1 class="hm-title">What&rsquo;s new in the market today</h1>
+    <h1 class="hm-title">Discover what&rsquo;s new today</h1>
     <p class="hm-pulse" id="hello-pulse" hidden><i></i><span></span></p>
     <button class="hm-searchbtn" onclick="openSearch()" aria-label="Search products, shops or shop numbers">
       <span aria-hidden="true">🔍</span><span class="hm-searchtxt">Search a product, shop name or shop number</span>
@@ -1599,6 +1636,9 @@
         <div class="nav-logo-text"><span>ALFIJEER</span><span>Menu</span></div>
         <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">✕</button>
       </div>
+      <a class="drawer-support" href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer" onclick="closeMobileMenu()">
+        <span>💬</span><div><b>Need help?</b><small>Chat with our support team on WhatsApp</small></div>
+      </a>
       <div class="drawer-section">
         <a href="#" onclick="closeMobileMenu()">🏠 Home</a>
         <a href="#shops" onclick="closeMobileMenu()">🛒 Nearby Shops</a>
@@ -1996,7 +2036,7 @@
   </main>
 
   <!-- ══ FOOTER ══ -->
-  <footer>
+  <footer class="desk-footer">
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="./index.html" class="nav-logo">
@@ -2077,6 +2117,28 @@
       </div>
     </div>
   </footer>
+
+  <!-- ══ SLIM MOBILE FOOTER (phones only) ══ -->
+  <div class="m-footer" aria-label="Site information">
+    <div class="mf-brand">
+      <img src="./Alfijeer1.png" alt="ALFIJEER" height="38" onerror="this.style.display='none'"/>
+      <div><b>ALFIJEER</b><span>The Digital Market Place For Nigeria</span></div>
+    </div>
+    <div class="mf-actions">
+      <a class="mf-btn" href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer"><span>💬</span>WhatsApp</a>
+      <a class="mf-btn" href="tel:+2347082783618"><span>📞</span>Call</a>
+      <a class="mf-btn" href="mailto:Alfijeershops@gmail.com"><span>✉️</span>Email</a>
+    </div>
+    <div class="mf-social">
+      <a href="https://www.facebook.com/profile.php?id=61595066786406" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="color:#1877F2;">f</a>
+      <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&amp;utm_medium=copy_link&amp;utm_content=azdicg8" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="color:#E1306C;">ig</a>
+      <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" style="color:#25D366;">wa</a>
+    </div>
+    <p class="mf-links">
+      <a href="./privacy.html">Privacy Policy</a><i>·</i><a href="./terms.html">Terms of Use</a><i>·</i><a href="#" onclick="openModal('contact-modal');return false;">Contact</a>
+    </p>
+    <p class="mf-copy">© <b>ALFIJEER 2026</b> · Built with pride by <b>KAUSANITECH</b></p>
+  </div>
 
 
   <script>
@@ -2161,7 +2223,7 @@
     const _HOME_API = 'https://alfijeershops-backend-production.up.railway.app/api';
     const HOME_SHOPS = 6, HOME_PRODUCTS = 6;           // the homepage stays small: newest in, oldest out
     const CATS = [
-      ['Food, Grains & Spices','🌾','Food & Grains'], ['Beauty & Personal Care','💄','Beauty'], ['Household & Cleaning Supplies','🧴','Household'],
+      ['Food, Grains & Spices','🍴','Food & Restaurants'], ['Beauty & Personal Care','💄','Beauty'], ['Household & Cleaning Supplies','🧴','Household'],
       ['Health & Wellness','💊','Health'], ['Fashion & Clothing','👕','Fashion'], ['Baby & Kids','🧸','Baby & Kids'],
       ['Phones & Electronics','📱','Phones'], ['Farm Products','🫘','Farm'], ['Home & Furniture','🛋️','Home'],
       ['Building Materials & Hardware','🧱','Building'], ['Vehicles & Spare Parts','🚗','Vehicles'], ['Business & Industrial Equipment','⚙️','Industrial'],
@@ -2539,6 +2601,19 @@
   box.addEventListener('focusout', function () { paused = false; });
   box.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { go(idx + 1); restart(); } if (e.key === 'ArrowLeft') { go(idx - 1); restart(); } });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }, { threshold: 0.3 }).observe(box);
+})();
+</script>
+<script>
+/* Hide the bottom bar when the footer comes into view (phones) */
+(function () {
+  var nav = document.querySelector('.bottom-nav'), foot = document.querySelector('.m-footer');
+  if (!nav || !foot) return;
+  function set(on) { nav.classList.toggle('at-footer', on); }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { set(en[0].isIntersecting); }, { threshold: 0 }).observe(foot);
+  } else {
+    window.addEventListener('scroll', function () { set(foot.getBoundingClientRect().top < window.innerHeight); }, { passive: true });
+  }
 })();
 </script>
 <script src="/pwa.js" defer></script>
