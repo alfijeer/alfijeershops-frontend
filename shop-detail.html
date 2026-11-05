@@ -23,22 +23,30 @@
     --border: rgba(201,144,0,0.2);
     --bg: #F3F9F5;
   }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     font-family: 'Nunito', sans-serif;
     background: var(--bg);
     color: var(--white);
     min-height: 100vh;
-    padding-bottom: 40px;
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+    overscroll-behavior-y: auto;
   }
 
   /* ── HEADER ── */
+  /* only the slim top bar stays pinned; the tall shop card scrolls away so products get the whole screen */
+  .sd-topbar {
+    background: var(--navy-deep); color: var(--on-navy);
+    padding: calc(10px + env(safe-area-inset-top)) 20px 6px;
+    position: sticky; top: 0; z-index: 50;
+  }
   .sd-header {
     background: var(--navy-deep);
     color: var(--on-navy);
-    padding: 16px 20px 22px;
-    position: sticky; top: 0; z-index: 50;
+    padding: 0 20px 22px;
+    position: relative;
   }
+  .sd-header-row { margin-bottom: 0; }
   .sd-header-row {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 4px;
@@ -203,7 +211,7 @@
   .sd-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   @media (min-width: 640px) {
-    .sd-header, .sd-section { padding-left: calc(50% - 300px); padding-right: calc(50% - 300px); }
+    .sd-topbar, .sd-header, .sd-section { padding-left: calc(50% - 300px); padding-right: calc(50% - 300px); }
     .sd-card { margin-left: calc(50% - 300px); margin-right: calc(50% - 300px); }
   }
 </style>
@@ -217,7 +225,7 @@
 </head>
 <body>
 
-  <header class="sd-header">
+  <div class="sd-topbar">
     <div class="sd-header-row">
       <a href="buyer-dashboard.html" class="sd-back" aria-label="Back">←</a>
       <div class="sd-brand">
@@ -226,7 +234,9 @@
       </div>
       <button class="sd-share" onclick="shareShop()" aria-label="Share this shop">⤴</button>
     </div>
+  </div>
 
+  <header class="sd-header">
     <div class="sd-card" id="sd-card">
       <div class="sd-photo" id="sd-photo">🏪<span class="sd-num" id="sd-num">Shop —</span></div>
       <div class="sd-body">
@@ -273,11 +283,12 @@
       setTimeout(() => t.classList.remove('show'), 2400);
     }
 
+    const catLabel = c => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     function _catIcon(cat) {
       const icons = {
         'Fashion, Clothing & Shoes':'👕','Electronics & Appliances':'📺',
         'Phones & Accessories':'📱','Home & Furniture':'🛋️',
-        'Food & Groceries':'🛒','Computers & Technology':'💻',
+        'Food & Groceries':'🛒','Food, Grains & Spices':'🍴','Computers & Technology':'💻',
         'Agriculture & Livestock':'🌾','Health & Beauty':'💊',
         'Education & Training':'📚','Services':'🔧','Other':'📦',
       };
@@ -325,10 +336,10 @@
     function renderShop(s) {
       document.title = (s.businessName || 'Shop') + ' — ALFIJEER';
       document.getElementById('sd-name').textContent = s.businessName || 'Unnamed Shop';
-      document.getElementById('sd-cat').textContent = s.category || 'Other';
+      document.getElementById('sd-cat').textContent = catLabel(s.category || 'Other');
       document.getElementById('sd-num').textContent = _formatShopNum(s.shopNumber);
       document.getElementById('sd-address').textContent = s.address || [s.city, s.state].filter(Boolean).join(', ') || 'Address not provided';
-      document.getElementById('sd-verified').style.display = 'inline-flex';
+      document.getElementById('sd-verified').style.display = s.isVerified ? 'inline-flex' : 'none';
 
       const photoEl = document.getElementById('sd-photo');
       if (s.shopPhotoUrl) {

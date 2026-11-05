@@ -84,6 +84,13 @@
       .then(function (sub) { try { localStorage.setItem('as_push_ep', sub.endpoint); } catch (e) {} return fetch(API + '/push/subscribe', { method: 'POST', headers: auth(), body: JSON.stringify({ subscription: sub.toJSON() }) }); });
   }
 
+  // used by "Alert me about saved shops": asks permission (if needed) and registers this phone
+  window.asPushOn = function () {
+    if (Notification.permission === 'granted') return subscribe().catch(function () {});
+    if (Notification.permission === 'denied') return Promise.resolve();
+    return Notification.requestPermission().then(function (p) { if (p === 'granted') return subscribe().catch(function () {}); });
+  };
+
   // used when someone logs out, so the next person on this phone does not get their alerts
   window.asPushOff = function () {
     try {

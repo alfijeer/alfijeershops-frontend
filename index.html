@@ -76,11 +76,14 @@
     }
 
     .nav-logo img {
-      height: 52px;
-      width: 52px;
-      border-radius: 52px;
+      height: 56px;
+      width: 56px;
+      border-radius: 50%;
       object-fit: contain;
-      box-shadow: 0 2px 8px rgba(16,40,28,0.12);
+      background: #fff;
+      padding: 2px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
     .nav-logo-text {
@@ -1071,7 +1074,7 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
-      height: 64px;
+      height: 72px;
       display: grid;
       grid-template-columns: 1fr auto;
       align-items: center;
@@ -1157,14 +1160,14 @@
     }
 
     @media (max-width: 480px) {
-      .nav-logo img { height: 40px; width: 40px; }
+      .nav-logo img { height: 52px; width: 52px; border-radius: 50%; }
       .location-pill { max-width: 118px; padding: 6px 8px; font-size: 0.7rem; }
       .location-pill span#location-label { max-width: 68px; }
       .app-bar { padding: 0 3.5%; gap: 6px; }
       .icon-btn { width: 34px; height: 34px; font-size: 0.95rem; }
     }
 
-    .search-bar-wrap { margin-top: 64px; padding: 14px 5% 4px; position: relative; z-index: 5; }
+    .search-bar-wrap { margin-top: 72px; padding: 14px 5% 4px; position: relative; z-index: 5; }
     .search-bar {
       display: flex; align-items: center; gap: 10px;
       background: #FFFFFF; border: 1px solid var(--border, rgba(201,144,0,0.15));
@@ -1222,37 +1225,6 @@
     .hamburger { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; width: 38px; height: 38px; background: none; border: none; cursor: pointer; }
     .hamburger span { display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
 
-    /* ════════════════════════════════
-       BOTTOM NAV
-    ════════════════════════════════ */
-    .bottom-nav {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
-      background: rgba(255,255,255,0.97);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border, rgba(201,144,0,0.12));
-      box-shadow: 0 -2px 14px rgba(16,40,28,0.08);
-      display: flex; align-items: center; justify-content: space-around;
-      padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
-    }
-    .bn-item {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      text-decoration: none; color: var(--white-dim);
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2px;
-      flex: 1; padding: 4px 0;
-    }
-    .bn-item .bn-icon { font-size: 1.15rem; }
-    .bn-item.active { color: var(--gold); }
-    .bn-item.bn-center .bn-icon {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: var(--gold); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      margin-top: -22px; box-shadow: 0 4px 14px rgba(201,144,0,0.35);
-    }
-    .bn-item.bn-center { color: var(--gold); }
-
-    @media (min-width: 769px) {
-      .bottom-nav { display: none; }
-    }
     @media (max-width: 768px) {
       /* The footer (last element) clears the fixed bottom nav once; no extra body padding */
       body { padding-bottom: 0; }
@@ -1391,7 +1363,7 @@
     .hm-empty { grid-column: 1 / -1; padding: 22px 8px; text-align: center; font-size: 0.85rem; color: var(--white-dim); }
 
     /* top: greeting, headline, search */
-    .hm-top { margin-top: 64px; padding: 26px 5% 6px; max-width: 1100px; margin-left: auto; margin-right: auto; position: relative; z-index: 3; }
+    .hm-top { margin-top: 72px; padding: 26px 5% 6px; max-width: 1100px; margin-left: auto; margin-right: auto; position: relative; z-index: 3; }
     .hm-hello { font-size: 0.85rem; font-weight: 700; color: var(--gold-dim); }
     .hm-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(1.45rem, 6.2vw, 2.1rem); line-height: 1.18; color: var(--white); margin: 2px 0 8px; max-width: 16em; }
     .hm-pulse { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #0E6B3C; background: rgba(18,128,73,0.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
@@ -1507,15 +1479,9 @@
     .hm-row-price { font-weight: 800; font-size: 0.9rem; flex: 0 0 auto; }
     .hm-row-go { font-weight: 800; font-size: 0.78rem; color: var(--gold-dim); flex: 0 0 auto; }
 
-    .hm-toast { position: fixed; left: 12px; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; background: var(--navy-deep); color: #fff; padding: 13px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; z-index: 4000; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
+    .hm-toast { position: fixed; left: 12px; right: 12px; bottom: calc(24px + env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; background: var(--navy-deep); color: #fff; padding: 13px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; z-index: 4000; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
     .hm-toast.show { opacity: 1; transform: none; }
 
-    /* bottom tab bar: navy like the buyer dashboard */
-    .bottom-nav { top: auto; height: auto; z-index: 1100; background: var(--navy-deep); border-top: 0; box-shadow: 0 -4px 20px rgba(0,18,51,0.25); padding: 0 4px env(safe-area-inset-bottom); }
-    .bn-item { height: 62px; justify-content: center; color: var(--on-navy-dim); font-size: 0.68rem; position: relative; }
-    .bn-item .bn-icon { font-size: 1.3rem; line-height: 1; }
-    .bn-item.active { color: var(--gold); }
-    .bn-item.active::before { content: ''; position: absolute; top: 0; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--gold); }
 
     /* larger screens */
     @media (min-width: 700px) {
@@ -1564,10 +1530,6 @@
       .mf-copy { font-size: 0.72rem; color: var(--on-navy-dim); line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; }
       .mf-copy b { color: var(--gold); }
     }
-    /* bottom bar slides away while the footer is on screen */
-    .bottom-nav { transition: transform .25s ease; }
-    .bottom-nav.at-footer { transform: translateY(100%); pointer-events: none; }
-    @media (prefers-reduced-motion: reduce) { .bottom-nav { transition: none; } }
 
     /* older browsers without aspect-ratio */
     @supports not (aspect-ratio: 1 / 1) {
@@ -2230,6 +2192,7 @@
       ['Books, Office & School Supplies','📚','Books'], ['Sports & Outdoor','⚽','Sports'], ['Other','📦','Other'],
     ];
     const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const catLabel = (c) => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     const catIcon = (c) => { const h = CATS.find((x) => x[0] === c); return h ? h[1] : '🏪'; };
     const money = (n) => '₦' + Number(n || 0).toLocaleString('en-NG');
     const shopNum = (n) => (n === null || n === undefined || n === '') ? 'Shop' : 'Shop ' + String(n).trim().replace(/^(shop)?\s*#?\s*/i, '');
@@ -2271,11 +2234,22 @@
 
     // ── Saved shops (same list the buyer dashboard uses) ──
     const savedIds = () => lsGet('as_saved_shops', []).map(String);
+    // A logged-in buyer's hearts are also kept on the server (so we can alert them about those shops).
+    let _savedTimer = null;
+    function pushSavedSoon(ids) {
+      let token = null, role = null; try { token = localStorage.getItem('as_token'); role = localStorage.getItem('as_role'); } catch (e) {}
+      if (!token || role !== 'buyer') return;
+      clearTimeout(_savedTimer);
+      _savedTimer = setTimeout(() => {
+        fetch(_HOME_API + '/buyers/saved', { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ ids }) }).catch(() => {});
+      }, 600);
+    }
     function toggleHeart(id, ev) {
       ev.stopPropagation(); ev.preventDefault();
       let ids = savedIds(); const was = ids.includes(String(id));
       ids = was ? ids.filter((x) => x !== String(id)) : [String(id)].concat(ids);
       lsSet('as_saved_shops', ids);
+      pushSavedSoon(ids);
       document.querySelectorAll('.hm-heart[data-id="' + id + '"]').forEach((b) => { b.classList.toggle('on', !was); b.setAttribute('aria-pressed', String(!was)); });
       toast(was ? 'Removed from saved shops' : 'Shop saved. Find it under Saved.');
     }
@@ -2292,8 +2266,8 @@
           <button class="hm-heart ${saved ? 'on' : ''}" data-id="${esc(s._id)}" aria-pressed="${saved}" aria-label="Save ${esc(s.businessName)}" onclick="toggleHeart('${esc(s._id)}', event)">♥</button>
         </div>
         <div class="hm-shop-body">
-          <h3>${esc(s.businessName)}</h3>
-          <p>${esc(s.category || '')}${s.city ? ' · ' + esc(s.city) : ''}</p>
+          <h3>${esc(s.businessName)}${s.isVerified ? ' <span title="Verified shop" style="color:#16803C;font-size:.85em;">✔</span>' : ''}</h3>
+          <p>${esc(catLabel(s.category) || '')}${s.city ? ' · ' + esc(s.city) : ''}</p>
           <small>Opened ${esc(ago(s.createdAt))}</small>
         </div></article>`;
     }
@@ -2324,7 +2298,7 @@
       let ok = false;
       if (s.status === 'fulfilled' && Array.isArray(s.value.sellers)) { _shops = s.value.sellers.slice(0, HOME_SHOPS); ok = true; }
       if (p.status === 'fulfilled' && Array.isArray(p.value.products)) { _products = p.value.products.slice(0, HOME_PRODUCTS); ok = true; }
-      if (ok) { _loadedAt = Date.now(); lsSet('as_home_v1', { shops: _shops, products: _products }); paintHome(); }
+      if (ok) { _loadedAt = Date.now(); lsSet('as_home_v1', { at: Date.now(), shops: _shops, products: _products }); paintHome(); }
       else homeError();
     }
 
@@ -2368,7 +2342,7 @@
     const sProduct = (p) => sRow(`<span class="hm-row-img">${safeUrl(p.image) ? `<img src="${esc(safeUrl(p.image))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(p.category)}</span>
         <span class="hm-row-main"><b>${esc(p.name)}</b><small>${esc(p.shopName)}${p.city ? ' · ' + esc(p.city) : ''}</small></span><span class="hm-row-price">${money(p.price)}</span>`, p.shopId);
     const sShop = (s) => sRow(`<span class="hm-row-img">${safeUrl(s.shopPhotoUrl) ? `<img src="${esc(safeUrl(s.shopPhotoUrl))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(s.category)}</span>
-        <span class="hm-row-main"><b>${esc(s.businessName || 'Shop')}</b><small>${esc(shopNum(s.shopNumber))}${s.city ? ' · ' + esc(s.city) : ''}${s.category ? ' · ' + esc(s.category) : ''}</small></span><span class="hm-row-go">View</span>`, s._id);
+        <span class="hm-row-main"><b>${esc(s.businessName || 'Shop')}</b><small>${esc(shopNum(s.shopNumber))}${s.city ? ' · ' + esc(s.city) : ''}${s.category ? ' · ' + esc(catLabel(s.category)) : ''}</small></span><span class="hm-row-go">View</span>`, s._id);
 
     async function runSheetSearch() {
       clearTimeout(_sTimer);
@@ -2457,7 +2431,7 @@
         const d = await getJSON('/sellers?limit=100'); const all = (d.sellers || []).filter((s) => s.latitude && s.longitude)
           .map((s) => Object.assign({}, s, { km: haversine(_lat, _lng, s.latitude, s.longitude) })).sort((a, b) => a.km - b.km).slice(0, 3);
         list.innerHTML = all.length ? all.map((s) => `<button class="hm-row" onclick="goToShop('${esc(s._id)}')"><span class="hm-row-img">${safeUrl(s.shopPhotoUrl) ? `<img src="${esc(safeUrl(s.shopPhotoUrl))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(s.category)}</span>
-          <span class="hm-row-main"><b>${esc(s.businessName)}</b><small>${esc(shopNum(s.shopNumber))} · ${esc(s.category || '')}</small></span><span class="hm-row-go">${s.km < 1 ? Math.round(s.km * 1000) + ' m' : s.km.toFixed(1) + ' km'}</span></button>`).join('')
+          <span class="hm-row-main"><b>${esc(s.businessName)}</b><small>${esc(shopNum(s.shopNumber))} · ${esc(catLabel(s.category) || '')}</small></span><span class="hm-row-go">${s.km < 1 ? Math.round(s.km * 1000) + ' m' : s.km.toFixed(1) + ' km'}</span></button>`).join('')
           : '<p class="hm-empty">No shops with a map location near you yet.</p>';
       } catch (e) { list.innerHTML = '<p class="hm-empty">Could not load nearby shops. <button class="hm-link-btn" onclick="showNearby()">Try again</button></p>'; }
     }
@@ -2479,7 +2453,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       renderHello();
       const c = lsGet('as_home_v1', null);
-      if (c && Array.isArray(c.shops) && Array.isArray(c.products)) { _shops = c.shops; _products = c.products; paintHome(); }
+      // Only a very fresh copy paints instantly; an older one could still hold a shop that was deleted since.
+      if (c && c.at && Date.now() - c.at < 5 * 60 * 1000 && Array.isArray(c.shops) && Array.isArray(c.products)) { _shops = c.shops; _products = c.products; paintHome(); }
       loadHome();
       if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted') requestGPS(false); }).catch(() => {});
       setInterval(() => { if (!document.hidden && Date.now() - _loadedAt > 90000) loadHome(); }, 30000);
@@ -2495,14 +2470,6 @@
     <div class="hm-sheet-body" id="sheet-body"></div>
   </div>
 
-  <!-- ══ BOTTOM NAV ══ -->
-  <nav class="bottom-nav" aria-label="Main">
-    <a href="#" class="bn-item active" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><span class="bn-icon">🏠</span><span>Home</span></a>
-    <a href="#" class="bn-item" onclick="openSearch();return false;"><span class="bn-icon">🔍</span><span>Search</span></a>
-    <a href="#" class="bn-item" onclick="goToDashboard('saved');return false;"><span class="bn-icon">♥</span><span>Saved</span></a>
-    <a href="#" class="bn-item" onclick="goToDashboard('orders');return false;"><span class="bn-icon">📦</span><span>Orders</span></a>
-    <a href="#" class="bn-item" onclick="goToDashboard('account');return false;"><span class="bn-icon">👤</span><span>Account</span></a>
-  </nav>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -2601,19 +2568,6 @@
   box.addEventListener('focusout', function () { paused = false; });
   box.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { go(idx + 1); restart(); } if (e.key === 'ArrowLeft') { go(idx - 1); restart(); } });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }, { threshold: 0.3 }).observe(box);
-})();
-</script>
-<script>
-/* Hide the bottom bar when the footer comes into view (phones) */
-(function () {
-  var nav = document.querySelector('.bottom-nav'), foot = document.querySelector('.m-footer');
-  if (!nav || !foot) return;
-  function set(on) { nav.classList.toggle('at-footer', on); }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) { set(en[0].isIntersecting); }, { threshold: 0 }).observe(foot);
-  } else {
-    window.addEventListener('scroll', function () { set(foot.getBoundingClientRect().top < window.innerHeight); }, { passive: true });
-  }
 })();
 </script>
 <script src="/pwa.js" defer></script>

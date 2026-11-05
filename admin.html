@@ -923,6 +923,9 @@
       <a class="nav-item" data-sec="disputes" onclick="showSection('disputes')">
         <span class="nav-icon">⚠️</span> Issues &amp; Disputes <span id="issues-nav-badge" style="display:none;margin-left:auto;background:var(--gold);color:var(--dark);font-size:0.6rem;font-weight:800;padding:2px 7px;border-radius:10px;"></span>
       </a>
+      <a class="nav-item" data-sec="reports" onclick="showSection('reports')">
+        <span class="nav-icon">🚩</span> Shop Reports <span id="reports-nav-badge" style="display:none;margin-left:auto;background:var(--gold);color:var(--dark);font-size:0.6rem;font-weight:800;padding:2px 7px;border-radius:10px;"></span>
+      </a>
       <a class="nav-item" onclick="window.location.href='admin.orders.html'">
         <span class="nav-icon">💳</span> Orders
       </a>
@@ -1002,6 +1005,7 @@
         <button class="tab-btn" data-filter="approved" onclick="setSellerFilter('approved')">Approved <span class="count-badge" id="count-approved">0</span></button>
         <button class="tab-btn" data-filter="suspended" onclick="setSellerFilter('suspended')">Suspended <span class="count-badge" id="count-suspended">0</span></button>
         <button class="tab-btn" data-filter="rejected" onclick="setSellerFilter('rejected')">Rejected <span class="count-badge" id="count-rejected">0</span></button>
+        <button class="tab-btn" data-filter="deleted" onclick="setSellerFilter('deleted')">🗑 Deleted <span class="count-badge" id="count-deleted">0</span></button>
       </div>
       <div class="admin-toolbar">
         <div class="admin-search"><span class="icon">🔍</span><input type="text" placeholder="Search shops…" oninput="filterTable('sellers', this.value)"/></div>
@@ -1033,6 +1037,21 @@
         <table class="admin-table">
           <thead><tr><th>Order</th><th>Buyer</th><th>Shop</th><th>Status</th><th>Waiting</th><th></th></tr></thead>
           <tbody id="disputes-body"><tr class="empty-row"><td colspan="6">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ SHOP REPORTS ══ -->
+    <section class="page-section" id="sec-reports">
+      <div class="tab-row" id="reports-tab-row">
+        <button class="tab-btn active" data-rf="open" onclick="setReportFilter('open')">Open</button>
+        <button class="tab-btn" data-rf="reviewed" onclick="setReportFilter('reviewed')">Reviewed</button>
+        <button class="tab-btn" data-rf="dismissed" onclick="setReportFilter('dismissed')">Dismissed</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>Shop</th><th>Reason</th><th>Reported by</th><th>When</th><th></th></tr></thead>
+          <tbody id="reports-body"><tr class="empty-row"><td colspan="5">Loading…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -1182,22 +1201,53 @@
     </div>
   </div>
 
+  <!-- REVIEW A SHOP REPORT -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header"><h3>Shop report</h3><button class="modal-close" onclick="closeReportModal()">✕</button></div>
+      <div class="modal-body">
+        <p id="report-modal-info" style="font-size:0.85rem;line-height:1.6;margin-bottom:10px;"></p>
+        <textarea id="report-modal-note" class="reject-reason" placeholder="Your note (optional): what did you find or do?" maxlength="500"></textarea>
+        <div class="modal-footer-row" style="margin-top:14px;">
+          <button class="btn-cancel" onclick="submitReport('dismissed')">Dismiss</button>
+          <button class="btn-confirm-danger" style="background:#16803C;" onclick="submitReport('reviewed')">Mark reviewed</button>
+        </div>
+        <p style="font-size:0.75rem;color:var(--white-dim);margin-top:10px;">Need to act on the shop? Suspend or delete it from the Sellers tab, then mark this report reviewed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECK A SELLER'S ID, THEN VERIFY -->
+  <div class="modal-overlay" id="id-modal">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-header"><h3 id="id-modal-title">Check ID</h3><button class="modal-close" onclick="closeIdModal()">✕</button></div>
+      <div class="modal-body">
+        <div id="id-modal-body" style="text-align:center;min-height:120px;"></div>
+        <p style="font-size:0.78rem;color:var(--white-dim);line-height:1.6;margin-top:10px;">Check that the name and photo on the ID match the shop owner. Every time you open an ID it is written to the admin log.</p>
+        <div class="modal-footer-row" style="margin-top:14px;">
+          <button class="btn-cancel" onclick="closeIdModal()">Close</button>
+          <button class="btn-confirm-danger" id="id-verify-btn" style="background:#16803C;" onclick="verifyFromModal()">✔ Verify this shop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- DELETE CONFIRMATION — requires typing the exact name, since this is irreversible -->
   <div class="modal-overlay" id="delete-modal">
     <div class="modal" style="max-width:420px;">
       <div class="modal-header">
-        <h3>Delete Account</h3>
+        <h3 id="delete-modal-title">Delete Account</h3>
         <button class="modal-close" onclick="closeDeleteModal()">✕</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:0.85rem;color:var(--white-dim);line-height:1.6;">
+        <p id="delete-modal-text" style="font-size:0.85rem;color:var(--white-dim);line-height:1.6;">
           This cannot be undone. If this account has order history, it will be anonymized and permanently locked instead of removed, so past orders stay intact.
         </p>
         <p style="font-size:0.85rem;margin:12px 0 8px;">Type <strong id="delete-modal-name" style="color:var(--white);"></strong> below to confirm:</p>
         <input type="text" id="delete-confirm-input" class="reject-reason" style="min-height:auto;padding:10px 12px;" placeholder="Type the exact name"/>
         <div class="modal-footer-row" style="margin-top:16px;">
           <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
-          <button class="btn-confirm-danger" onclick="submitDelete()">Delete Permanently</button>
+          <button class="btn-confirm-danger" id="delete-modal-btn" onclick="submitDelete()">Delete Permanently</button>
         </div>
       </div>
     </div>
@@ -1267,6 +1317,7 @@
       <button class="sheet-row" onclick="showSection('sellers')"><i>🏪</i> All sellers</button>
       <button class="sheet-row" onclick="showSection('buyers')"><i>🧍</i> Buyers</button>
       <button class="sheet-row" onclick="showSection('disputes')"><i>⚠️</i> Issues &amp; disputes <em id="sheet-issues-badge" class="sb" style="display:none"></em></button>
+      <button class="sheet-row" onclick="showSection('reports')"><i>🚩</i> Shop reports <em id="sheet-reports-badge" class="sb" style="display:none"></em></button>
       <button class="sheet-row" onclick="showSection('announce')"><i>📢</i> Announcements</button>
       <button class="sheet-row" onclick="showSection('settings')"><i>⚙️</i> Platform settings <em id="sheet-off-badge" class="sb" style="display:none">OFFLINE</em></button>
       <a class="sheet-row" href="index.html"><i>🌍</i> View marketplace</a>
@@ -1315,7 +1366,7 @@
       sec.classList.add('active');
       document.querySelectorAll('[data-sec]').forEach(a => a.classList.toggle('active', a.dataset.sec === name));
       const moreTab = document.getElementById('tab-more');
-      if (moreTab) moreTab.classList.toggle('active', ['sellers','buyers','disputes','announce','settings'].indexOf(name) > -1);
+      if (moreTab) moreTab.classList.toggle('active', ['sellers','buyers','disputes','reports','announce','settings'].indexOf(name) > -1);
       history.replaceState(null, '', name === 'home' ? window.location.pathname : '#' + name);
       const titles = {
         home: ['Admin Dashboard', 'Manage sellers, buyers, and platform activity'],
@@ -1323,6 +1374,7 @@
         sellers: ['All Sellers', 'Every shop on the platform'],
         buyers: ['Buyers', 'Everyone shopping on ALFIJEER'],
         disputes: ['Issues & Disputes', 'Orders waiting for an admin decision'],
+        reports: ['Shop Reports', 'What buyers say is wrong with a shop'],
         analysis: ['Order Analysis', 'What every shop is doing, right now'],
         announce: ['Announcements', 'Tell sellers what you need from them'],
         settings: ['Platform Settings', 'Maintenance mode and order controls'],
@@ -1335,16 +1387,18 @@
       window.scrollTo(0, 0);
       if (name === 'analysis') loadAnalysis();
       if (name === 'announce') loadAnnouncements();
+      if (name === 'reports') loadReports();
       if (name === 'settings') loadSettings();
     }
     function openMore()  { document.getElementById('more-sheet').classList.add('open'); }
     function closeMore() { const m = document.getElementById('more-sheet'); if (m) m.classList.remove('open'); }
 
+    const catLabel = c => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     function _catIcon(cat) {
       const icons = {
         'Fashion, Clothing & Shoes':'👕','Electronics & Appliances':'📺',
         'Phones & Accessories':'📱','Home & Furniture':'🛋️',
-        'Food & Groceries':'🛒','Computers & Technology':'💻',
+        'Food & Groceries':'🛒','Food, Grains & Spices':'🍴','Computers & Technology':'💻',
         'Agriculture & Livestock':'🌾','Health & Beauty':'💊',
         'Education & Training':'📚','Services':'🔧','Other':'📦',
       };
@@ -1367,6 +1421,7 @@
     }
 
     let allSellers = [];
+    let deletedSellers = [];
     let allBuyers = [];
     let sellerFilter = 'all';
 
@@ -1375,7 +1430,10 @@
       try {
         const res = await fetch(_API + '/sellers?limit=500', { headers: _headers() });
         const data = await res.json();
-        allSellers = data.sellers || data || [];
+        const everySeller = data.sellers || data || [];
+        // Deleted shops are kept only for the admin's records (their orders stay intact). They never mix into the working lists or the stats.
+        allSellers = everySeller.filter(s => !s.isDeleted);
+        deletedSellers = everySeller.filter(s => s.isDeleted);
         renderDashboardStats();
         renderPendingTable();
         renderSellersTable();
@@ -1417,7 +1475,7 @@
       body.innerHTML = recent.length ? recent.map(s => `
         <tr>
           <td>${shopCellHtml(s)}</td>
-          <td>${esc(s.category || '—')}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
           <td>${_timeAgo(s.createdAt)}</td>
           <td>${statusPillHtml(s)}</td>
         </tr>
@@ -1430,7 +1488,7 @@
         : _catIcon(s.category);
       return `<div class="shop-cell">
         <div class="thumb">${thumb}</div>
-        <div><div class="name">${esc(s.businessName || 'Unnamed Shop')}</div><div class="sub">${_formatShopNum(s.shopNumber)}</div></div>
+        <div><div class="name">${esc(s.businessName || 'Unnamed Shop')}${s.isVerified ? ' <span title="Verified" style="color:#16803C;">✔</span>' : ''}</div><div class="sub">${_formatShopNum(s.shopNumber)}</div></div>
       </div>`;
     }
     function statusPillHtml(s) {
@@ -1447,7 +1505,7 @@
         <tr data-search="${esc((s.businessName||'').toLowerCase())} ${esc((s.category||'').toLowerCase())}">
           <td>${shopCellHtml(s)}</td>
           <td>${esc(s.phone || s.whatsappNumber || '—')}</td>
-          <td>${esc(s.category || '—')}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
           <td>${esc(s.city || s.address || s.state || '—')}</td>
           <td>${_timeAgo(s.createdAt)}</td>
           <td>
@@ -1472,19 +1530,42 @@
       document.getElementById('count-suspended').textContent = allSellers.filter(s => statusOf(s)==='suspended').length;
       document.getElementById('count-rejected').textContent = allSellers.filter(s => statusOf(s)==='rejected').length;
 
-      let list = sellerFilter === 'all' ? allSellers : allSellers.filter(s => statusOf(s) === sellerFilter);
+      document.getElementById('count-deleted').textContent = deletedSellers.length;
+
+      const showingDeleted = sellerFilter === 'deleted';
+      let list = showingDeleted ? deletedSellers : (sellerFilter === 'all' ? allSellers : allSellers.filter(s => statusOf(s) === sellerFilter));
       const body = document.getElementById('sellers-body');
+      if (showingDeleted && list.length) {
+        body.innerHTML = list.map(s => {
+          const gone = !!s.purgedAt;
+          const left = s.daysLeft;
+          const pill = gone ? 'Removed permanently' : (left != null ? (left <= 1 ? 'Deleted · expires today' : 'Deleted · ' + left + ' days left') : 'Deleted');
+          const actions = gone
+            ? `<span style="color:var(--white-dim);font-size:0.75rem;">Kept only for order records</span>`
+            : `${s.canRestore ? `<button class="act-btn act-approve" onclick="restoreShop('${esc(s._id)}','${jsq(s.businessName||'this shop')}')">↩ Restore</button>` : ''}<button class="act-btn act-reject" onclick="deleteShopForever('${esc(s._id)}','${jsq(s.businessName||'this shop')}')">🗑 Delete forever</button>`;
+          return `<tr data-search="${esc((s.businessName||'').toLowerCase())}">
+          <td>${shopCellHtml(s)}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
+          <td>${esc(s.city || s.address || s.state || '—')}</td>
+          <td><span class="status-pill status-suspended">${esc(pill)}</span></td>
+          <td><div class="row-actions">${actions}</div></td>
+        </tr>`; }).join('');
+        return;
+      }
       if (!list.length) { body.innerHTML = '<tr class="empty-row"><td colspan="5">No shops in this category.</td></tr>'; return; }
       body.innerHTML = list.map(s => {
         const st = statusOf(s);
         let actions = '';
-        if (st === 'approved') actions = `<button class="act-btn act-suspend" onclick="openSuspendModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}','suspend','sellers')">⏸ Suspend</button>`;
+        if (st === 'approved') actions = `<button class="act-btn act-suspend" onclick="openSuspendModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}','suspend','sellers')">⏸ Suspend</button>` +
+          (s.isVerified
+            ? `<button class="act-btn act-view" onclick="unverifyShop('${esc(s._id)}','${jsq(s.businessName||'this shop')}')">✔ Verified · Remove</button>`
+            : `<button class="act-btn act-approve" onclick="openIdModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}')">🪪 Check ID &amp; Verify</button>`);
         else if (st === 'suspended') actions = `<button class="act-btn act-approve" onclick="openSuspendModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}','reactivate','sellers')">▶ Reactivate</button>`;
         else if (st === 'pending') actions = `<button class="act-btn act-approve" onclick="approveSeller('${esc(s._id)}')">✓ Approve</button><button class="act-btn act-reject" onclick="openRejectModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}')">✕ Reject</button>`;
         else actions = `<span style="color:var(--white-dim);font-size:0.75rem;">—</span>`;
         return `<tr data-search="${esc((s.businessName||'').toLowerCase())} ${esc((s.category||'').toLowerCase())}">
           <td>${shopCellHtml(s)}</td>
-          <td>${esc(s.category || '—')}</td>
+          <td>${esc(catLabel(s.category) || '—')}</td>
           <td>${esc(s.city || s.address || s.state || '—')}</td>
           <td>${statusPillHtml(s)}</td>
           <td><div class="row-actions">${actions}<button class="act-btn act-view" onclick="openEditSellerModal('${esc(s._id)}')">✎ Edit</button><a class="act-btn act-view" href="shop-detail.html?id=${esc(s._id)}" target="_blank">👁 View</a><button class="act-btn act-reject" onclick="openDeleteModal('${esc(s._id)}','${jsq(s.businessName||'this shop')}','sellers')">🗑 Delete</button></div></td>
@@ -1595,6 +1676,12 @@
       document.getElementById('delete-modal-name').textContent = name;
       document.getElementById('delete-confirm-input').value = '';
       document.getElementById('delete-confirm-input').dataset.expected = name;
+      const soft = type === 'sellers';   // shops get a 30-day undo; buyer accounts are still removed at once
+      document.getElementById('delete-modal-title').textContent = soft ? 'Delete Shop' : 'Delete Account';
+      document.getElementById('delete-modal-text').textContent = soft
+        ? 'The shop disappears from the app and the owner is locked out right away. Nothing is destroyed: it waits in the Deleted tab for 30 days, and you can restore it with one tap. After 30 days it is removed for good.'
+        : 'This cannot be undone. If this account has order history, it will be anonymized and permanently locked instead of removed, so past orders stay intact.';
+      document.getElementById('delete-modal-btn').textContent = soft ? 'Delete Shop' : 'Delete Permanently';
       document.getElementById('delete-modal').classList.add('open');
     }
     function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('open'); _deleteId = null; }
@@ -1614,6 +1701,86 @@
       } catch (e) {
         showToastSafe(e.message || 'Could not delete — check your backend is up to date.', 'error');
       }
+    }
+
+    // ── DELETED SHOPS: restore, or delete forever ──
+    async function restoreShop(id, name) {
+      if (!(await askConfirm('Restore shop?', `"${name}" will come back exactly as it was before it was deleted, and its owner can log in again.`, 'Restore', false))) return;
+      try { const d = await adm('/sellers/' + id + '/restore', 'PUT'); showToastSafe(d.message || 'Shop restored.', 'success'); loadSellers(); }
+      catch (e) { showToastSafe(e.message, 'error'); }
+    }
+    async function deleteShopForever(id, name) {
+      if (!(await askConfirm('Delete forever?', `"${name}" and its products will be removed for good and cannot be restored. If it has order history it is anonymized instead, so past orders stay intact.`, 'Delete forever'))) return;
+      try { const d = await adm('/sellers/' + id + '/permanent', 'DELETE'); showToastSafe(d.message || 'Removed.', 'success'); loadSellers(); }
+      catch (e) { showToastSafe(e.message, 'error'); }
+    }
+
+    // ── VERIFICATION BADGE ──
+    let _idShopId = null;
+    async function openIdModal(id, name) {
+      _idShopId = id;
+      document.getElementById('id-modal-title').textContent = 'Check ID: ' + name;
+      const body = document.getElementById('id-modal-body');
+      body.innerHTML = '<p style="color:var(--white-dim);padding:30px 0;">Loading…</p>';
+      document.getElementById('id-verify-btn').style.display = '';
+      document.getElementById('id-modal').classList.add('open');
+      try {
+        const d = await adm('/sellers/' + id + '/id-document');
+        if (!d.govIdUrl) { body.innerHTML = '<p style="color:var(--white-dim);padding:30px 0;">This shop has no ID on file, so it cannot be verified.</p>'; document.getElementById('id-verify-btn').style.display = 'none'; return; }
+        body.innerHTML = `<a href="${esc(d.govIdUrl)}" target="_blank" rel="noopener"><img src="${esc(d.govIdUrl)}" alt="Seller ID" style="max-width:100%;max-height:340px;border-radius:8px;border:1px solid var(--border);"></a><div style="font-size:0.72rem;color:var(--white-dim);margin-top:6px;">Tap the picture to open it full size.</div>`;
+      } catch (e) { body.innerHTML = '<p style="color:#e74c3c;padding:30px 0;">' + esc(e.message) + '</p>'; document.getElementById('id-verify-btn').style.display = 'none'; }
+    }
+    function closeIdModal() { document.getElementById('id-modal').classList.remove('open'); _idShopId = null; }
+    async function verifyFromModal() {
+      if (!_idShopId) return;
+      try { const d = await adm('/sellers/' + _idShopId + '/verify', 'PUT'); showToastSafe(d.message || 'Verified.', 'success'); closeIdModal(); loadSellers(); }
+      catch (e) { showToastSafe(e.message, 'error'); }
+    }
+    async function unverifyShop(id, name) {
+      if (!(await askConfirm('Remove verified badge?', `"${name}" will stay open but will no longer show the ✔ Verified badge.`, 'Remove badge'))) return;
+      try { const d = await adm('/sellers/' + id + '/unverify', 'PUT'); showToastSafe(d.message || 'Badge removed.', 'info'); loadSellers(); }
+      catch (e) { showToastSafe(e.message, 'error'); }
+    }
+
+    // ── SHOP REPORTS ──
+    const REPORT_REASON = { fake_products: 'Fake or misleading products', scam_or_fraud: 'Scam or fraud', wrong_info: 'Wrong shop information', abusive_behavior: 'Rude or abusive behaviour', other: 'Something else' };
+    let _reports = [], _reportFilter = 'open', _reportId = null;
+    function setReportFilter(f) {
+      _reportFilter = f;
+      document.querySelectorAll('#reports-tab-row .tab-btn').forEach(b => b.classList.toggle('active', b.dataset.rf === f));
+      loadReports();
+    }
+    async function loadReports(badgeOnly) {
+      try {
+        const d = await adm('/reports?status=' + _reportFilter);
+        _reports = d.reports || [];
+        ['reports-nav-badge', 'sheet-reports-badge'].forEach(id => { const b = document.getElementById(id); if (b) { b.textContent = d.openTotal || ''; b.style.display = d.openTotal ? '' : 'none'; } });
+        if (badgeOnly === true) return;
+        const body = document.getElementById('reports-body');
+        if (!_reports.length) { body.innerHTML = '<tr class="empty-row"><td colspan="5">Nothing here. 🎉</td></tr>'; return; }
+        body.innerHTML = _reports.map(r => `<tr>
+          <td><b>${esc(r.shopName)}</b><div style="font-size:0.72rem;color:var(--white-dim);">${_formatShopNum(r.shopNumber)} · ${esc(r.shopStatus || '')}${r.openReportsForShop > 1 ? ' · <b style="color:#e74c3c;">' + r.openReportsForShop + ' open reports</b>' : ''}</div></td>
+          <td>${esc(REPORT_REASON[r.reason] || r.reason)}${r.details ? '<div style="font-size:0.75rem;color:var(--white-dim);margin-top:3px;">' + esc(r.details) + '</div>' : ''}${r.adminNote ? '<div style="font-size:0.72rem;margin-top:3px;">📝 ' + esc(r.adminNote) + '</div>' : ''}</td>
+          <td>${esc(r.reporterName)}<div style="font-size:0.72rem;color:var(--white-dim);">${esc(r.reporterPhone || '')}</div></td>
+          <td>${_timeAgo(r.createdAt)}</td>
+          <td><div class="row-actions">${r.status === 'open' ? `<button class="act-btn act-approve" onclick="openReportModal('${esc(r._id)}')">Review</button>` : `<span class="status-pill status-suspended">${esc(r.status)}</span>`}${r.shopId ? `<a class="act-btn act-view" href="shop-detail.html?id=${esc(r.shopId)}" target="_blank">👁 View</a>` : ''}</div></td>
+        </tr>`).join('');
+      } catch (e) {
+        if (badgeOnly !== true) document.getElementById('reports-body').innerHTML = '<tr class="empty-row"><td colspan="5">Could not load reports. ' + esc(e.message) + '</td></tr>';
+      }
+    }
+    function openReportModal(id) {
+      const r = _reports.find(x => x._id === id); if (!r) return;
+      _reportId = id;
+      document.getElementById('report-modal-info').innerHTML = `<b>${esc(r.shopName)}</b><br>${esc(REPORT_REASON[r.reason] || r.reason)}${r.details ? '<br><i>“' + esc(r.details) + '”</i>' : ''}`;
+      document.getElementById('report-modal-note').value = '';
+      document.getElementById('report-modal').classList.add('open');
+    }
+    function closeReportModal() { document.getElementById('report-modal').classList.remove('open'); _reportId = null; }
+    async function submitReport(status) {
+      if (!_reportId) return;
+      try { await adm('/reports/' + _reportId, 'PUT', { status, note: document.getElementById('report-modal-note').value }); showToastSafe(status === 'reviewed' ? 'Marked as reviewed.' : 'Report dismissed.', 'success'); closeReportModal(); loadReports(); }
+      catch (e) { showToastSafe(e.message, 'error'); }
     }
 
     // ── VIEW BUYER ORDERS ──
@@ -1682,7 +1849,7 @@
     }
 
     function refreshAll() {
-      loadSellers(); loadBuyers(); loadIssues(); loadSettings();
+      loadSellers(); loadBuyers(); loadIssues(); loadSettings(); loadReports(true);
       if (document.getElementById('sec-analysis').classList.contains('active')) loadAnalysis();
       if (document.getElementById('sec-announce').classList.contains('active')) loadAnnouncements();
       showToastSafe('Refreshed', 'info');
