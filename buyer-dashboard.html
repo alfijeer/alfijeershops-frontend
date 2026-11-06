@@ -382,12 +382,8 @@
       height: 140px; border-radius: 8px; margin-bottom: 20px;
       background: linear-gradient(135deg, var(--green-mid), var(--green-light));
       display: flex; align-items: center; justify-content: center;
-      font-size: 3.5rem; position: relative; overflow: hidden;
+      font-size: 3.5rem; position: relative;
     }
-    .modal-shop-banner .modal-banner-img {
-      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;
-    }
-    .modal-shop-banner .modal-num, .modal-shop-banner .modal-verified { z-index: 2; }
     .modal-num {
       position: absolute; top: 12px; left: 12px;
       background: var(--gold); color: var(--dark);
@@ -964,7 +960,7 @@
       <div id="ann-box"></div>
       <div class="search-hero">
         <h2>What are you looking for?</h2>
-        <p>Search a product, a shop name or a shop number. We show approved shops that sell it.</p>
+        <p>Search a product, a shop name or a shop number. We show verified shops that sell it.</p>
         <div class="search-bar">
           <input type="search" enterkeyhint="search" placeholder="Product, shop name or number" id="main-search" autocomplete="off" aria-label="Search products, shops or shop numbers" onkeydown="if(event.key==='Enter') doSearch()"/>
           <button onclick="doSearch()" aria-label="Search"><span class="sb-ico">🔍</span><span class="sb-txt"> Search</span></button>
@@ -1068,10 +1064,6 @@
         <h3>✦ Saved Shops</h3>
         <span style="font-size:0.75rem;color:var(--white-dim);" id="saved-count"></span>
       </div>
-      <label id="saved-alerts-row" style="display:none;align-items:center;gap:10px;padding:12px 14px;margin-bottom:14px;border:1px solid var(--border);border-radius:10px;font-size:0.82rem;cursor:pointer;">
-        <input type="checkbox" id="saved-alerts-toggle" checked onchange="toggleSavedAlerts(this.checked)"/>
-        <span>🔔 <b>Alert me</b> when a saved shop adds a product or drops a price</span>
-      </label>
       <div class="saved-list" id="saved-list"></div>
     </section>
 
@@ -1180,7 +1172,7 @@
         <div class="modal-shop-banner" id="modal-banner">
           <span id="modal-icon">🏪</span>
           <span class="modal-num" id="modal-num">Shop —</span>
-          <span class="modal-verified" id="modal-verified" style="display:none;">✅ Verified</span>
+          <span class="modal-verified">✅ Verified</span>
         </div>
         <h2 class="modal-shop-name" id="modal-name">Shop Name</h2>
         <div class="modal-detail-row">
@@ -1198,26 +1190,9 @@
           <div class="product-grid" id="modal-products"></div>
         </div>
         <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-          <button style="background:none;border:none;color:#e74c3c;font-size:0.78rem;cursor:pointer;font-family:'Nunito',sans-serif;" onclick="openReportShop()">🚩 Report this Shop</button>
+          <button style="background:none;border:none;color:#e74c3c;font-size:0.78rem;cursor:pointer;font-family:'Nunito',sans-serif;" onclick="showToast('Report submitted.','info')">🚩 Report this Shop</button>
           <a id="modal-fullpage-link" href="#" style="padding:8px 14px;background:rgba(0,18,51,0.05);border:1px solid var(--border);border-radius:6px;color:var(--white);font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;text-decoration:none;">📄 Full Page</a>
           <button style="padding:8px 18px;background:rgba(201,144,0,0.1);border:1px solid var(--gold-dim);border-radius:6px;color:var(--gold);font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;cursor:pointer;" onclick="closeModal();openCart();">🛒 View Cart (<span id="modal-cart-count">0</span>)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- REPORT A SHOP -->
-  <div class="modal-overlay" id="report-shop-modal" style="z-index:2600;">
-    <div class="modal" style="max-width:440px;">
-      <div class="modal-header"><h3>🚩 Report this shop</h3><button class="modal-close" onclick="closeReportShop()">✕</button></div>
-      <div class="modal-body">
-        <p id="report-shop-name" style="font-weight:800;margin-bottom:4px;"></p>
-        <p style="font-size:0.8rem;color:var(--white-dim);line-height:1.6;margin-bottom:12px;">Tell us what is wrong. Our team reads every report. For a problem with one of your orders, use that order in My Orders instead.</p>
-        <div id="report-reasons" style="display:grid;gap:8px;margin-bottom:12px;"></div>
-        <textarea id="report-details" maxlength="500" placeholder="Tell us more (optional)" style="width:100%;min-height:80px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
-          <button onclick="closeReportShop()" style="padding:10px 18px;background:none;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-weight:800;font-family:'Nunito',sans-serif;">Cancel</button>
-          <button id="report-send-btn" onclick="submitReportShop()" style="padding:10px 18px;background:#e74c3c;color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:800;font-family:'Nunito',sans-serif;">Send report</button>
         </div>
       </div>
     </div>
@@ -1252,9 +1227,8 @@
       return 'Shop ' + s;
     }
 
-    const catLabel = c => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     const CATEGORIES = [
-      ['Food, Grains & Spices','🍴'], ['Beauty & Personal Care','💄'], ['Household & Cleaning Supplies','🧴'], ['Health & Wellness','💊'],
+      ['Food, Grains & Spices','🌾'], ['Beauty & Personal Care','💄'], ['Household & Cleaning Supplies','🧴'], ['Health & Wellness','💊'],
       ['Fashion & Clothing','👕'], ['Baby & Kids','🧸'], ['Phones & Electronics','📱'], ['Farm Products','🫘'], ['Home & Furniture','🛋️'],
       ['Building Materials & Hardware','🧱'], ['Vehicles & Spare Parts','🚗'], ['Business & Industrial Equipment','⚙️'],
       ['Books, Office & School Supplies','📚'], ['Sports & Outdoor','⚽'], ['Other','📦'],
@@ -1296,81 +1270,7 @@
       syncHearts();
       renderSaved();
       updateStats();
-      _pushSavedSoon();   // tell the server too, so alerts about this shop can reach you
     }
-    // ── REPORT A SHOP ──
-    const _REPORT_REASONS = [
-      ['fake_products', '🎭 Fake or misleading products'],
-      ['scam_or_fraud', '⚠️ Scam or fraud'],
-      ['wrong_info', '📍 Wrong shop information'],
-      ['abusive_behavior', '😡 Rude or abusive behaviour'],
-      ['other', '💬 Something else'],
-    ];
-    function openReportShop() {
-      if (!isLoggedIn() || getRole() !== 'buyer') { showToast('Please log in as a buyer to report a shop.', 'info'); return; }
-      const s = shops.find(x => x._id === _modalShopId); if (!s) return;
-      document.getElementById('report-shop-name').textContent = s.name;
-      document.getElementById('report-details').value = '';
-      document.getElementById('report-reasons').innerHTML = _REPORT_REASONS.map((r, i) =>
-        `<label style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85rem;"><input type="radio" name="report-reason" value="${r[0]}" ${i === 0 ? 'checked' : ''}/> ${r[1]}</label>`).join('');
-      document.getElementById('report-shop-modal').classList.add('open');
-    }
-    function closeReportShop() { document.getElementById('report-shop-modal').classList.remove('open'); }
-    async function submitReportShop() {
-      const picked = document.querySelector('input[name="report-reason"]:checked');
-      const btn = document.getElementById('report-send-btn');
-      if (!picked) { showToast('Please choose a reason.', 'info'); return; }
-      btn.disabled = true; btn.textContent = 'Sending…';
-      try {
-        const res = await fetch(_API + '/reports', { method: 'POST', headers: _headers(), body: JSON.stringify({ shopId: _modalShopId, reason: picked.value, details: document.getElementById('report-details').value }) });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.message || 'Could not send your report.');
-        closeReportShop();
-        showToast(data.message || 'Thank you. Our team will review this shop.', 'success');
-      } catch (e) { showToast(e.message, 'error'); }
-      finally { btn.disabled = false; btn.textContent = 'Send report'; }
-    }
-
-    // ── SAVED SHOPS ↔ SERVER (so we can alert you about them) ──
-    // The phone still keeps its own copy so hearts work instantly and offline; the server copy is what lets us send alerts.
-    // First time on an account: merge the phone's list with the server's. After that the SERVER wins, so un-saving on one phone sticks on every phone.
-    let _savedSyncTimer = null;
-    function _isBuyer() { return isLoggedIn() && getRole() === 'buyer'; }
-    function _pushSavedSoon() {
-      if (!_isBuyer()) return;
-      clearTimeout(_savedSyncTimer);
-      _savedSyncTimer = setTimeout(() => {
-        fetch(_API + '/buyers/saved', { method: 'PUT', headers: _headers(), body: JSON.stringify({ ids: _savedIds() }) }).catch(() => {});
-      }, 600);
-    }
-    async function pullSavedFromServer() {
-      if (!_isBuyer()) return;
-      try {
-        const res = await fetch(_API + '/buyers/saved', { headers: _headers() });
-        if (!res.ok) return;
-        const d = await res.json();
-        const user = getCurrentUser() || {};
-        const flag = 'as_saved_synced_' + (user._id || 'me');
-        let ids = (d.ids || []).map(String);
-        if (!localStorage.getItem(flag)) {
-          ids = Array.from(new Set(_savedIds().map(String).concat(ids)));
-          await fetch(_API + '/buyers/saved', { method: 'PUT', headers: _headers(), body: JSON.stringify({ ids }) });
-          try { localStorage.setItem(flag, '1'); } catch (e) {}
-        }
-        try { localStorage.setItem('as_saved_shops', JSON.stringify(ids)); } catch (e) {}
-        const box = document.getElementById('saved-alerts-toggle'); if (box) box.checked = d.notify !== false;
-        syncHearts(); renderSaved(); updateStats();
-      } catch (e) {}
-    }
-    async function toggleSavedAlerts(on) {
-      try {
-        if (on && 'Notification' in window && Notification.permission !== 'granted' && window.asPushOn) await window.asPushOn();
-        if (on && 'Notification' in window && Notification.permission === 'denied') showToast('Notifications are blocked in your browser settings, so alerts cannot reach this phone.', 'info');
-        await fetch(_API + '/buyers/saved/prefs', { method: 'PUT', headers: _headers(), body: JSON.stringify({ notify: !!on }) });
-        showToast(on ? 'You will be alerted about new items and price drops.' : 'Alerts turned off.', 'info');
-      } catch (e) { showToast('Could not update alerts. Try again.', 'error'); }
-    }
-
     // every heart on the page (cards, shop window, search results) always shows the real state
     function syncHearts() {
       document.querySelectorAll('.heart[data-id]').forEach(h => {
@@ -1430,7 +1330,6 @@
               latitude: s.latitude || null,
               longitude: s.longitude || null,
               photo: s.shopPhotoUrl || null,
-              verified: !!s.isVerified,   // only shops whose ID an admin checked
             };
           });
 
@@ -1499,7 +1398,7 @@
 
     function updateStats() {
       const el = (id) => document.getElementById(id);
-      if (el('stat-verified')) el('stat-verified').textContent = shops.filter(s => s.verified).length;
+      if (el('stat-verified')) el('stat-verified').textContent = shops.length;
       const savedN = shops.length ? _savedIds().filter(id => shops.some(s => s._id === id)).length : _savedIds().length;
       if (el('stat-saved')) el('stat-saved').textContent = savedN;
       if (el('saved-count')) el('saved-count').textContent = savedN + (savedN === 1 ? ' saved' : ' saved');
@@ -1847,10 +1746,10 @@
       const distLabel = hasDist ? (s.dist < 1 ? Math.round(s.dist * 1000) + 'm' : s.dist.toFixed(1) + 'km') + ' away' : '';
       return `<div class="shop-card" onclick="openModal('${s._id}')">
         <button class="heart ${isSaved(s._id) ? 'on' : ''}" data-id="${_E(s._id)}" onclick="toggleSaved('${s._id}', event)" aria-pressed="${isSaved(s._id)}" aria-label="${isSaved(s._id) ? 'Remove from saved shops' : 'Save this shop'}">♥</button>
-        <div class="shop-thumb">${s.photo ? `<img src="${OrdersUI.esc(s.photo)}" alt="${OrdersUI.esc(s.name)}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy">` : s.icon}<span class="shop-num">${_formatShopNum(s.num)}</span>${s.verified ? '<span class="verified-pill">✅ Verified</span>' : ''}</div>
+        <div class="shop-thumb">${s.photo ? `<img src="${OrdersUI.esc(s.photo)}" alt="${OrdersUI.esc(s.name)}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'" loading="lazy">` : s.icon}<span class="shop-num">${_formatShopNum(s.num)}</span><span class="verified-pill">✅ Verified</span></div>
         <div class="shop-body">
           <h4>${OrdersUI.esc(s.name)}</h4>
-          <div class="shop-meta-row"><span>🏷️ ${OrdersUI.esc(catLabel(s.cat))}</span><span>📍 ${OrdersUI.esc(s.loc)}</span></div>
+          <div class="shop-meta-row"><span>🏷️ ${OrdersUI.esc(s.cat)}</span><span>📍 ${OrdersUI.esc(s.loc)}</span></div>
           <div class="shop-footer-row">
             ${hasDist ? `<span class="dist-tag">${distLabel}</span>` : '<span></span>'}
             <button class="btn-sm" onclick="event.stopPropagation();openModal('${s._id}')">View Shop</button>
@@ -1883,7 +1782,7 @@
           <div class="saved-icon">${s.icon}</div>
           <div class="saved-info">
             <h4>${_formatShopNum(s.num)} — ${_E(s.name)}</h4>
-            <p>🏷️ ${_E(catLabel(s.cat))} &nbsp;|&nbsp; 📍 ${_E(s.loc)}</p>
+            <p>🏷️ ${_E(s.cat)} &nbsp;|&nbsp; 📍 ${_E(s.loc)}</p>
           </div>
           <div class="saved-actions">
             <button class="btn-icon" onclick="openModal('${s._id}')" title="View">👁</button>
@@ -1909,22 +1808,9 @@
       _modalShopId = s._id; rememberShop(s._id); syncHearts();
       document.getElementById('modal-title').textContent = s.name;
       document.getElementById('modal-icon').textContent  = s.icon;
-      // Shop banner: show the seller's uploaded photo behind the badges; fall back to the category icon if it is missing or fails to load.
-      const bannerEl = document.getElementById('modal-banner');
-      const oldImg = bannerEl.querySelector('.modal-banner-img'); if (oldImg) oldImg.remove();
-      const iconEl = document.getElementById('modal-icon'); iconEl.style.visibility = '';
-      if (s.photo) {
-        const img = document.createElement('img');
-        img.className = 'modal-banner-img'; img.alt = s.name || 'Shop banner';
-        img.onerror = () => { img.remove(); iconEl.style.visibility = ''; };
-        img.onload = () => { iconEl.style.visibility = 'hidden'; };
-        img.src = s.photo;
-        bannerEl.insertBefore(img, bannerEl.firstChild);
-      }
       document.getElementById('modal-num').textContent   = _formatShopNum(s.num);
-      document.getElementById('modal-verified').style.display = s.verified ? '' : 'none';
       document.getElementById('modal-name').textContent  = s.name;
-      document.getElementById('modal-cat').textContent   = '🏷️ ' + catLabel(s.cat);
+      document.getElementById('modal-cat').textContent   = '🏷️ ' + s.cat;
       document.getElementById('modal-loc').textContent   = '📍 ' + s.loc;
       const distEl = document.getElementById('modal-dist');
       const hasDist = s.dist !== null && s.dist !== undefined;
@@ -2040,14 +1926,14 @@
 
     function buildCategoryUI() {
       const pills = document.getElementById('search-filters');
-      if (pills) pills.innerHTML = [['all','🔎','All']].concat(CATEGORIES.map(c => [c[0], c[1], catLabel(c[0])]))
+      if (pills) pills.innerHTML = [['all','🔎','All']].concat(CATEGORIES.map(c => [c[0], c[1], c[0]]))
         .map(c => `<div class="cat-pill ${c[0] === _searchCat ? 'active' : ''}" data-cat="${_E(c[0])}" style="flex:0 0 auto;white-space:nowrap;" onclick="setSearchCat(this.dataset.cat)">${c[1]} ${_E(c[2])}</div>`).join('');
       const strip = document.getElementById('home-cats');
-      if (strip) strip.innerHTML = CATEGORIES.map(c => `<button class="cat-chip" data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)"><span>${c[1]}</span>${_E(catLabel(c[0]))}</button>`).join('');
+      if (strip) strip.innerHTML = CATEGORIES.map(c => `<button class="cat-chip" data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)"><span>${c[1]}</span>${_E(c[0])}</button>`).join('');
       const grid = document.getElementById('category-grid');
       if (grid) grid.innerHTML = CATEGORIES.map(c => `<div data-cat="${_E(c[0])}" onclick="showCatShops(this.dataset.cat)" style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
           <span style="font-size:2.2rem;display:block;margin-bottom:10px;">${c[1]}</span>
-          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">${_E(catLabel(c[0]))}</span>
+          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:var(--white);">${_E(c[0])}</span>
           <span class="cat-count" data-cat="${_E(c[0])}" style="display:block;font-size:0.7rem;color:var(--white-dim);margin-top:4px;">– shops</span></div>`).join('');
       if (typeof updateStats === 'function' && shops.length) updateStats();
     }
@@ -2074,7 +1960,7 @@
       const out = document.getElementById('search-results');
 
       if (!q && _searchCat === 'all') {                      // nothing typed: show every verified shop
-        out.innerHTML = _head('All shops', shops.length + (shops.length === 1 ? ' shop' : ' shops')) + _shopGrid(shops);
+        out.innerHTML = _head('All verified shops', shops.length + (shops.length === 1 ? ' shop' : ' shops')) + _shopGrid(shops);
         return;
       }
       if (q.length === 1 && !/\d/.test(q)) { out.innerHTML = '<p style="text-align:center;color:var(--white-dim);padding:30px;">Type at least 2 letters…</p>'; return; }
@@ -2165,9 +2051,9 @@
           <h3 style="margin:10px 0 6px;">${q ? `No results for “${_E(q)}”${inCat}` : `No shops in ${_E(_searchCat)} yet`}</h3>
           <p style="color:var(--white-dim);font-size:0.84rem;line-height:1.7;max-width:420px;margin:0 auto 16px;">${q
             ? 'Check the spelling, try fewer or simpler words (for example “Samsung” instead of the full model), or browse a category below.' + (_searchCat !== 'all' ? ' You can also search all categories.' : '')
-            : 'New shops join every week. Meanwhile, browse another category below or see every shop.'}</p>
+            : 'New shops join every week. Meanwhile, browse another category below or see every verified shop.'}</p>
           ${_searchCat !== 'all' ? '<button class="btn-sm" onclick="setSearchCat(\'all\')" style="margin-bottom:16px;">Search all categories</button>' : ''}</div>
-          <div class="cat-pills" style="justify-content:center;">${(d.categories || []).slice(0, 8).map(c => `<div class="cat-pill" data-cat="${_E(c.name)}" onclick="showCatShops(this.dataset.cat)">${_catIcon(c.name)} ${_E(catLabel(c.name))} (${c.count})</div>`).join('')}</div>`;
+          <div class="cat-pills" style="justify-content:center;">${(d.categories || []).slice(0, 8).map(c => `<div class="cat-pill" data-cat="${_E(c.name)}" onclick="showCatShops(this.dataset.cat)">${_catIcon(c.name)} ${_E(c.name)} (${c.count})</div>`).join('')}</div>`;
       }
       out.innerHTML = h;
     }
@@ -2226,7 +2112,6 @@
     loadShops();
     requestGPS();
     loadProfile();
-    if (_isBuyer()) { const r = document.getElementById('saved-alerts-row'); if (r) r.style.display = 'flex'; pullSavedFromServer(); }
 
 
     /* ── TOAST NOTIFICATION SYSTEM ── */
