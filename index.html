@@ -1498,8 +1498,6 @@
     /* the generic nav{} rule above must not turn the top-bar links into a second white bar */
     .desktop-nav-links { position: static; height: auto; padding: 0; background: none; backdrop-filter: none; border: 0; justify-content: flex-start; z-index: auto; }
     @media (min-width: 1080px) { .hamburger { display: none; } }
-<<<<<<< HEAD
-=======
   
     /* ════════════════════════════════
        SLIM MOBILE FOOTER + DRAWER SUPPORT
@@ -1533,7 +1531,6 @@
       .mf-copy b { color: var(--gold); }
     }
 
->>>>>>> 6f842b0aa91b93c00a1efd02f42379eb418c3bc8
     /* older browsers without aspect-ratio */
     @supports not (aspect-ratio: 1 / 1) {
       .banner-carousel { min-height: 150px; }
@@ -1541,7 +1538,7 @@
       .hm-prod-img { height: 160px; }
       .rec-thumb { height: 140px; }
     }
-  </style>
+</style>
 <link rel="manifest" href="./manifest.json"/>
 <meta name="theme-color" content="#001233"/>
 <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png"/>
@@ -1587,7 +1584,7 @@
   <!-- ══ GREETING + SEARCH ══ -->
   <div class="hm-top">
     <p class="hm-hello" id="hello-line">Good day</p>
-    <h1 class="hm-title">What&rsquo;s new in the market today</h1>
+    <h1 class="hm-title">Discover what&rsquo;s new today</h1>
     <p class="hm-pulse" id="hello-pulse" hidden><i></i><span></span></p>
     <button class="hm-searchbtn" onclick="openSearch()" aria-label="Search products, shops or shop numbers">
       <span aria-hidden="true">🔍</span><span class="hm-searchtxt">Search a product, shop name or shop number</span>
@@ -1601,6 +1598,9 @@
         <div class="nav-logo-text"><span>ALFIJEER</span><span>Menu</span></div>
         <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">✕</button>
       </div>
+      <a class="drawer-support" href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer" onclick="closeMobileMenu()">
+        <span>💬</span><div><b>Need help?</b><small>Chat with our support team on WhatsApp</small></div>
+      </a>
       <div class="drawer-section">
         <a href="#" onclick="closeMobileMenu()">🏠 Home</a>
         <a href="#shops" onclick="closeMobileMenu()">🛒 Nearby Shops</a>
@@ -1998,7 +1998,7 @@
   </main>
 
   <!-- ══ FOOTER ══ -->
-  <footer>
+  <footer class="desk-footer">
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="./index.html" class="nav-logo">
@@ -2079,6 +2079,28 @@
       </div>
     </div>
   </footer>
+
+  <!-- ══ SLIM MOBILE FOOTER (phones only) ══ -->
+  <div class="m-footer" aria-label="Site information">
+    <div class="mf-brand">
+      <img src="./Alfijeer1.png" alt="ALFIJEER" height="38" onerror="this.style.display='none'"/>
+      <div><b>ALFIJEER</b><span>The Digital Market Place For Nigeria</span></div>
+    </div>
+    <div class="mf-actions">
+      <a class="mf-btn" href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer"><span>💬</span>WhatsApp</a>
+      <a class="mf-btn" href="tel:+2347082783618"><span>📞</span>Call</a>
+      <a class="mf-btn" href="mailto:Alfijeershops@gmail.com"><span>✉️</span>Email</a>
+    </div>
+    <div class="mf-social">
+      <a href="https://www.facebook.com/profile.php?id=61595066786406" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="color:#1877F2;">f</a>
+      <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&amp;utm_medium=copy_link&amp;utm_content=azdicg8" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="color:#E1306C;">ig</a>
+      <a href="https://wa.me/message/ZNXGX4OWQN4OJ1" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" style="color:#25D366;">wa</a>
+    </div>
+    <p class="mf-links">
+      <a href="./privacy.html">Privacy Policy</a><i>·</i><a href="./terms.html">Terms of Use</a><i>·</i><a href="#" onclick="openModal('contact-modal');return false;">Contact</a>
+    </p>
+    <p class="mf-copy">© <b>ALFIJEER 2026</b> · Built with pride by <b>KAUSANITECH</b></p>
+  </div>
 
 
   <script>
@@ -2163,7 +2185,7 @@
     const _HOME_API = 'https://alfijeershops-backend-production.up.railway.app/api';
     const HOME_SHOPS = 6, HOME_PRODUCTS = 6;           // the homepage stays small: newest in, oldest out
     const CATS = [
-      ['Food, Grains & Spices','🌾','Food & Grains'], ['Beauty & Personal Care','💄','Beauty'], ['Household & Cleaning Supplies','🧴','Household'],
+      ['Food, Grains & Spices','🍴','Food & Restaurants'], ['Beauty & Personal Care','💄','Beauty'], ['Household & Cleaning Supplies','🧴','Household'],
       ['Health & Wellness','💊','Health'], ['Fashion & Clothing','👕','Fashion'], ['Baby & Kids','🧸','Baby & Kids'],
       ['Phones & Electronics','📱','Phones'], ['Farm Products','🫘','Farm'], ['Home & Furniture','🛋️','Home'],
       ['Building Materials & Hardware','🧱','Building'], ['Vehicles & Spare Parts','🚗','Vehicles'], ['Business & Industrial Equipment','⚙️','Industrial'],
@@ -2212,11 +2234,22 @@
 
     // ── Saved shops (same list the buyer dashboard uses) ──
     const savedIds = () => lsGet('as_saved_shops', []).map(String);
+    // A logged-in buyer's hearts are also kept on the server (so we can alert them about those shops).
+    let _savedTimer = null;
+    function pushSavedSoon(ids) {
+      let token = null, role = null; try { token = localStorage.getItem('as_token'); role = localStorage.getItem('as_role'); } catch (e) {}
+      if (!token || role !== 'buyer') return;
+      clearTimeout(_savedTimer);
+      _savedTimer = setTimeout(() => {
+        fetch(_HOME_API + '/buyers/saved', { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ ids }) }).catch(() => {});
+      }, 600);
+    }
     function toggleHeart(id, ev) {
       ev.stopPropagation(); ev.preventDefault();
       let ids = savedIds(); const was = ids.includes(String(id));
       ids = was ? ids.filter((x) => x !== String(id)) : [String(id)].concat(ids);
       lsSet('as_saved_shops', ids);
+      pushSavedSoon(ids);
       document.querySelectorAll('.hm-heart[data-id="' + id + '"]').forEach((b) => { b.classList.toggle('on', !was); b.setAttribute('aria-pressed', String(!was)); });
       toast(was ? 'Removed from saved shops' : 'Shop saved. Find it under Saved.');
     }
@@ -2233,7 +2266,7 @@
           <button class="hm-heart ${saved ? 'on' : ''}" data-id="${esc(s._id)}" aria-pressed="${saved}" aria-label="Save ${esc(s.businessName)}" onclick="toggleHeart('${esc(s._id)}', event)">♥</button>
         </div>
         <div class="hm-shop-body">
-          <h3>${esc(s.businessName)}</h3>
+          <h3>${esc(s.businessName)}${s.isVerified ? ' <span title="Verified shop" style="color:#16803C;font-size:.85em;">✔</span>' : ''}</h3>
           <p>${esc(catLabel(s.category) || '')}${s.city ? ' · ' + esc(s.city) : ''}</p>
           <small>Opened ${esc(ago(s.createdAt))}</small>
         </div></article>`;
@@ -2265,7 +2298,7 @@
       let ok = false;
       if (s.status === 'fulfilled' && Array.isArray(s.value.sellers)) { _shops = s.value.sellers.slice(0, HOME_SHOPS); ok = true; }
       if (p.status === 'fulfilled' && Array.isArray(p.value.products)) { _products = p.value.products.slice(0, HOME_PRODUCTS); ok = true; }
-      if (ok) { _loadedAt = Date.now(); lsSet('as_home_v1', { shops: _shops, products: _products }); paintHome(); }
+      if (ok) { _loadedAt = Date.now(); lsSet('as_home_v1', { at: Date.now(), shops: _shops, products: _products }); paintHome(); }
       else homeError();
     }
 
@@ -2420,7 +2453,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       renderHello();
       const c = lsGet('as_home_v1', null);
-      if (c && Array.isArray(c.shops) && Array.isArray(c.products)) { _shops = c.shops; _products = c.products; paintHome(); }
+      // Only a very fresh copy paints instantly; an older one could still hold a shop that was deleted since.
+      if (c && c.at && Date.now() - c.at < 5 * 60 * 1000 && Array.isArray(c.shops) && Array.isArray(c.products)) { _shops = c.shops; _products = c.products; paintHome(); }
       loadHome();
       if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted') requestGPS(false); }).catch(() => {});
       setInterval(() => { if (!document.hidden && Date.now() - _loadedAt > 90000) loadHome(); }, 30000);

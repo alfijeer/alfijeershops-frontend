@@ -339,7 +339,7 @@
       document.getElementById('sd-cat').textContent = catLabel(s.category || 'Other');
       document.getElementById('sd-num').textContent = _formatShopNum(s.shopNumber);
       document.getElementById('sd-address').textContent = s.address || [s.city, s.state].filter(Boolean).join(', ') || 'Address not provided';
-      document.getElementById('sd-verified').style.display = 'inline-flex';
+      document.getElementById('sd-verified').style.display = s.isVerified ? 'inline-flex' : 'none';
 
       const photoEl = document.getElementById('sd-photo');
       if (s.shopPhotoUrl) {
