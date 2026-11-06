@@ -76,11 +76,14 @@
     }
 
     .nav-logo img {
-      height: 52px;
-      width: 52px;
-      border-radius: 52px;
+      height: 56px;
+      width: 56px;
+      border-radius: 50%;
       object-fit: contain;
-      box-shadow: 0 2px 8px rgba(16,40,28,0.12);
+      background: #fff;
+      padding: 2px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
     .nav-logo-text {
@@ -1071,7 +1074,7 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
-      height: 64px;
+      height: 72px;
       display: grid;
       grid-template-columns: 1fr auto;
       align-items: center;
@@ -1157,14 +1160,14 @@
     }
 
     @media (max-width: 480px) {
-      .nav-logo img { height: 40px; width: 40px; }
+      .nav-logo img { height: 52px; width: 52px; border-radius: 50%; }
       .location-pill { max-width: 118px; padding: 6px 8px; font-size: 0.7rem; }
       .location-pill span#location-label { max-width: 68px; }
       .app-bar { padding: 0 3.5%; gap: 6px; }
       .icon-btn { width: 34px; height: 34px; font-size: 0.95rem; }
     }
 
-    .search-bar-wrap { margin-top: 64px; padding: 14px 5% 4px; position: relative; z-index: 5; }
+    .search-bar-wrap { margin-top: 72px; padding: 14px 5% 4px; position: relative; z-index: 5; }
     .search-bar {
       display: flex; align-items: center; gap: 10px;
       background: #FFFFFF; border: 1px solid var(--border, rgba(201,144,0,0.15));
@@ -1222,37 +1225,6 @@
     .hamburger { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; width: 38px; height: 38px; background: none; border: none; cursor: pointer; }
     .hamburger span { display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
 
-    /* ════════════════════════════════
-       BOTTOM NAV
-    ════════════════════════════════ */
-    .bottom-nav {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
-      background: rgba(255,255,255,0.97);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border, rgba(201,144,0,0.12));
-      box-shadow: 0 -2px 14px rgba(16,40,28,0.08);
-      display: flex; align-items: center; justify-content: space-around;
-      padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
-    }
-    .bn-item {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      text-decoration: none; color: var(--white-dim);
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2px;
-      flex: 1; padding: 4px 0;
-    }
-    .bn-item .bn-icon { font-size: 1.15rem; }
-    .bn-item.active { color: var(--gold); }
-    .bn-item.bn-center .bn-icon {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: var(--gold); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      margin-top: -22px; box-shadow: 0 4px 14px rgba(201,144,0,0.35);
-    }
-    .bn-item.bn-center { color: var(--gold); }
-
-    @media (min-width: 769px) {
-      .bottom-nav { display: none; }
-    }
     @media (max-width: 768px) {
       /* The footer (last element) clears the fixed bottom nav once; no extra body padding */
       body { padding-bottom: 0; }
@@ -1391,7 +1363,7 @@
     .hm-empty { grid-column: 1 / -1; padding: 22px 8px; text-align: center; font-size: 0.85rem; color: var(--white-dim); }
 
     /* top: greeting, headline, search */
-    .hm-top { margin-top: 64px; padding: 26px 5% 6px; max-width: 1100px; margin-left: auto; margin-right: auto; position: relative; z-index: 3; }
+    .hm-top { margin-top: 72px; padding: 26px 5% 6px; max-width: 1100px; margin-left: auto; margin-right: auto; position: relative; z-index: 3; }
     .hm-hello { font-size: 0.85rem; font-weight: 700; color: var(--gold-dim); }
     .hm-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(1.45rem, 6.2vw, 2.1rem); line-height: 1.18; color: var(--white); margin: 2px 0 8px; max-width: 16em; }
     .hm-pulse { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #0E6B3C; background: rgba(18,128,73,0.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 12px; }
@@ -1507,15 +1479,9 @@
     .hm-row-price { font-weight: 800; font-size: 0.9rem; flex: 0 0 auto; }
     .hm-row-go { font-weight: 800; font-size: 0.78rem; color: var(--gold-dim); flex: 0 0 auto; }
 
-    .hm-toast { position: fixed; left: 12px; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; background: var(--navy-deep); color: #fff; padding: 13px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; z-index: 4000; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
+    .hm-toast { position: fixed; left: 12px; right: 12px; bottom: calc(24px + env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; background: var(--navy-deep); color: #fff; padding: 13px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; z-index: 4000; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
     .hm-toast.show { opacity: 1; transform: none; }
 
-    /* bottom tab bar: navy like the buyer dashboard */
-    .bottom-nav { top: auto; height: auto; z-index: 1100; background: var(--navy-deep); border-top: 0; box-shadow: 0 -4px 20px rgba(0,18,51,0.25); padding: 0 4px env(safe-area-inset-bottom); }
-    .bn-item { height: 62px; justify-content: center; color: var(--on-navy-dim); font-size: 0.68rem; position: relative; }
-    .bn-item .bn-icon { font-size: 1.3rem; line-height: 1; }
-    .bn-item.active { color: var(--gold); }
-    .bn-item.active::before { content: ''; position: absolute; top: 0; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--gold); }
 
     /* larger screens */
     @media (min-width: 700px) {
@@ -1532,6 +1498,42 @@
     /* the generic nav{} rule above must not turn the top-bar links into a second white bar */
     .desktop-nav-links { position: static; height: auto; padding: 0; background: none; backdrop-filter: none; border: 0; justify-content: flex-start; z-index: auto; }
     @media (min-width: 1080px) { .hamburger { display: none; } }
+<<<<<<< HEAD
+=======
+  
+    /* ════════════════════════════════
+       SLIM MOBILE FOOTER + DRAWER SUPPORT
+    ════════════════════════════════ */
+    .m-footer { display: none; }
+    .drawer-support { display: flex; align-items: center; gap: 12px; margin: 14px 16px 6px; padding: 12px 14px; background: rgba(37,211,102,0.10); border: 1px solid rgba(37,211,102,0.35); border-radius: 12px; text-decoration: none; color: var(--white); }
+    .drawer-support > span { font-size: 1.5rem; }
+    .drawer-support b { display: block; font-size: 0.9rem; }
+    .drawer-support small { display: block; font-size: 0.74rem; color: var(--white-dim); margin-top: 2px; }
+
+    @media (max-width: 768px) {
+      .desk-footer { display: none; }
+      .m-footer {
+        display: block; position: relative; z-index: 2;
+        margin-top: 30px; background: var(--navy-deep);
+        padding: 26px 5% calc(28px + env(safe-area-inset-bottom));
+        text-align: center;
+      }
+      .mf-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; text-align: left; }
+      .mf-brand b { display: block; font-family: 'Cinzel', serif; color: #fff; font-size: 1.05rem; letter-spacing: 1px; }
+      .mf-brand span { display: block; font-size: 0.72rem; color: var(--on-navy-dim); margin-top: 2px; }
+      .mf-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+      .mf-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #fff; text-decoration: none; font-size: 0.78rem; font-weight: 800; }
+      .mf-btn span { font-size: 1.25rem; line-height: 1; }
+      .mf-social { display: flex; justify-content: center; gap: 12px; margin-bottom: 18px; }
+      .mf-social a { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; text-decoration: none; font-weight: 800; font-size: 0.85rem; }
+      .mf-links { font-size: 0.8rem; margin-bottom: 12px; }
+      .mf-links a { color: var(--gold); text-decoration: none; font-weight: 700; padding: 6px 4px; display: inline-block; }
+      .mf-links i { color: var(--on-navy-dim); font-style: normal; margin: 0 6px; }
+      .mf-copy { font-size: 0.72rem; color: var(--on-navy-dim); line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; }
+      .mf-copy b { color: var(--gold); }
+    }
+
+>>>>>>> 6f842b0aa91b93c00a1efd02f42379eb418c3bc8
     /* older browsers without aspect-ratio */
     @supports not (aspect-ratio: 1 / 1) {
       .banner-carousel { min-height: 150px; }
@@ -2168,6 +2170,7 @@
       ['Books, Office & School Supplies','📚','Books'], ['Sports & Outdoor','⚽','Sports'], ['Other','📦','Other'],
     ];
     const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const catLabel = (c) => c === 'Food, Grains & Spices' ? 'Food & Restaurants' : c;
     const catIcon = (c) => { const h = CATS.find((x) => x[0] === c); return h ? h[1] : '🏪'; };
     const money = (n) => '₦' + Number(n || 0).toLocaleString('en-NG');
     const shopNum = (n) => (n === null || n === undefined || n === '') ? 'Shop' : 'Shop ' + String(n).trim().replace(/^(shop)?\s*#?\s*/i, '');
@@ -2231,7 +2234,7 @@
         </div>
         <div class="hm-shop-body">
           <h3>${esc(s.businessName)}</h3>
-          <p>${esc(s.category || '')}${s.city ? ' · ' + esc(s.city) : ''}</p>
+          <p>${esc(catLabel(s.category) || '')}${s.city ? ' · ' + esc(s.city) : ''}</p>
           <small>Opened ${esc(ago(s.createdAt))}</small>
         </div></article>`;
     }
@@ -2306,7 +2309,7 @@
     const sProduct = (p) => sRow(`<span class="hm-row-img">${safeUrl(p.image) ? `<img src="${esc(safeUrl(p.image))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(p.category)}</span>
         <span class="hm-row-main"><b>${esc(p.name)}</b><small>${esc(p.shopName)}${p.city ? ' · ' + esc(p.city) : ''}</small></span><span class="hm-row-price">${money(p.price)}</span>`, p.shopId);
     const sShop = (s) => sRow(`<span class="hm-row-img">${safeUrl(s.shopPhotoUrl) ? `<img src="${esc(safeUrl(s.shopPhotoUrl))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(s.category)}</span>
-        <span class="hm-row-main"><b>${esc(s.businessName || 'Shop')}</b><small>${esc(shopNum(s.shopNumber))}${s.city ? ' · ' + esc(s.city) : ''}${s.category ? ' · ' + esc(s.category) : ''}</small></span><span class="hm-row-go">View</span>`, s._id);
+        <span class="hm-row-main"><b>${esc(s.businessName || 'Shop')}</b><small>${esc(shopNum(s.shopNumber))}${s.city ? ' · ' + esc(s.city) : ''}${s.category ? ' · ' + esc(catLabel(s.category)) : ''}</small></span><span class="hm-row-go">View</span>`, s._id);
 
     async function runSheetSearch() {
       clearTimeout(_sTimer);
@@ -2395,7 +2398,7 @@
         const d = await getJSON('/sellers?limit=100'); const all = (d.sellers || []).filter((s) => s.latitude && s.longitude)
           .map((s) => Object.assign({}, s, { km: haversine(_lat, _lng, s.latitude, s.longitude) })).sort((a, b) => a.km - b.km).slice(0, 3);
         list.innerHTML = all.length ? all.map((s) => `<button class="hm-row" onclick="goToShop('${esc(s._id)}')"><span class="hm-row-img">${safeUrl(s.shopPhotoUrl) ? `<img src="${esc(safeUrl(s.shopPhotoUrl))}" alt="" loading="lazy" onerror="this.remove()"/>` : catIcon(s.category)}</span>
-          <span class="hm-row-main"><b>${esc(s.businessName)}</b><small>${esc(shopNum(s.shopNumber))} · ${esc(s.category || '')}</small></span><span class="hm-row-go">${s.km < 1 ? Math.round(s.km * 1000) + ' m' : s.km.toFixed(1) + ' km'}</span></button>`).join('')
+          <span class="hm-row-main"><b>${esc(s.businessName)}</b><small>${esc(shopNum(s.shopNumber))} · ${esc(catLabel(s.category) || '')}</small></span><span class="hm-row-go">${s.km < 1 ? Math.round(s.km * 1000) + ' m' : s.km.toFixed(1) + ' km'}</span></button>`).join('')
           : '<p class="hm-empty">No shops with a map location near you yet.</p>';
       } catch (e) { list.innerHTML = '<p class="hm-empty">Could not load nearby shops. <button class="hm-link-btn" onclick="showNearby()">Try again</button></p>'; }
     }
@@ -2433,14 +2436,6 @@
     <div class="hm-sheet-body" id="sheet-body"></div>
   </div>
 
-  <!-- ══ BOTTOM NAV ══ -->
-  <nav class="bottom-nav" aria-label="Main">
-    <a href="#" class="bn-item active" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><span class="bn-icon">🏠</span><span>Home</span></a>
-    <a href="#" class="bn-item" onclick="openSearch();return false;"><span class="bn-icon">🔍</span><span>Search</span></a>
-    <a href="#" class="bn-item" onclick="goToDashboard('saved');return false;"><span class="bn-icon">♥</span><span>Saved</span></a>
-    <a href="#" class="bn-item" onclick="goToDashboard('orders');return false;"><span class="bn-icon">📦</span><span>Orders</span></a>
-    <a href="#" class="bn-item" onclick="goToDashboard('account');return false;"><span class="bn-icon">👤</span><span>Account</span></a>
-  </nav>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {

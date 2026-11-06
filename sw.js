@@ -11,7 +11,11 @@
 // returning visitors pick up the new version instead of a stale cache.
 // ══════════════════════════════════════════════════════════
 
+<<<<<<< HEAD
 const CACHE_VERSION = 'alfijeer-v14'; // bumped from arewa-square-v1 for the rebrand — forces returning visitors to pull fresh (correctly-branded) assets instead of serving stale cached ones
+=======
+const CACHE_VERSION = 'alfijeer-v17'; // bumped from arewa-square-v1 for the rebrand — forces returning visitors to pull fresh (correctly-branded) assets instead of serving stale cached ones
+>>>>>>> 6f842b0aa91b93c00a1efd02f42379eb418c3bc8
 const API_HOST = 'alfijeershops-backend-production.up.railway.app';
 
 const APP_SHELL = [
